@@ -30,13 +30,30 @@ elseif (isset($_POST["Ref"])) {
         .nonSoulign {
             text-decoration: none !important;
         }
-        .page_link{
-            z-index: 2;
-            color: #fff;
-            cursor: default;
-            background-color: #337ab7;
-            border-color: #337ab7;
+        .page_link,.prev_link,.next_link{
+            border:1px solid #007bffb9;
+            border-radius: 50px;
+            font-size:30px;
+            background-color: white;
+            padding:2px 10px 3px 10px;
+            text-decoration: none ;
+            color: black;
         }
+        .pager{
+            padding-left:33%;
+        }
+        .page_link:hover,.prev_link:hover,.next_link:hover{
+            text-decoration: none ;
+            color: black;
+        }
+        .active>a{
+            border-radius: 50px;
+            background-color: #007bffb9;
+        }
+        .table {
+            margin-bottom: 2em;
+        }
+
     </style>
 </head>
 
@@ -153,6 +170,7 @@ elseif (isset($_POST["Ref"])) {
                     $date = $datN->format('d-m-Y');
                 }
                 ///////////////////////////////////////////----Present----//////////////////////////////////////////////
+                $nbr=0;
                 if(!isset($_POST["validerRechJour"])|| isset($_POST["validerRechJour"]) && $_POST["presence"]=="present"){           
                     for($i=0;$i<count($emargement);$i++){
                         $date_emargement = $emargement[$i]["Date_emargement"];
@@ -185,6 +203,7 @@ elseif (isset($_POST["Ref"])) {
                                 <td class="col-md-1 text-center">' . $emargement[$i]["Depart"] . '</td>
                                 <td class="col-md-1 text-center"><a class="nonSoulign" href="stat.php?code=' . $etudiants[0]["NCI"]  . '" ><button class="form-control" >Stat</button></a></td>
                             </tr>';
+                            $nbr++;
                         }
                     }
                 }
@@ -236,18 +255,21 @@ elseif (isset($_POST["Ref"])) {
                                 <td class="col-md-1 text-center">--:--</td>
                                 <td class="col-md-1 text-center"><a class="nonSoulign" href="stat.php?code=' . $etudiants[$i]["NCI"]. '" ><button class="form-control" >Stat</button></a></td>
                             </tr>';
+                            $nbr++;
                         }
                     }
-                    
                 }
                 ///////////////////////////////////////////----Fin Absents----//////////////////////////////////////////////
 
                 ####################################------Fin Affichage-----#################################
-                echo'</tbody></table>
-                <div class="col-md-12 text-center">
-                    <ul class="pagination pagination-sm pager" id="developer_page"></ul>
-                </div>
-                ';
+                echo'</tbody>
+                </table>';
+                if($nbr>8){
+                    echo'<div class="col-md-12 text-center">
+                        <ul class="pagination pagination-sm pager" id="developer_page"></ul>
+                    </div>';
+                }
+                echo'<div class="bas"></div>';
             }
             catch (PDOException $e) {
                 echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql

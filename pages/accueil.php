@@ -145,6 +145,7 @@ $_SESSION["actif"] = "accueil";
     <script src="../js/charts.js"></script>
     <script src="../js/animated.js"></script>
     <script src="../js/index.js"></script>
+    <script src="../js/jq.js"></script>
     <script src="../js/monjs.js"></script>
 </body>
 
