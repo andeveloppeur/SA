@@ -37,14 +37,15 @@ elseif (isset($_POST["Ref"])) {
             background-color: white;
             padding:2px 10px 3px 10px;
             text-decoration: none ;
-            color: black;
+            color: #212529;
+            margin-right:10%;
         }
         .pager{
             padding-left:33%;
         }
         .page_link:hover,.prev_link:hover,.next_link:hover{
             text-decoration: none ;
-            color: black;
+            color: #212529;
         }
         .active>a{
             border-radius: 50px;

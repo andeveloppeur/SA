@@ -13,6 +13,14 @@ body {
     height: 100vh;
 }
 
+td {
+    border: 0.02px solid rgba(255, 255, 255, 0.288);
+}
+
+th {
+    border: 0.02px solid rgba(255, 255, 255, 0.11);
+}
+
 .piedPage {
     text-align: center;
     background-color: #007bffb9;
