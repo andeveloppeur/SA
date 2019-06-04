@@ -24,7 +24,7 @@
 2996 1994 00637|Dev Web|Mame Amy mbacke GUEYE|31-05-2019|774667906|gueyemameamy466@gmail.com|
 1870 1996 02000|Dev Web|Ababacar Sadikh GUEYE|20-08-1996|771844682|abougueye96@yahoo.fr|
 1765 1993 045682|Dev Web|Ibrahima GUISSE|03-08-1993|777274988|leguisse@gmail.com|
-2770 1996 01584|Dev Web|Mairame Aissatou KANE|11-10 1996|784825039|mairamaissata@gmail.com|
+2770 1996 01584|Dev Web|Mairame Aissatou KANE|11-10-1996|784825039|mairamaissata@gmail.com|
 1548 1996 01066|Dev Web|El Hadji Yaya LY|03-03-1996|772652363|yalya96@gmail.com|
 1767 1993 01194|Dev Web|Yaya LY|01-11-1992|775701631|yaya.ly@uadb.edu.sn|
 1757 1994 01090|Dev Web|Elhadji Mbacke MBAYE|31-05-2019|773674576|elhadjimbackembaye@gmail.com|
@@ -67,12 +67,12 @@
 1765 1992 00705|Data Art|alioune  NDIAYE|31-01-1992|776207443|aliounen28@gmail.com|
 1392 1993 00688|Data Art|Elemine NGOM|01-01-1993|774587386|ngom.elemine@gmail.com|
 1261 2002 01422|Data Art|Moussa SARR|23-06-1997|778288989|sarr82084@gmail.com|
-1633 2003 00126|Data Art|Mamadou SARR|1711-1994|777886847|mamadoutive@yahoo.fr|
+1633 2003 00126|Data Art|Mamadou SARR|17-11-1994|777886847|mamadoutive@yahoo.fr|
 1908 1999 300433|Data Art|Cheikh Ahmadou Mbacke  SECK|07-09-1993|771175215|cheikhahmadoumbacke.seck@uvs.edu.sn|
 1770 1995 02170|Data Art|Oumar SOW|31-12-1994|776706604|sowsogm@gmail.com|
 1765 1991 01866|Data Art|Alioune THIAW|30-03-1991|771532414|thiawalioune1280@gmail.com|
 o 000376222|Data Art|ARISTIDE ROMEO WESSEHINAM|12-08-1988|777371381|arwess1@gmail.com|
-EB 252 468|Ref Dig|AMAH Dédé Marie Francine Glorie AYIVI|1205-1995|771303645|gloryayivi@gmail.com|
+EB 252 468|Ref Dig|AMAH Dédé Marie Francine Glorie AYIVI|12-05-1995|771303645|gloryayivi@gmail.com|
 1757 1995 00951|Ref Dig|el hadji Ismaila  Ba|31-05-2019|783020366|izac44237@gmail.com|
 o 001082487|Ref Dig|Ramatoulaye BAH|31-05-2019|783893345|ramaba389@gmail.com|
 o 000047414|Ref Dig|Rodrigue BANZOUAKETTE|31-05-2019|780150704|foreverbanz@gmail.com|
@@ -85,7 +85,7 @@ o 000047414|Ref Dig|Rodrigue BANZOUAKETTE|31-05-2019|780150704|foreverbanz@gmail
 1251 1989 01244|Ref Dig|Oumar DRAME|09-03-1989|773125747|oumardrame09@gmail.com|
 2770 1995 01194|Ref Dig|Soumaiya FALL|31-05-2019|781118891|soumaiya9@gmail.com|
 1755 1993 03703|Ref Dig|Cheikh Ahmed Tidiane FALL|02-11-1993|776642076|cheitidianefall@gmail.com|
-1752 1992 01511|Ref Dig|THIEMOKHO KHOUMA|19-16-1992|772673229|khoumathiemokho@gmail.com|
+1752 1992 01511|Ref Dig|THIEMOKHO KHOUMA|31-05-2019|772673229|khoumathiemokho@gmail.com|
 2895 1995 00283|Ref Dig|Mame Ndiaya LO|18-01-1995|776089347|mamendiayabane@gmail.com|
 2755 1993 02877|Ref Dig|  MANE|31-05-2019|771543689|datish93@gmail.com|
 2548 1988 03325|Ref Dig|Marie Sarr MANE|07-05-1988|779538015|mariesarrdiallo@gmail.com|

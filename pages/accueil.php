@@ -57,52 +57,84 @@ $_SESSION["actif"] = "accueil";
         ?>
         <div id="chartdiv"></div>
         <?php
-        $i=0;
-        if(isset($_POST["valider"])){
-            $datN = new DateTime($_POST["jourRech"]);
-            $date = $datN->format('d-m-Y');
-        }
-        $monfichier = fopen('promos.txt', 'r');
-        while (!feof($monfichier)) {
-            $ligne = fgets($monfichier);
-            $promo = explode('|', $ligne);
-            //////------compter effectif---//////
-            $effectif = 0;
-            $fichier = fopen('etudiants.txt', 'r');
-            while (!feof($fichier)) {
-                $line = fgets($fichier);
-                $etudiant = explode('|', $line);
-                if (isset($etudiant[1]) && isset($promo[1]) && $promo[1] == $etudiant[1]) {
-                    $effectif++;
-                }
-            }
-            fclose($fichier);
-            //////------Fin compter effectif---//////
+        try {
+            $serveur = "localhost";
+            $Monlogin = "root";
+            $Monpass = "101419";
+            $connexion = new PDO("mysql:host=$serveur;dbname=SA;charset=utf8", $Monlogin, $Monpass); //se connecte au serveur mysquel
+            $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //setAttribute — Configure l'attribut PDO $connexion
+            
+            
 
-            ////////------compter emarger---///////
-            $emarger=0;
-            $fichier = fopen('emargement.txt', 'r');
-            while (!feof($fichier)) {
-                $line = fgets($fichier);
-                $etudiant = explode('|', $line);
-                if (isset($etudiant[1]) && isset($promo[1]) && $promo[1] == $etudiant[1] && $etudiant[3]==date('d-m-Y') && !isset($_POST["valider"]) || isset($_POST["valider"]) && isset($etudiant[1]) && isset($promo[1]) && $promo[1] == $etudiant[1] && $etudiant[3]==$date) {
-                    $emarger++;
+            ///////////-----recuperation des données referentiels----///////////
+            $codemysql = "SELECT id_referentiels,Nom FROM referentiels"; //le code mysql
+            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+            $requete->execute();
+            $lesReferentiel=$requete->fetchAll();
+            ///////////-----recuperation des données referentiels----///////////
+
+            ///////////-----recuperation des données des etudiants----///////////
+            $codemysql = "SELECT Nom,id_referentiels,NCI FROM etudiants"; //le code mysql
+            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+            $requete->execute();
+            $etudiants=$requete->fetchAll();
+            ///////////-----recuperation des données des etudiants----///////////
+
+            ///////////-----recuperation des données de la table emargement----///////////
+            $codemysql = "SELECT NCI,Date_emargement FROM emargement"; //le code mysql
+            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+            $requete->execute();
+            $emargement=$requete->fetchAll();
+            ///////////-----recuperation des données de la table emargement-----///////////
+            $i=0;
+            for($a=0;$a<count($lesReferentiel);$a++){
+                $referentiel = $lesReferentiel[$a]["Nom"];
+                $id_ref=$lesReferentiel[$a]["id_referentiels"];
+                //////------compter effectif---//////
+                $effectif = 0;
+                for($b=0;$b<count($etudiants);$b++) {
+                    $etudiant = $etudiants[$i]["Nom"];
+                    $id_ref_etudiant=$etudiants[$b]["id_referentiels"];//la clé de son referentiel
+                    if (isset($etudiant) && isset($referentiel) && $id_ref == $id_ref_etudiant) {
+                        $effectif++;
+                    }
                 }
+                //////------Fin compter effectif---//////
+
+                ////////------compter emarger---///////
+                $emarger=0;
+                for($c=0;$c<count($emargement);$c++) {
+                    $NCI_emarger = $emargement[$c]["NCI"];
+                    $date_emargement = $emargement[$c]["Date_emargement"];
+                    ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
+                    $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_emarger'"; //le code mysql
+                    $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+                    $requete->execute();
+                    $le_ref_emargement=$requete->fetchAll();
+                    ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
+                    $ref_emargement=$le_ref_emargement[0]["Nom"];
+                    if (isset($ref_emargement) && isset($referentiel) && $referentiel == $ref_emargement && $date_emargement==date('Y-m-d') && !isset($_POST["valider"]) || isset($_POST["valider"]) && isset($ref_emargement) && isset($referentiel) && $referentiel == $ref_emargement && $date_emargement==$_POST["jourRech"]) {
+                        $emarger++;
+                    }
+                }
+                //////------Fin compter emarger---//////
+                $absent=$effectif-$emarger;
+                $i++;
+                echo'<div id="present'.$i.'" class="'.$emarger.'"></div>
+                    <div id="absent'.$i.'" class="'.$absent.'"></div>';
             }
-            fclose($fichier);
-            //////------Fin compter emarger---//////
-            $absent=$effectif-$emarger;
-            $i++;
-            echo'<div id="present'.$i.'" class="'.$emarger.'"></div>
-                 <div id="absent'.$i.'" class="'.$absent.'"></div>';
+            
+            if(!isset($_POST["valider"])){
+                echo'<div id="jourR" class="'.date('Y-m-d').'"></div>';
+            }
+            else{
+                echo'<div id="jourR" class="'.$_POST["jourRech"].'"></div>';
+            }
+        } 
+        catch (PDOException $e) {
+            echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
         }
-        fclose($monfichier);
-        if(!isset($_POST["valider"])){
-            echo'<div id="jourR" class="'.date('d-m-Y').'"></div>';
-        }
-        else{
-            echo'<div id="jourR" class="'.$date.'"></div>';
-        }
+
         echo "<h2 class='margBot'></h2>
         </section>
             <footer class='piedPageaccueil'>

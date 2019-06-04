@@ -1,9 +1,9 @@
 var divDiag = document.getElementById("chartdiv");
-
-divDiag.addEventListener("click", sijeDoubleClikDev);
-divDiag.addEventListener("click", sijeDoubleClikRef);
-divDiag.addEventListener("click", sijeDoubleClikData);
-
+if (divDiag) {
+    divDiag.addEventListener("click", sijeDoubleClikDev);
+    divDiag.addEventListener("click", sijeDoubleClikRef);
+    divDiag.addEventListener("click", sijeDoubleClikData);
+}
 
 
 var diagramdevPres = "";
@@ -25,7 +25,7 @@ function sijeDoubleClikDev() {
     jourR = jour.getAttribute("class");
 
     function devAbsclicker() {
-        document.location.href = "presence.php?promo=Dev Web&statut=absents&laDate=" + jourR;
+        document.location.href = "presence.php?Ref=Dev Web&statut=absents&laDate=" + jourR;
 
     }
 
@@ -33,7 +33,7 @@ function sijeDoubleClikDev() {
     if (diagramdevPres) { diagramdevPres.addEventListener("click", devPresclicker); }
 
     function devPresclicker() {
-        document.location.href = "presence.php?promo=Dev Web&statut=present&laDate=" + jourR;
+        document.location.href = "presence.php?Ref=Dev Web&statut=present&laDate=" + jourR;
 
     }
     ///////////////////////----Fin dev---///////////////////////////
@@ -47,7 +47,7 @@ function sijeDoubleClikRef() {
     jourR = jour.getAttribute("class");
 
     function refAbsclicker() {
-        document.location.href = "presence.php?promo=Ref Dig&statut=absents&laDate=" + jourR;
+        document.location.href = "presence.php?Ref=Ref Dig&statut=absents&laDate=" + jourR;
 
     }
 
@@ -55,7 +55,7 @@ function sijeDoubleClikRef() {
     if (diagramrefPres) { diagramrefPres.addEventListener("click", refPresclicker); }
 
     function refPresclicker() {
-        document.location.href = "presence.php?promo=Ref Dig&statut=present&laDate=" + jourR;
+        document.location.href = "presence.php?Ref=Ref Dig&statut=present&laDate=" + jourR;
 
     }
     ///////////////////////----Fin Ref Dig---///////////////////////////
@@ -69,7 +69,7 @@ function sijeDoubleClikData() {
     jourR = jour.getAttribute("class");
 
     function dataAbsclicker() {
-        document.location.href = "presence.php?promo=Data Art&statut=absents&laDate=" + jourR;
+        document.location.href = "presence.php?Ref=Data Art&statut=absents&laDate=" + jourR;
 
     }
 
@@ -77,8 +77,12 @@ function sijeDoubleClikData() {
     diagramdataPres.addEventListener("click", dataPresclicker);
 
     function dataPresclicker() {
-        document.location.href = "presence.php?promo=Data Art&statut=present&laDate=" + jourR;
+        document.location.href = "presence.php?Ref=Data Art&statut=present&laDate=" + jourR;
 
     }
     ///////////////////////----Fin data art---///////////////////////////
 }
+$(document).ready(function() {
+    $('#dtBasicExample').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+});
