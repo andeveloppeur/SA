@@ -21,12 +21,21 @@ elseif (isset($_POST["Ref"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="../css/MonStyle.css">
     <title>Emargement</title>
     <style>
         .nonSoulign {
             text-decoration: none !important;
+        }
+        .page_link{
+            z-index: 2;
+            color: #fff;
+            cursor: default;
+            background-color: #337ab7;
+            border-color: #337ab7;
         }
     </style>
 </head>
@@ -120,10 +129,10 @@ elseif (isset($_POST["Ref"])) {
                 </form>';
             
             ///////////////////////////-------rechercher par jour---------------------//////////////////////
-            
+            //<table  id="dtBasicExample"  class="col-12 table table-hover tabliste table"   >
                 if($tableVide==false || isset($_POST["validerRechJour"])){   //donc la table n'est pas vide ou qu'on appuis sur le submit
                 echo '
-                    <table  id="dtBasicExample"  class="col-12 table table-hover tabliste table" class="  >
+                    <table class="col-12 table tabliste table-hover">
                
                 <thead class="">
                     <tr class="row">
@@ -236,7 +245,7 @@ elseif (isset($_POST["Ref"])) {
                 ####################################------Fin Affichage-----#################################
                 echo'</tbody></table>
                 <div class="col-md-12 text-center">
-                    <ul class="pagination pagination-lg pager" id="developer_page"></ul>
+                    <ul class="pagination pagination-sm pager" id="developer_page"></ul>
                 </div>
                 ';
             }
@@ -248,8 +257,11 @@ elseif (isset($_POST["Ref"])) {
     <?php
     include("piedDePage.php");
     ?>
-    <script src="js/bootstrap-table-pagination.js"></script>
-    <script src="js/pagination.js"></script>
+    <script src="../js/jq.js"></script>
+    <script src="../js/bootstrap-table-pagination.js"></script>
+    <script src="../js/monjs.js"></script>
+
+
 </body>
 
 </html>

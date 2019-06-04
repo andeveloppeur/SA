@@ -1,3 +1,13 @@
+///////////////-----------pagination-------------////
+$(document).ready(function() {
+    $('#developers').pageMe({
+        pagerSelector: '#developer_page',
+        showPrevNext: true,
+        hidePageNumbers: false,
+        perPage: 3
+    });
+});
+///////////////-----------pagination-------------////
 var divDiag = document.getElementById("chartdiv");
 if (divDiag) {
     divDiag.addEventListener("click", sijeDoubleClikDev);
@@ -82,7 +92,3 @@ function sijeDoubleClikData() {
     }
     ///////////////////////----Fin data art---///////////////////////////
 }
-$(document).ready(function() {
-    $('#dtBasicExample').DataTable();
-    $('.dataTables_length').addClass('bs-select');
-});
