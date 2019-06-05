@@ -37,9 +37,7 @@ $_SESSION["actif"] = "ModifierPromo";
                     include("connexionBDD.php");
                     ///////////-----recuperation des referentiels----///////////
                     $codemysql = "SELECT * FROM referentiels"; //le code mysql
-                    $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-                    $requete->execute();
-                    $referentiels=$requete->fetchAll();
+                    $referentiels=recuperation($connexion,$codemysql);
                     ///////////-----Fin recuperation des referentiels----///////////
 
                     /////////////////--Debut contenu fichier--//////////
@@ -286,7 +284,6 @@ $_SESSION["actif"] = "ModifierPromo";
                     }
                 }
                 //////------Fin compter effectif---//////
-                    
                     $ligne=$lesReferentiel[$a]["Nom"]." ".$lesReferentiel[$a]["Mois"]." ".$lesReferentiel[$a]["Annee"];
                     ######-------fin compter effectif####
                     if ( $tableVide==false && !isset($_POST["recherche"]) || isset($_POST["recherche"]) &&  !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) || $tableVide==false && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {

@@ -202,9 +202,7 @@ elseif (isset($_POST["Ref"])) {
                 if(isset($_POST["validerRechJour"]) && $_POST["presence"]=="absents" || !isset($_POST["validerRechJour"]) && isset($_GET["statut"]) && $_GET["statut"]=="absents"){
                     ///////////-----recuperation des données des etudiants----///////////
                     $codemysql = "SELECT NCI,Nom FROM etudiants"; //le code mysql
-                    $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-                    $requete->execute();
-                    $etudiants=$requete->fetchAll();
+                    $etudiants=recuperation($connexion,$codemysql);
                     ///////////-----Fin recuperation des données des etudiants----///////////           
                     for($i=0;$i<count($etudiants);$i++) {
                        
@@ -227,9 +225,7 @@ elseif (isset($_POST["Ref"])) {
                         ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
                         $NCI_etudiant=$etudiants[$i]["NCI"];
                         $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_etudiant'"; //le code mysql
-                        $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-                        $requete->execute();
-                        $le_ref_etudiant=$requete->fetchAll();
+                        $le_ref_etudiant=recuperation($connexion,$codemysql);
                         ///////////-----Fin recuperation des referentiels des personnes qui ont emargés----///////////
                         }
                     
