@@ -62,6 +62,7 @@ $_SESSION["actif"] = "ModifierEtudiant";
                 $confirmer = false;
                 $nombre = 0;
                 $valAjout = false;
+                $ne_pas_ajouter_code_existe=false;
                 try {
                     include("connexionBDD.php");
                 ############################--Debut contenu fichier--############################
@@ -76,9 +77,21 @@ $_SESSION["actif"] = "ModifierEtudiant";
 
 
                 ///////////////////////////////----Validation des élements avant ajout definitif------/////////////////
-                if (isset($_POST["AjouterFin"]) || isset($_POST["valider"]) && isset($_POST["promo"])) {
-                    if (!empty($_POST["code"]) && !empty($_POST["nom"]) && !empty($_POST["dateNaiss"]) && !empty($_POST["tel"]) && !empty($_POST["email"]) && !empty($_POST["promo"])||!empty($_POST["ancienCode"]) && !empty($_POST["nom"]) && !empty($_POST["dateNaiss"]) && !empty($_POST["tel"]) && !empty($_POST["email"]) && !empty($_POST["promo"])) {
+                if (isset($_POST["AjouterFin"]) || isset($_POST["valider"]) && isset($_POST["ref"])) {
+                    if (!empty($_POST["code"]) && !empty($_POST["nom"]) && !empty($_POST["dateNaiss"]) && !empty($_POST["tel"]) && !empty($_POST["email"]) && !empty($_POST["ref"])||!empty($_POST["ancienCode"]) && !empty($_POST["nom"]) && !empty($_POST["dateNaiss"]) && !empty($_POST["tel"]) && !empty($_POST["email"]) && !empty($_POST["ref"])) {
                         $valAjout = true;
+                    }
+                    if(isset($_POST["AjouterFin"])){
+                        ///////////-----recuperation des données des etudiants----///////////
+                        $le_code=$_POST["code"];
+                        $codemysql = "SELECT * FROM etudiants WHERE NCI='$le_code'"; //le code mysql
+                        $etudiants=recuperation($connexion,$codemysql);
+                        ///////////-----Fin recuperation des données des etudiants----///////
+                        if(isset($etudiants[0][1])){
+                            $valAjout = false;//le code existe deja ne pas ajouter
+                            $ne_pas_ajouter_code_existe=true;
+                        }
+                        
                     }
                 }
                 ////////////////////////////----Fin de la validation des élements avant ajout definitif------///////
@@ -101,17 +114,17 @@ $_SESSION["actif"] = "ModifierEtudiant";
                         if ($tableVide==false && strtolower($etudiants[$i]["Nom"]) == strtolower($_POST["nom"]) && $nombre == 1 || isset($_POST["ancienCode"]) && strtolower($etudiants[$i]["Nom"]) == strtolower($_POST["nom"]) && $nombre > 1 && $_POST["ancienCode"] == $etudiants[$i]["NCI"]) {
                             //soit on cherche avec le nom si il y a une seule personne qui porte ce nom soit avec le nom et le code si plusieurs personnes ont ce nom
                             
-                            ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
+                            ///////////-----recuperation des données de la table ref----///////////
                             $NCI_etudiant=$etudiants[$i]["NCI"];
                             $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_etudiant'"; //le code mysql
                             $le_ref_etudiant=recuperation($connexion,$codemysql);
-                            ///////////-----Fin recuperation des referentiels des personnes qui ont emargés----////////
+                            ///////////-----Fin recuperation des données de la table ref----////////
 
                             $_POST["nom"] = $etudiants[$i]["Nom"]; //pouvoir utiliser le bon nom
                             $ancDNaiss = $etudiants[$i]["Naissance"];
-                            $ancTel = $$etudiants[$i]["Te"];
-                            $ancEmail = $etudiants[$i]["NCI"];
-                            $anciePromo = $le_ref_etudiant[0]["Nom"];
+                            $ancTel = $etudiants[$i]["Telephone"];
+                            $ancEmail = $etudiants[$i]["Email"];
+                            $ancieref = $le_ref_etudiant[0]["Nom"];
                             $confirmer = true;
                         }
                     }
@@ -136,22 +149,21 @@ $_SESSION["actif"] = "ModifierEtudiant";
                     echo '</select>
                     </div>';
                 }
-                if (isset($_POST["Ajouter"])) {
+                if (isset($_POST["Ajouter"])|| isset($_POST["AjouterFin"]) && $valAjout == false) {
                         echo '<div class="row">
                         <div class="col-md-2"></div>';
                     if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
                         echo '<input class="form-control col-md-8 espace" name="code" placeholder="Numéro carte d\'identité" ';
-                        // if ($existeDeja == true) {
-                        //     echo 'value="' . $ancTel . '" ';
-                        // }
                     } 
                     elseif (isset($_POST["AjouterFin"]) && empty($_POST["code"]) || isset($_POST["valider"]) && empty($_POST["code"])) { //si le téléphone vide lors de l'ajout
                         echo '<input class="form-control col-md-8 espace rougMoins" type="text" name="code" placeholder="Remplir le numéro de le carte d\'identité" ';
                     } 
-                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre le téléphone
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false && $ne_pas_ajouter_code_existe==false|| isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre le téléphone
                         echo '<input class="form-control col-md-8 espace" type="text"  name="code" placeholder="Numéro carte d\'identité" value ="' . $_POST["code"] . '" ';
                     }
-
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false && $ne_pas_ajouter_code_existe==true) { //si il manque des informations avant l'ajout remettre le téléphone
+                        echo '<input class="form-control col-md-8 espace rougMoins" type="text"  name="code" placeholder ="' . $_POST["code"] . ' existe déja !" ';
+                    }
                     echo '">
                     </div>';
                 }
@@ -251,26 +263,26 @@ $_SESSION["actif"] = "ModifierEtudiant";
                     </div>';
                     //////////////////////////-------Fin Email---------------------//////////////////////
 
-                    //////////////////////////-------Promo---------------------//////////////////////
+                    //////////////////////////-------ref---------------------//////////////////////
                     echo '<div class="row">
                         <div class="col-md-2"></div>
-                        <select class="form-control col-md-8 espace" name="promo" >';
-                    ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
+                        <select class="form-control col-md-8 espace" name="ref" >';
+                    ///////////-----recuperation des données de la table ref----///////////
                     $codemysql = "SELECT Nom FROM referentiels";
                     $lesReferentiel=recuperation($connexion,$codemysql);
-                    ///////////-----Fin recuperation des referentiels des personnes qui ont emargés----///////////
+                    ///////////-----Fin recuperation des données de la table ref----///////////
 
                     for($i=0;$i<count($lesReferentiel);$i++){
                         if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
-                            if (isset($_POST["premierValidation"]) && $anciePromo == $lesReferentiel[$i]["Nom"]) {
+                            if (isset($_POST["premierValidation"]) && $ancieref == $lesReferentiel[$i]["Nom"]) {
                                 echo '<option value="' . $lesReferentiel[$i]["Nom"] . '" selected>' . $lesReferentiel[$i]["Nom"]. '</option>';
                             } 
                             else {
                                 echo '<option value="' . $lesReferentiel[$i]["Nom"] . '">' . $lesReferentiel[$i]["Nom"] . '</option>';
                             }
                         } 
-                        elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre la promo
-                            if ($_POST["promo"] == $lesReferentiel[$i]["Nom"]) { //selectionner la bonne promo
+                        elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre la ref
+                            if ($_POST["ref"] == $lesReferentiel[$i]["Nom"]) { //selectionner la bonne ref
                                 echo '<option value="' . $lesReferentiel[$i]["Nom"] . '" selected>' . $lesReferentiel[$i]["Nom"] . '</option>';
                             } 
                             else {
@@ -280,7 +292,7 @@ $_SESSION["actif"] = "ModifierEtudiant";
                     }
                     echo '</select>
                     </div>';
-                    ///////////////////////////-------Fin Promo---------------------//////////////////////
+                    ///////////////////////////-------Fin ref---------------------//////////////////////
                 }
                 ?>
                 <div class="row">
@@ -320,60 +332,46 @@ $_SESSION["actif"] = "ModifierEtudiant";
 
             ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
             if (isset($_POST["AjouterFin"]) && $valAjout == true) {
-                $monfichier = fopen('etudiants.txt', 'r');
-                while (!feof($monfichier)) {
-                    $ligne = fgets($monfichier);
-                    $tab = explode("|", $ligne);
-                }
-                fclose($monfichier);
-                $code = $_POST["code"];
-
-                $promo = $_POST["promo"];
-                $nom = $_POST["nom"];
-                $datN = new DateTime($_POST["dateNaiss"]);
-                $dateNaiss = $datN->format('d-m-Y');
-
-                $tel = $_POST["tel"];
-                $email = $_POST["email"];
-                $statut = "Accepter";
-
-                $monfichier = fopen('etudiants.txt', 'a+');
-                if( $tableVide==false){
-                    $nouvU = "\n" . $code . "|" . $promo . "|" . $nom . "|" . $dateNaiss . "|" . $tel . "|" . $email . "|" . $statut . "|"; //ajout d un nouvel utilisateur
-                }
-                else{
-                    $nouvU = $code . "|" . $promo . "|" . $nom . "|" . $dateNaiss . "|" . $tel . "|" . $email . "|" . $statut . "|"; //ajout d un nouvel utilisateur
-                }
-                fwrite($monfichier, $nouvU); //ajout 
-                fclose($monfichier);
+                $code = securisation($_POST["code"]);
+                ///////////-----recuperation des données de la table ref----////////////
+                $ref = securisation($_POST["ref"]);
+                $codemysql = "SELECT id_referentiels FROM referentiels WHERE Nom='$ref'"; //le code mysql
+                $id_referentiel=recuperation($connexion,$codemysql);
+                ///////////-----Fin recuperation des données de la table ref----////////
+                $nom = securisation($_POST["nom"]);
+                $dateNaiss = securisation($_POST["dateNaiss"]);
+                $tel = securisation($_POST["tel"]);
+                $email = securisation($_POST["email"]);
+                $codemysql = "INSERT INTO `etudiants` (NCI,id_referentiels,Nom,Naissance,Telephone,Email)
+                        VALUES(:NCI,:id_referentiels,:Nom,:Naissance,:Telephone,:Email)"; //le code mysql
+                $requete = $connexion->prepare($codemysql);
+                $requete->bindParam(":id_referentiels", $id_referentiel[0]["id_referentiels"]);
+                $requete->bindParam(":NCI", $code);
+                $requete->bindParam(":Nom", $nom);
+                $requete->bindParam(":Naissance", $dateNaiss);
+                $requete->bindParam(":Telephone", $tel);
+                $requete->bindParam(":Email", $email);
+                $requete->execute(); //excecute la requete qui a été preparé
+                
             }
             ####################################------Fin Ajouter-----#################################
 
             ///////////////////////////////////------Debut Modification-----///////////////////////////
             if (isset($_POST["valider"])  && $valAjout == true) {
-
-                $reecrire = "";
-                $monfichier = fopen('etudiants.txt', 'r');
-                while (!feof($monfichier)) {
-
-                    $ligne = fgets($monfichier);
-                    $tab = explode("|", $ligne);
-                    if ( $tab[0] == $_POST["ancienCode"] ) {
-                        //modifier si le code correspond                             
-                        $datN = new DateTime($_POST["dateNaiss"]);
-                        $NouvdateNaiss = $datN->format('d-m-Y');
-                        $modif = $tab[0] . "|" . $_POST["promo"] . "|" . $_POST["nom"] . "|" . $NouvdateNaiss . "|" . $_POST["tel"] . "|" . $_POST["email"] . "|\n";
-                    } 
-                    else {
-                        $modif = $ligne;
-                    }
-                    $reecrire = $reecrire . $modif;
-                }
-                fclose($monfichier);
-                $monfichier = fopen('etudiants.txt', 'w+');
-                //$reecrire="";
-                fwrite($monfichier, trim($reecrire));
-                fclose($monfichier);
+                    $NCI_etudiant=$_POST["ancienCode"];
+                    ///////////-----recuperation des données de la table ref----////////////
+                    $ref=securisation($_POST["ref"]);
+                    $codemysql = "SELECT id_referentiels FROM referentiels WHERE Nom='$ref'"; //le code mysql
+                    $id_referentiel=recuperation($connexion,$codemysql);
+                    ///////////-----Fin recuperation des données de la table ref----////////
+                    $id_ref=$id_referentiel[0]["id_referentiels"];
+                    $nom_etudiant=securisation($_POST["nom"]);
+                    $naiss_etudiant=securisation($_POST["dateNaiss"]); 
+                    $tel_etudiant=securisation($_POST["tel"]);
+                    $email_etudiant=securisation($_POST["email"]);
+                    $codemysql = "UPDATE `etudiants` SET id_referentiels='$id_ref',Nom='$nom_etudiant',Naissance='$naiss_etudiant',Telephone='$tel_etudiant',Email='$email_etudiant' WHERE NCI='$NCI_etudiant' ";
+                    $requete = $connexion->prepare($codemysql);
+                    $requete->execute();
             }
             ####################################------Fin Modification----#############################S
             ?>
@@ -403,20 +401,22 @@ $_SESSION["actif"] = "ModifierEtudiant";
             ///////////-----Fin recuperation des données des etudiants----//////
 
             for($i=0;$i<count($etudiants);$i++){
-                ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
+                ///////////-----recuperation des données de la table ref----///////////
                 $NCI_etudiant=$etudiants[$i]["NCI"];
                 $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_etudiant'"; //le code mysql
                 $le_ref_etudiant=recuperation($connexion,$codemysql);
-                ///////////-----Fin recuperation des referentiels des personnes qui ont emargés----////////
+                ///////////-----Fin recuperation des données de la table ref----////////
                 $ligne = $NCI_etudiant." ".$le_ref_etudiant[0]["Nom"]." ".$etudiants[$i]["Nom"]." ".$etudiants[$i]["Naissance"]." ".$etudiants[$i]["Telephone"]." ".$etudiants[$i]["Email"];
                 if ($tableVide==false && !isset($_POST["recherche"]) || isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) || $tableVide==false && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
                 //si le code n'est pas vide et que on ne recherche rien                          //si on recherche une chose non vide et que cela face partie de la ligne                                 //si on appuis sur le bouton rechercher alors qu'on n'a rien ecrit afficher tous les éléments                                      
+                    $datN = new DateTime($etudiants[$i]["Naissance"]);
+                    $date = $datN->format('d-m-Y');
                     echo
                         '<tr class="row">
                             <td class="col-md-2 text-center">' . $NCI_etudiant . '</td>
                             <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
                             <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"] . '</td>
-                            <td class="col-md-2 text-center">' . $etudiants[$i]["Naissance"] . '</td>
+                            <td class="col-md-2 text-center">' . $date . '</td>
                             <td class="col-md-1 text-center">' . $etudiants[$i]["Telephone"] . '</td>
                             <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
                             
