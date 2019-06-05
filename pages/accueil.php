@@ -60,24 +60,18 @@ $_SESSION["actif"] = "accueil";
         try {
             include("connexionBDD.php");
             ///////////-----recuperation des données referentiels----///////////
-            $codemysql = "SELECT id_referentiels,Nom FROM referentiels"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $lesReferentiel=$requete->fetchAll();
+            $codemysql = "SELECT id_referentiels,Nom FROM referentiels"; //le code mysql connexionBDD.php
+            $lesReferentiel=recuperation($connexion,$codemysql);//lq vqriqble ]connexion se trouve dans 
             ///////////-----recuperation des données referentiels----///////////
 
             ///////////-----recuperation des données des etudiants----///////////
             $codemysql = "SELECT Nom,id_referentiels,NCI FROM etudiants"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $etudiants=$requete->fetchAll();
+            $etudiants=recuperation($connexion,$codemysql);
             ///////////-----recuperation des données des etudiants----///////////
 
             ///////////-----recuperation des données de la table emargement----///////////
             $codemysql = "SELECT NCI,Date_emargement FROM emargement"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $emargement=$requete->fetchAll();
+            $emargement=recuperation($connexion,$codemysql);
             ///////////-----recuperation des données de la table emargement-----///////////
             $i=0;
             for($a=0;$a<count($lesReferentiel);$a++){
@@ -101,9 +95,7 @@ $_SESSION["actif"] = "accueil";
                     $date_emargement = $emargement[$c]["Date_emargement"];
                     ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
                     $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_emarger'"; //le code mysql
-                    $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-                    $requete->execute();
-                    $le_ref_emargement=$requete->fetchAll();
+                    $le_ref_emargement=recuperation($connexion,$codemysql);
                     ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
                     $ref_emargement=$le_ref_emargement[0]["Nom"];
                     if (isset($ref_emargement) && isset($referentiel) && $referentiel == $ref_emargement && $date_emargement==date('Y-m-d') && !isset($_POST["valider"]) || isset($_POST["valider"]) && isset($ref_emargement) && isset($referentiel) && $referentiel == $ref_emargement && $date_emargement==$_POST["jourRech"]) {

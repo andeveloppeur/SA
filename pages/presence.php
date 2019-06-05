@@ -67,9 +67,7 @@ elseif (isset($_POST["Ref"])) {
             include("connexionBDD.php");
              ///////////-----recuperation des données de la table emargement----///////////
             $codemysql = "SELECT * FROM emargement"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $emargement=$requete->fetchAll();
+            $emargement=recuperation($connexion,$codemysql);
             ///////////-----recuperation des données de la table emargement-----///////////
             $tableVide=true;
             $sortie=false;
@@ -172,9 +170,7 @@ elseif (isset($_POST["Ref"])) {
                         $NCI_emarger = $emargement[$i]["NCI"];
                         ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
                         $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_emarger'"; //le code mysql
-                        $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-                        $requete->execute();
-                        $le_ref_emargement=$requete->fetchAll();
+                        $le_ref_emargement=recuperation($connexion,$codemysql);
                         ///////////-----Fin recuperation des referentiels des personnes qui ont emargés----///////////
                         if (!isset($_POST["validerRechJour"]) && isset($date_emargement) && $date_emargement==date('Y-m-d') && !isset($_GET["Ref"])||
                         isset($_POST["validerRechJour"]) && isset($date_emargement) && $date_emargement==$_POST["jourRech"] && $le_ref_emargement[0]["Nom"]==$_POST["Ref"] && $_POST["presence"]=="present" && !isset($_GET["Ref"]) ||
@@ -182,9 +178,7 @@ elseif (isset($_POST["Ref"])) {
                         isset($_GET["Ref"])&& !isset($_POST["validerRechJour"]) && isset($date_emargement)  && $le_ref_emargement[0]["Nom"]==$_GET["Ref"] && isset($_GET["laDate"]) && isset($_GET["statut"]) && $_GET["laDate"]==$date_emargement && $_GET["statut"]=="present") {
                              ///////////-----recuperation des données des etudiants----///////////
                             $codemysql = "SELECT NCI,Nom FROM etudiants WHERE NCI='$NCI_emarger'"; //le code mysql
-                            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-                            $requete->execute();
-                            $etudiants=$requete->fetchAll();
+                            $etudiants=recuperation($connexion,$codemysql);
                             ///////////-----Fin recuperation des données des etudiants----///////////
                             $datN = new DateTime($emargement[$i]["Date_emargement"] );
                             $date_emargement = $datN->format('d-m-Y');

@@ -46,9 +46,7 @@ if (!isset($_GET["code"])) {
             ///////////-----recuperation le nom de l'etudiant----///////////
             $NCI=$_GET["code"];
             $codemysql = "SELECT Nom FROM etudiants WHERE NCI='$NCI'"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $etudiant=$requete->fetchAll();
+            $etudiant=recuperation($connexion,$codemysql);
             ///////////-----recuperation le nom de l'etudiant-----///////////
 
             echo'<h1 class="textAccueil">'.$etudiant[0]["Nom"].'</h1>';
@@ -58,9 +56,7 @@ if (!isset($_GET["code"])) {
         $j=0;
             ///////////-----recuperation des données de la table emargement----///////////
             $codemysql = "SELECT * FROM emargement"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $emargement=$requete->fetchAll();
+            $emargement=recuperation($connexion,$codemysql);
             ///////////-----recuperation des données de la table emargement-----///////////
             for($i=0;$i<count($emargement);$i++) {
                 if(isset($_GET["code"]) && $_GET["code"]==$emargement[$i]["NCI"]){

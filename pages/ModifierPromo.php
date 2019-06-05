@@ -264,16 +264,12 @@ $_SESSION["actif"] = "ModifierPromo";
 
             ///////////-----recuperation des données referentiels----///////////
             $codemysql = "SELECT * FROM referentiels"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $lesReferentiel=$requete->fetchAll();
+            $lesReferentiel=recuperation($connexion,$codemysql);
             ///////////-----recuperation des données referentiels----///////////
 
             ///////////-----recuperation des données des etudiants----///////////
             $codemysql = "SELECT Nom,id_referentiels,NCI FROM etudiants"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $etudiants=$requete->fetchAll();
+            $etudiants=recuperation($connexion,$codemysql);
             ///////////-----recuperation des données des etudiants----///////////
 
             $i=0;

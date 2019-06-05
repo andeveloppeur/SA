@@ -36,13 +36,12 @@ session_start();
                 </div>
                 <?php
                     if (isset( $_SESSION["reussi"]) &&  $_SESSION["reussi"]==false) { //verification du login et du MDP
-                        echo "
+               ?> 
                             <div class='row'>
-                            <div class='col-md-3'></div>
-                            <p class='blocAcc'>";
-                        echo "Erreur sur le login ou le mot de passe";
-                        echo "!!</p>
-                            </div>";
+                                <div class='col-md-3'></div>
+                                <p class='blocAcc'>Erreur sur le login ou le mot de passe!!</p>
+                            </div>
+                <?php
                     }
                 ?>
             </div>

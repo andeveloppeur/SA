@@ -12,9 +12,7 @@ if (isset($_POST["submit"])) {
             include("connexionBDD.php");
              ///////////-----recuperation login et mdp----///////////
             $codemysql = "SELECT * FROM agents"; //le code mysql
-            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-            $requete->execute();
-            $agents=$requete->fetchAll();
+            $agents=recuperation($connexion,$codemysql);
             ///////////-----recuperation login et mdp-----///////////
     }
     catch (PDOException $e) {
