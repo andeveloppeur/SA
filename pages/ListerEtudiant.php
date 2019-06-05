@@ -6,11 +6,11 @@ if (!isset($_SESSION["nom"])) {
     exit();
 }
 $_SESSION["actif"] = "ListerEtudiant";
-if (isset($_GET["promo"])) {
-    $Promo = $_GET["promo"];
+if (isset($_GET["ref"])) {
+    $ref = $_GET["ref"];
 } 
-elseif (isset($_POST["promo"])) {
-    $Promo = $_POST["promo"];
+elseif (isset($_POST["ref"])) {
+    $ref = $_POST["ref"];
 }
 ?>
 <!DOCTYPE html>
@@ -63,30 +63,33 @@ elseif (isset($_POST["promo"])) {
             <div class="col-md-3"></div>
             <div class="col-md-6 bor">
                 <?php
-                ///////////////////////////-------Promo---------------------//////////////////////
+            try {
+                include("connexionBDD.php");
+
+                ///////////////////////////-------ref---------------------//////////////////////
+                ///////////-----recuperation des données de la table ref----///////////
+                $codemysql = "SELECT Nom FROM referentiels";
+                $lesReferentiel=recuperation($connexion,$codemysql);
+                ///////////-----Fin recuperation des données de la table ref----///////////
                 echo '<div class="row">
                         <div class="col-md-2"></div>
-                        <select class="form-control col-md-8 espace" name="promo" >';
+                        <select class="form-control col-md-8 espace" name="ref" >';
                 if(!isset($_POST["recherche"]) && !isset($_POST["aRechercher"])||isset($_POST["recherche"]) && empty($_POST["aRechercher"])|| isset($_POST["finRecherche"])){
-                    $monfichier = fopen("promos.txt", "r");
-                    while (!feof($monfichier)) {
-                        $ligne = fgets($monfichier);
-                        $etudiants = explode("|", $ligne);
-                        if ($Promo == $etudiants[1]) {
-                            echo '<option value="' . $etudiants[1] . '" selected>' . $etudiants[1] . '</option>';
+                    for($i=0;$i<count($lesReferentiel);$i++) {
+                        if ($ref == $lesReferentiel[$i]["Nom"]) {
+                            echo '<option value="' . $lesReferentiel[$i]["Nom"]. '" selected>' . $lesReferentiel[$i]["Nom"] . '</option>';
                         } 
                         else {
-                            echo '<option value="' . $etudiants[1] . '">' . $etudiants[1] . '</option>';
+                            echo '<option value="' . $lesReferentiel[$i]["Nom"] . '">' . $lesReferentiel[$i]["Nom"] . '</option>';
                         }
                     }
-                    fclose($monfichier);
                 }
                 elseif(isset($_POST["recherche"])){
                     echo '<option value="">Rechercher dans tous les référentiels</option>';
                 }
                 echo '</select>
                     </div>';
-                ///////////////////////////-------Fin Promo---------------------//////////////////////
+                ///////////////////////////-------Fin ref---------------------//////////////////////
 
                 ///////////////////////////---------Nom---------------------//////////////////////
                 echo '<div class="row">
@@ -103,7 +106,7 @@ elseif (isset($_POST["promo"])) {
             </div>
         </form>
         <?php
-        //if (isset($_POST["promo"]) || isset($_GET["promo"])) {
+        
             echo '<table class="col-12 table tabliste table-hover">
             <thead class="">
                 <tr class="row">
@@ -121,25 +124,34 @@ elseif (isset($_POST["promo"])) {
             $actualisation=false;
             $nbr=0;
             $monfichier = fopen('etudiants.txt', 'r');
-            while (!feof($monfichier)) {
-                $ligne = fgets($monfichier);
-                $etudiant = explode('|', $ligne);
-                if (!isset($_POST["valider"]) && isset($etudiant[1]) && $etudiant[1] == "Dev Web" && !isset($_GET["promo"])){
-                    $Promo="Dev Web";
+            ///////////-----recuperation des données des etudiants----///////////
+            $codemysql = "SELECT * FROM etudiants"; //le code mysql
+            $etudiants=recuperation($connexion,$codemysql);
+            ///////////-----Fin recuperation des données des etudiants----///////
+            for($i=0;$i<count($etudiants);$i++) {
+                ///////////-----recuperation des données de la table ref----///////////
+                $NCI_etudiant=$etudiants[$i]["NCI"];
+                $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_etudiant'"; //le code mysql
+                $le_ref_etudiant=recuperation($connexion,$codemysql);
+                ///////////-----Fin recuperation des données de la table ref----////////
+                $ligne = $NCI_etudiant." ".$le_ref_etudiant[0]["Nom"]." ".$etudiants[$i]["Nom"]." ".$etudiants[$i]["Telephone"]." ".$etudiants[$i]["Email"];
+                if (!isset($_POST["valider"]) && isset($le_ref_etudiant[0]["Nom"]) && $le_ref_etudiant[0]["Nom"] == "Dev Web" && !isset($_GET["ref"])){
+                    $ref="Dev Web";
                     $actualisation=true;
                 }
-                if ($actualisation==true && !isset($_POST["recherche"])&& $etudiant[1] == "Dev Web"||isset($Promo) && isset($etudiant[1]) && $etudiant[1] == $Promo && empty($_POST["nom"]) && !isset($_POST["recherche"])|| 
-                isset($Promo) && isset($etudiant[1]) && $etudiant[1] == $Promo && !empty($_POST["nom"]) && strstr(strtolower($etudiant[2]),strtolower($_POST["nom"]))&& !isset($_POST["recherche"])||
+                if ($actualisation==true && !isset($_POST["recherche"])&& $le_ref_etudiant[0]["Nom"] == "Dev Web"||isset($ref) && isset($le_ref_etudiant[0]["Nom"]) && $le_ref_etudiant[0]["Nom"] == $ref && empty($_POST["nom"]) && !isset($_POST["recherche"])|| 
+                isset($ref) && isset($le_ref_etudiant[0]["Nom"]) && $le_ref_etudiant[0]["Nom"] == $ref && !empty($_POST["nom"]) && strstr(strtolower($etudiants[$i]["Nom"]),strtolower($_POST["nom"]))&& !isset($_POST["recherche"])||
                 isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) || 
-                $etudiant[0] != "" && isset($_POST["recherche"]) && empty($_POST["aRechercher"])&& $etudiant[1] == "Dev Web") {
+                $NCI_etudiant != "" && isset($_POST["recherche"]) && empty($_POST["aRechercher"])&& $le_ref_etudiant[0]["Nom"] == "Dev Web") {
+                    
                     echo
                         '<tr class="row">
-                            <td class="col-md-2 text-center">' . $etudiant[0] . '</td>
-                            <td class="col-md-2 text-center">' . $etudiant[1] . '</td>
-                            <td class="col-md-2 text-center">' . $etudiant[2] . '</td>
-                            <td class="col-md-2 text-center">' . $etudiant[4] . '</td>
-                            <td class="col-md-3 text-center">' . $etudiant[5] . '</td>
-                            <td class="col-md-1 text-center"><a href="emargement.php?code=' . $etudiant[0] . '&promo=' . $Promo .  '"   id="' . $etudiant[0] . '" ><button class="btn btn-outline-primary" >Emarger</button></a></td>
+                            <td class="col-md-2 text-center">' . $NCI_etudiant . '</td>
+                            <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
+                            <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"]. '</td>
+                            <td class="col-md-2 text-center">' . $etudiants[$i]["Telephone"] . '</td>
+                            <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
+                            <td class="col-md-1 text-center"><a href="emargement.php?code=' . $NCI_etudiant . '&ref=' . $ref .  '"   id="' . $NCI_etudiant . '" ><button class="btn btn-outline-primary" >Emarger</button></a></td>
                         </tr>';
                         $nbr++;
                 }
@@ -154,6 +166,10 @@ elseif (isset($_POST["promo"])) {
                     </div>';
                 }
                 echo'<div class="bas"></div>';
+        }
+        catch (PDOException $e) {
+            echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
+        }
         ?>
        
     </section>

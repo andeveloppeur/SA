@@ -6,12 +6,12 @@ if (!isset($_SESSION["nom"])) {
     exit();
 }
 $_SESSION["actif"] = "emargement";
-$Promo="";
-if (isset($_GET["promo"])) {
-    $Promo = $_GET["promo"];
+$ref="";
+if (isset($_GET["ref"])) {
+    $ref = $_GET["ref"];
 } 
-elseif (isset($_POST["promo"])) {
-    $Promo = $_POST["promo"];
+elseif (isset($_POST["ref"])) {
+    $ref = $_POST["ref"];
 }
 ?>
 <!DOCTYPE html>
@@ -64,289 +64,281 @@ elseif (isset($_POST["promo"])) {
     <header></header>
     <section class="container-fluid  pageLister">
         <?php
-        $FichierVide=true;
-        $sortie=false;
-        $heureDepart="";
-       $monfichier = fopen('emargement.txt', 'r');
-        while (!feof($monfichier)) {
-            $ligne = fgets($monfichier);
-            $etudiant = explode('|', $ligne);
-            if(isset($etudiant[1])){
-                $FichierVide=false;
+        try {
+            include("connexionBDD.php");
+            $tableVide=true;
+            $sortie=false;
+            $heureDepart="";
+            ///////////-----recuperation des données de la table emargement----///////////
+            $codemysql = "SELECT * FROM emargement"; //le code mysql
+            $emargement=recuperation($connexion,$codemysql);
+            ///////////-----recuperation des données de la table emargement-----///////////
+            for($i=0;$i<count($emargement);$i++) {
+                if(isset($emargement[0][1])){
+                    $tableVide=false;
+                }
+                if (isset($_GET["code"]) && $emargement[$i]["NCI"]==$_GET["code"] && $emargement[$i]["Date_emargement"]==date('Y-m-d')||isset($_POST["code"]) && $emargement[$i]["NCI"]==$_POST["code"] && $emargement[$i]["Date_emargement"]==date('Y-m-d')){
+                    $sortie=true;
+                    $heurArrive=$emargement[$i]["Arrivee"];
+                }
             }
-            if (isset($_GET["code"]) && $etudiant[0]==$_GET["code"] && $etudiant[3]==date('d-m-Y')||isset($_POST["code"]) && $etudiant[0]==$_POST["code"] && $etudiant[3]==date('d-m-Y')){
-                $sortie=true;
-                $heurArrive=$etudiant[4];
-            }
-        }
-        fclose($monfichier);
-        if(isset($_GET["code"]) || isset($_GET["aModifier"])){
-            
-            echo'<form method="POST" action="emargement.php" class="MonForm row insc">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6 bor">';
-                    $codeRecup="";
-                    $nomRecup="";
-                    $dateNow="";
-                    $heureNow="";
-                    ///////////////////////////-------Promo---------------------//////////////////////
-                    echo '<div class="row">
-                            <div class="col-md-2"></div>
-                             <select class="form-control col-md-8 espace" name="promo" readonly="readonly">';
-                                echo '<option value="' . $Promo. '" selected>' . $Promo. '</option>';
-                        echo'</select>
-                        </div>';
-                    ///////////////////////////-------Fin Promo---------------------//////////////////////
-                    
-
-                    ///////////////////////////-------Récupération informations---------------------//////////////////////
-
-                    
-                    if (!isset($_POST["valider"]) && isset($_POST["promo"]) || !isset($_POST["valider"]) && isset($_GET["promo"])) {
-                        $monfichier = fopen('etudiants.txt', 'r');
-                        while (!feof($monfichier)) {
-                            $ligne = fgets($monfichier);
-                            $tab = explode("|", $ligne);
-                            if(isset($_GET["code"]) && $tab[0]==$_GET["code"] || isset($_POST["code"]) && tab[0]==$_POST["code"] ){
-                                $nomRecup=$tab[2];
-                                $codeRecup=$tab[0];
-                            }
-                        }
-                        fclose($monfichier);
-                        $dateNow = date('Y-m-d');
-                        if($sortie==false){
-                            $heureNow=date("H:i");
-                        }
-                        else{
-                            $heureNow=$heurArrive;
-                            $heureDepart=date("H:i");
-                        }
-
-                    }
-                    ///////////////////////////-------Récupération informations---------------------//////////////////////
-                    
-                    ///////////////////////////-------recup information si modification---------------------//////////////////////
-                    if(isset($_GET["aModifier"])){
-                        $monfichier = fopen('emargement.txt', 'r');
-                        while (!feof($monfichier)) {
-                            $ligne = fgets($monfichier);
-                            $tab = explode("|", $ligne);
-                            if($tab[0]==$_GET["aModifier"] && $tab[3]==$_GET["date"]){
-                                $codeRecup=$tab[0];
-                                $nomRecup=$tab[2];
-                                $datN = new DateTime($tab[3]);
-                                $dateNow = $datN->format('Y-m-d');
-                                $heureNow=$tab[4];
-                                $heureDepart=$tab[5];
-                            }
-                        }
-                    }
-                    ///////////////////////////-------recup information si modification----------------------//////////////////////
-
-                    ///////////////////////////-------Code---------------------//////////////////////
-                    echo'<div class="row">
-                            <div class="col-md-2"></div>
-                            <input type="" class="form-control col-md-8 espace" name="code" value="'.$codeRecup.'" readonly="readonly" placeholder="Code">
-                        </div>';
-                    ///////////////////////////-------Code---------------------//////////////////////
-
-                    ///////////////////////////-------Nom---------------------//////////////////////
-                    echo'<div class="row">
-                            <div class="col-md-2"></div>
-                            <input type="" class="form-control col-md-8 espace" name="nom" value="'.$nomRecup.'" readonly="readonly" placeholder="Nom">
-                        </div>';
-                    ///////////////////////////-------Nom---------------------//////////////////////
-
-                    ///////////////////////////-------Date---------------------//////////////////////
-                    echo'<div class="row">
-                            <div class="col-md-2"></div>
-                            <input type="date" class="form-control col-md-8 espace" name="auj" value="'.$dateNow.'" readonly="readonly">
-                        </div>';
-                    ///////////////////////////-------Date---------------------//////////////////////
-
-                    ///////////////////////////-------Arrivée---------------------//////////////////////
-                    echo'<div class="row">
-                            <div class="col-md-2"></div>
-                            <input type="time" class="form-control col-md-8 espace" name="arrivee" value="'.$heureNow.'"   ';if($sortie==true && !isset($_GET["aModifier"])){echo' readonly="readonly"';} echo'>
-                        </div>';
-                    ///////////////////////////-------Arrivée---------------------//////////////////////
-
-                    ///////////////////////////-------Sortie---------------------//////////////////////
-                    echo'<div class="row">
-                            <div class="col-md-2"></div>
-                            <input type="time" class="form-control col-md-8 espace" name="depart" value="'.$heureDepart.'"   ';if($sortie==false && !isset($_GET["aModifier"])){echo' readonly="readonly"';} echo'>
-                        </div>';
-                    ///////////////////////////-------Sortie---------------------//////////////////////
-
-                    ///////////////////////////-------EnregistrerEnregistrer---------------------//////////////////////
-                    echo '<div class="row">
-                        <div class="col-md-2"></div>
-                        <input type="submit" class="form-control col-md-4 espace" value="Annuller" name="Annuller">
-                        <input type="submit" class="form-control col-md-4 espace" value="Enregistrer" name="valider">
-                    </div>';
-                    ///////////////////////////-------Enregistrer---------------------//////////////////////
-                    
-                    echo'</div>
-                </form>';
-            }
-            ///////////////////////////-------Continuer emargement---------------------//////////////////////
-            elseif(!isset($_GET["promo"]) && isset($_POST["valider"])){
-                    echo'<form method="POST" action="ListerEtudiant.php?promo='.$_POST["promo"].'" class="MonForm row insc">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6 bor">
-                        <div class="row">
-                            <div class="col-md-2"></div>
-                            <label for="" class="form-control col-md-8 text-center">Voulez-vous continuer les émargements ?</label>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2"></div>
-                            <input type="submit" class="form-control col-md-4 espace" value="Oui" name="contEmarg">
-                            <a href="emargement.php" class="nonSoulign col-md-4 espace form-control text-center">Non</a>
-                        </div>
-                    </div>
-                </form>';
-            }
-            ///////////////////////////-------Continuer emargement---------------------//////////////////////
-
-            ///////////////////////////-------rechercher par jour---------------------//////////////////////
-            else{
-            echo'<form method="POST" action="emargement.php" class="MonForm row insc">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6 bor">';
-                    echo '<div class="row">
-                        <div class="col-md-2"></div>
-                        <input type="date" class="form-control col-md-8 espace" name="jourRech"'; if(!isset($_POST["jourRech"])){echo' value="'.date('Y-m-d').'" ';}else{echo' value="'.$_POST["jourRech"].'" ';} echo'>
-                    </div>';
-                    echo '<div class="row">
+            if(isset($_GET["code"]) || isset($_GET["aModifier"])){
+                
+                echo'<form method="POST" action="emargement.php" class="MonForm row insc">
                         <div class="col-md-3"></div>
-                        <input type="submit" class="form-control col-md-6 espace" value="Lister" name="validerRechJour">
-                    </div>
-                    </div>
-                </form>';
-            }
-            ///////////////////////////-------rechercher par jour---------------------//////////////////////
+                        <div class="col-md-6 bor">';
+                        $codeRecup="";
+                        $nomRecup="";
+                        $dateNow="";
+                        $heureNow="";
+                        ///////////////////////////-------ref---------------------//////////////////////
+                        echo '<div class="row">
+                                <div class="col-md-2"></div>
+                                <select class="form-control col-md-8 espace" name="ref" readonly="readonly">';
+                                    echo '<option value="' . $ref. '" selected>' . $ref. '</option>';
+                            echo'</select>
+                            </div>';
+                        ///////////////////////////-------Fin ref---------------------//////////////////////
+                        
 
-        ?>
-        <?php
-        if (isset($_POST["promo"]) || isset($_GET["promo"])) {
+                        ///////////////////////////-------Récupération informations---------------------//////////////////////
 
-            ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
-            if (isset($_POST["valider"]) && $sortie==false) {
-                $monfichier = fopen('emargement.txt', 'r');
-                $code= $_POST["code"];
-                $promo = $_POST["promo"];
-                $nom = $_POST["nom"];
-                $datN = new DateTime($_POST["auj"]);
-                $date = $datN->format('d-m-Y');
-                $arrivee = $_POST["arrivee"];
-                $depart =$_POST["depart"];
+                        
+                        if (!isset($_POST["valider"]) && isset($_POST["ref"]) || !isset($_POST["valider"]) && isset($_GET["ref"])) {
+                            ///////////-----recuperation des données des etudiants----///////////
+                            $codemysql = "SELECT NCI,Nom FROM etudiants"; //le code mysql
+                            $etudiants=recuperation($connexion,$codemysql);
+                            ///////////-----Fin recuperation des données des etudiants----///////
+                            for($i=0;$i<count($etudiants);$i++){
+                                if(isset($_GET["code"]) && $etudiants[$i]["NCI"]==$_GET["code"] || isset($_POST["code"]) && $etudiants[$i]["NCI"]==$_POST["code"] ){
+                                    $nomRecup=$etudiants[$i]["Nom"];
+                                    $codeRecup=$etudiants[$i]["NCI"];
+                                }
+                            }
+                            if($sortie==false){
+                                $heureNow=date("H:i");
+                            }
+                            else{
+                                $heureNow=$heurArrive;
+                                $heureDepart=date("H:i");
+                            }
 
+                        }
+                        ///////////////////////////-------Récupération informations---------------------//////////////////////
+                        
+                        ///////////////////////////-------recup information si modification---------------------//////////////////////
+                        if(isset($_GET["aModifier"])){
+                            for($i=0;$i<count($emargement);$i++) {
+                                if($emargement[$i]["NCI"]==$_GET["aModifier"] && $emargement[$i]["Date_emargement"]==$_GET["date"]){
+                                    $codeRecup=$emargement[$i]["NCI"];
 
-                $monfichier = fopen('emargement.txt', 'a+');
-                if($FichierVide==false){
-                    $nouvU = "\n" . $code . "|" . $promo . "|" . $nom . "|" . $date . "|" . $arrivee . "|" . $depart . "|" ; //emargement
+                                    $nomRecup = $emargement[$i]["NCI"];//a recup sur etudiant
+                                    $dateNow = $emargement[$i]["Date_emargement"];
+                                    $heureNow = $emargement[$i]["Arrivee"];
+                                    $heureDepart = $emargement[$i]["Depart"];
+                                }
+                            }
+                        }
+                        ///////////////////////////-------recup information si modification----------------------//////////////////////
+
+                        ///////////////////////////-------Code---------------------//////////////////////
+                        echo'<div class="row">
+                                <div class="col-md-2"></div>
+                                <input type="" class="form-control col-md-8 espace" name="code" value="'.$codeRecup.'" readonly="readonly" placeholder="Code">
+                            </div>';
+                        ///////////////////////////-------Code---------------------//////////////////////
+
+                        ///////////////////////////-------Nom---------------------//////////////////////
+                        echo'<div class="row">
+                                <div class="col-md-2"></div>
+                                <input type="" class="form-control col-md-8 espace" name="nom" value="'.$nomRecup.'" readonly="readonly" placeholder="Nom">
+                            </div>';
+                        ///////////////////////////-------Nom---------------------//////////////////////
+
+                        ///////////////////////////-------Date---------------------//////////////////////
+                        echo'<div class="row">
+                                <div class="col-md-2"></div>
+                                <input type="date" class="form-control col-md-8 espace" name="auj" value="'.$dateNow.'" readonly="readonly">
+                            </div>';
+                        ///////////////////////////-------Date---------------------//////////////////////
+
+                        ///////////////////////////-------Arrivée---------------------//////////////////////
+                        echo'<div class="row">
+                                <div class="col-md-2"></div>
+                                <input type="time" class="form-control col-md-8 espace" name="arrivee" value="'.$heureNow.'"   ';if($sortie==true && !isset($_GET["aModifier"])){echo' readonly="readonly"';} echo'>
+                            </div>';
+                        ///////////////////////////-------Arrivée---------------------//////////////////////
+
+                        ///////////////////////////-------Sortie---------------------//////////////////////
+                        echo'<div class="row">
+                                <div class="col-md-2"></div>
+                                <input type="time" class="form-control col-md-8 espace" name="depart" value="'.$heureDepart.'"   ';if($sortie==false && !isset($_GET["aModifier"])){echo' readonly="readonly"';} echo'>
+                            </div>';
+                        ///////////////////////////-------Sortie---------------------//////////////////////
+
+                        ///////////////////////////-------EnregistrerEnregistrer---------------------//////////////////////
+                        echo '<div class="row">
+                            <div class="col-md-2"></div>
+                            <input type="submit" class="form-control col-md-4 espace" value="Annuller" name="Annuller">
+                            <input type="submit" class="form-control col-md-4 espace" value="Enregistrer" name="valider">
+                        </div>';
+                        ///////////////////////////-------Enregistrer---------------------//////////////////////
+                        
+                        echo'</div>
+                    </form>';
                 }
+                ///////////////////////////-------Continuer emargement---------------------//////////////////////
+                elseif(!isset($_GET["ref"]) && isset($_POST["valider"])){
+                        echo'<form method="POST" action="ListerEtudiant.php?ref='.$_POST["ref"].'" class="MonForm row insc">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 bor">
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <label for="" class="form-control col-md-8 text-center">Voulez-vous continuer les émargements ?</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <input type="submit" class="form-control col-md-4 espace" value="Oui" name="contEmarg">
+                                <a href="emargement.php" class="nonSoulign col-md-4 espace form-control text-center">Non</a>
+                            </div>
+                        </div>
+                    </form>';
+                }
+                ///////////////////////////-------Continuer emargement---------------------//////////////////////
+
+                ///////////////////////////-------rechercher par jour---------------------//////////////////////
                 else{
-                    $nouvU = $code . "|" . $promo . "|" . $nom . "|" . $date . "|" . $arrivee . "|" . $depart . "|" ; //emargement
+                echo'<form method="POST" action="emargement.php" class="MonForm row insc">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 bor">';
+                        echo '<div class="row">
+                            <div class="col-md-2"></div>
+                            <input type="date" class="form-control col-md-8 espace" name="jourRech"'; if(!isset($_POST["jourRech"])){echo' value="'.date('Y-m-d').'" ';}else{echo' value="'.$_POST["jourRech"].'" ';} echo'>
+                        </div>';
+                        echo '<div class="row">
+                            <div class="col-md-3"></div>
+                            <input type="submit" class="form-control col-md-6 espace" value="Lister" name="validerRechJour">
+                        </div>
+                        </div>
+                    </form>';
                 }
-                fwrite($monfichier, $nouvU); //ajout 
-                fclose($monfichier);
+                ///////////////////////////-------rechercher par jour---------------------//////////////////////
+
+            ?>
+            <?php
+            if (isset($_POST["ref"]) || isset($_GET["ref"])) {
+
+                ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
+                if (isset($_POST["valider"]) && $sortie==false) {
+                    $code= securisation($_POST["code"]);
+                    $date_emar = securisation($_POST["auj"]);
+                    $hArriv = securisation($_POST["arrivee"]);
+                    $hDepart = securisation($_POST["depart"]);
+
+                    $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,NCI_agents)
+                        VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:NCI_agents_arrivee)"; //le code mysql
+                    $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+                    $requete->bindParam(":NCI", $code);
+                    $requete->bindParam(":Date_emargement", $date_emar);
+                    $requete->bindParam(":Arrivee", $hArriv);
+                    $requete->bindParam(":Depart", $hDepart);
+                    $requete->bindParam(":NCI_agents_arrivee", $_SESSION["NCI_agents"]);
+                    $requete->execute(); //excecute la requete qui a été preparé
+                }
+                ####################################------Fin Ajouter-----#################################
+
+                ///////////////////////////////////------Sortie-----///////////////////////////
+                if (isset($_POST["valider"])  && $sortie == true) {
+                    for($i=0;$i<count($emargement);$i++) {
+                        if ($emargement[$i]["NCI"]== $_POST["code"] &&$_POST["auj"]==$emargement[$i]["Date_emargement"] && !isset($_GET["aModifier"])|| isset($_GET["aModifier"]) && $emargement[$i]["NCI"] == $_GET["aModifier"] && $_POST["auj"]==$emargement[$i]["Date_emargement"] ) {//modifier si le code correspond                             
+                            $NCI_etudiant=securisation($_POST["code"]);
+                            $datEmar=securisation($_POST["auj"]);
+                            $hArriv=securisation($_POST["arrivee"]);
+                            $hDepart=securisation($_POST["depart"]);
+                            $NCI_agents_depart=$_SESSION["NCI_agents"];
+                            $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',NCI_agents_depart='$NCI_agents_depart' WHERE NCI='$NCI_etudiant' ";
+                            $requete = $connexion->prepare($codemysql);
+                            $requete->execute();
+                        }
+                    }
+                }
+                ####################################------Sortie----#############################
             }
-            ####################################------Fin Ajouter-----#################################
-
-            ///////////////////////////////////------Sortie-----///////////////////////////
-            if (isset($_POST["valider"])  && $sortie == true) {
-
-                $reecrire = "";
-                $monfichier = fopen('emargement.txt', 'r');
-                while (!feof($monfichier)) {
-
-                    $ligne = fgets($monfichier);
-                    $tab = explode("|", $ligne);
+                if($tableVide==false && !isset($_GET["aModifier"]) || isset($_GET["code"]) || isset($_POST["valider"])){
+                echo '<table class="col-12 table tabliste table-hover">
+                <thead class="">
+                    <tr class="row">
+                        <td class="col-md-2 text-center gras">N° CI</td>
+                        <td class="col-md-2 text-center gras">Référentiel</td>
+                        <td class="col-md-2 text-center gras">Nom</td>
+                        <td class="col-md-2 text-center gras">Date</td>
+                        <td class="col-md-1 text-center gras">Arrivée</td>
+                        <td class="col-md-1 text-center gras">Sortie</td>
+                        <td class="col-md-2 text-center gras">Modification</td>
+                    </tr>
+                </thead>
+                <tbody id="developers">';
+                }
+                /////////////////////////////////////////------Debut Affichage-----///////////////////////// 
+                if(!isset($_POST["valider"]) && !isset($_GET["aModifier"])){
+                    ///////////-----recuperation des données de la table emargement----///////////
+                    $codemysql = "SELECT * FROM emargement"; //le code mysql
+                    $emargement=recuperation($connexion,$codemysql);
+                    ///////////-----recuperation des données de la table emargement-----///////////
+                    $nbr=0;
+                    for($i=0;$i<count($emargement);$i++){
+                        $leNCI=$emargement[$i]["NCI"];
+                        ///////////-----recuperation des données des etudiants----///////////
+                        $codemysql = "SELECT * FROM etudiants WHERE NCI='$leNCI'"; //le code mysql
+                        $etudiants=recuperation($connexion,$codemysql);
+                        ///////////-----Fin recuperation des données des etudiants----///////
+                        $ligne = fgets($monfichier);
+                        if (isset($_POST["validerRechJour"]) && $tableVide==false && $etudiant[3]==$date||!isset($_POST["validerRechJour"]) && $tableVide==false && !isset($_POST["recherche"]) && $etudiant[3]==date('Y-m-d')||!isset($_POST["validerRechJour"]) &&  $tableVide==false && isset($_POST["recherche"])  && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && !empty($_POST["aRechercher"]) ||!isset($_POST["validerRechJour"]) &&  $tableVide==false && $etudiant[1] == $ref && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
+                            $datN = new DateTime($_POST["jourRech"]);
+                            $date = $datN->format('d-mY');
+                            echo
+                                '<tr class="row">
+                                    <td class="col-md-2 text-center">' . $etudiant[0] . '</td>
+                                    <td class="col-md-2 text-center">' . $etudiant[1] . '</td>
+                                    <td class="col-md-2 text-center">' . $etudiant[2] . '</td>
+                                    <td class="col-md-2 text-center">' . $etudiant[3] . '</td>
+                                    <td class="col-md-1 text-center">' . $etudiant[4] . '</td>
+                                    <td class="col-md-1 text-center">' . $etudiant[5] . '</td>
+                                    <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$etudiant[0].'&ref='.$etudiant[1].'&&date='.$etudiant[3].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
+                                </tr>';
+                                $nbr++;
+                        }
+                    }
+                    fclose($monfichier);
+                }
+                elseif(isset($_POST["valider"])){
                     $datN = new DateTime($_POST["auj"]);
-                    $dateaujj = $datN->format('d-m-Y');
-                    if ( $tab[0] == $_POST["code"] && $dateaujj==$tab[3] && !isset($_GET["aModifier"])|| isset($_GET["aModifier"]) && $tab[0] == $_GET["aModifier"] && $dateaujj==$tab[3]) {//modifier si le code correspond                             
-                       
-                        $modif = $tab[0] . "|" . $_POST["promo"] . "|" . $_POST["nom"] . "|" . $dateaujj . "|" . $_POST["arrivee"] . "|" . $_POST["depart"] . "|\n";
-                    } 
-                    else {
-                        $modif = $ligne;
-                    }
-                    $reecrire = $reecrire . $modif;
-                }
-                fclose($monfichier);
-                $monfichier = fopen('emargement.txt', 'w+');//$reecrire="";
-                fwrite($monfichier, trim($reecrire));
-                fclose($monfichier);
-            }
-            ####################################------Sortie----#############################
-        }
-            if($FichierVide==false && !isset($_GET["aModifier"]) || isset($_GET["code"]) || isset($_POST["valider"])){
-            echo '<table class="col-12 table tabliste table-hover">
-            <thead class="">
-                <tr class="row">
-                    <td class="col-md-2 text-center gras">N° CI</td>
-                    <td class="col-md-2 text-center gras">Référentiel</td>
-                    <td class="col-md-2 text-center gras">Nom</td>
-                    <td class="col-md-2 text-center gras">Date</td>
-                    <td class="col-md-1 text-center gras">Arrivée</td>
-                    <td class="col-md-1 text-center gras">Sortie</td>
-                    <td class="col-md-2 text-center gras">Modification</td>
-                </tr>
-            </thead>
-            <tbody id="developers">';
-            }
-            /////////////////////////////////////////------Debut Affichage-----///////////////////////// 
-            if(!isset($_POST["valider"]) && !isset($_GET["aModifier"])){
-                $monfichier = fopen('emargement.txt', 'r');
-                if(isset($_POST["jourRech"])){
-                    $datN = new DateTime($_POST["jourRech"]);
                     $date = $datN->format('d-m-Y');
+                    echo
+                        '<tr class="row">
+                            <td class="col-md-2 text-center">' . $_POST["code"] . '</td>
+                            <td class="col-md-2 text-center">' . $_POST["ref"] . '</td>
+                            <td class="col-md-2 text-center">' . $_POST["nom"]  . '</td>
+                            <td class="col-md-2 text-center">' . $date . '</td>
+                            <td class="col-md-1 text-center">' . $_POST["arrivee"]  . '</td>
+                            <td class="col-md-1 text-center">' . $_POST["depart"]  . '</td>
+                            <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&ref='.$_POST["ref"].'&&date='.$_POST["auj"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
+                        </tr>';
+                        $nbr++;
                 }
-                $nbr=0;
-                while (!feof($monfichier)) {
-                    $ligne = fgets($monfichier);
-                    $etudiant = explode('|', $ligne);
-                    if (isset($_POST["validerRechJour"]) && $FichierVide==false && $etudiant[3]==$date||!isset($_POST["validerRechJour"]) && $FichierVide==false && !isset($_POST["recherche"]) && $etudiant[3]==date('d-m-Y')||!isset($_POST["validerRechJour"]) &&  $FichierVide==false && isset($_POST["recherche"])  && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && !empty($_POST["aRechercher"]) ||!isset($_POST["validerRechJour"]) &&  $FichierVide==false && $etudiant[1] == $Promo && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
-                        echo
-                            '<tr class="row">
-                                <td class="col-md-2 text-center">' . $etudiant[0] . '</td>
-                                <td class="col-md-2 text-center">' . $etudiant[1] . '</td>
-                                <td class="col-md-2 text-center">' . $etudiant[2] . '</td>
-                                <td class="col-md-2 text-center">' . $etudiant[3] . '</td>
-                                <td class="col-md-1 text-center">' . $etudiant[4] . '</td>
-                                <td class="col-md-1 text-center">' . $etudiant[5] . '</td>
-                                <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$etudiant[0].'&promo='.$etudiant[1].'&&date='.$etudiant[3].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
-                            </tr>';
-                            $nbr++;
+                ####################################------Fin Affichage-----#################################
+            echo'</tbody>
+                    </table>';
+                    if($nbr>8){
+                        echo'<div class="col-md-12 text-center">
+                            <ul class="pagination pagination-sm pager" id="developer_page"></ul>
+                        </div>';
                     }
-                }
-                fclose($monfichier);
-            }
-            elseif(isset($_POST["valider"])){
-                $datN = new DateTime($_POST["auj"]);
-                $date = $datN->format('d-m-Y');
-                echo
-                    '<tr class="row">
-                        <td class="col-md-2 text-center">' . $_POST["code"] . '</td>
-                        <td class="col-md-2 text-center">' . $_POST["promo"] . '</td>
-                        <td class="col-md-2 text-center">' . $_POST["nom"]  . '</td>
-                        <td class="col-md-2 text-center">' . $date . '</td>
-                        <td class="col-md-1 text-center">' . $_POST["arrivee"]  . '</td>
-                        <td class="col-md-1 text-center">' . $_POST["depart"]  . '</td>
-                        <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&promo='.$_POST["promo"].'&&date='.$date.'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
-                    </tr>';
-                    $nbr++;
-            }
-            ####################################------Fin Affichage-----#################################
-        echo'</tbody>
-                </table>';
-                if($nbr>8){
-                    echo'<div class="col-md-12 text-center">
-                        <ul class="pagination pagination-sm pager" id="developer_page"></ul>
-                    </div>';
-                }
-                echo'<div class="bas"></div>';
+                    echo'<div class="bas"></div>';
+        }
+        catch (PDOException $e) {
+            echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
+        }        
         ?>
         
     </section>
