@@ -399,30 +399,51 @@ $_SESSION["actif"] = "ModifierEtudiant";
             $codemysql = "SELECT * FROM etudiants"; //le code mysql
             $etudiants=recuperation($connexion,$codemysql);
             ///////////-----Fin recuperation des données des etudiants----//////
-
-            for($i=0;$i<count($etudiants);$i++){
-                ///////////-----recuperation des données de la table ref----///////////
-                $NCI_etudiant=$etudiants[$i]["NCI"];
-                $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_etudiant'"; //le code mysql
-                $le_ref_etudiant=recuperation($connexion,$codemysql);
-                ///////////-----Fin recuperation des données de la table ref----////////
-                $ligne = $NCI_etudiant." ".$le_ref_etudiant[0]["Nom"]." ".$etudiants[$i]["Nom"]." ".$etudiants[$i]["Naissance"]." ".$etudiants[$i]["Telephone"]." ".$etudiants[$i]["Email"];
-                if ($tableVide==false && !isset($_POST["recherche"]) || isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) || $tableVide==false && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
-                //si le code n'est pas vide et que on ne recherche rien                          //si on recherche une chose non vide et que cela face partie de la ligne                                 //si on appuis sur le bouton rechercher alors qu'on n'a rien ecrit afficher tous les éléments                                      
-                    $datN = new DateTime($etudiants[$i]["Naissance"]);
-                    $date = $datN->format('d-m-Y');
-                    echo
-                        '<tr class="row">
-                            <td class="col-md-2 text-center">' . $NCI_etudiant . '</td>
-                            <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
-                            <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"] . '</td>
-                            <td class="col-md-2 text-center">' . $date . '</td>
-                            <td class="col-md-1 text-center">' . $etudiants[$i]["Telephone"] . '</td>
-                            <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
-                            
-                        </tr>';
-                        $nbr++;
+            if(isset($_POST["AjouterFin"]) && $valAjout == true || isset($_POST["valider"]) && $valAjout == true ){//si ajouter ou modifier n'afficher que la ligne
+                $datN = new DateTime($_POST["dateNaiss"]);
+                $date = $datN->format('d-m-Y');
+                if(isset($_POST["ancienCode"])){
+                    $leCode=$_POST["ancienCode"];
                 }
+                else{
+                    $leCode=$_POST["code"];
+                }
+                echo
+                            '<tr class="row">
+                                <td class="col-md-2 text-center">' .$leCode. '</td>
+                                <td class="col-md-2 text-center">' . $_POST["ref"]. '</td>
+                                <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
+                                <td class="col-md-2 text-center">' . $date . '</td>
+                                <td class="col-md-1 text-center">' . $_POST["tel"] . '</td>
+                                <td class="col-md-3 text-center">' . $_POST["email"] . '</td>
+                                
+                            </tr>';
+            }
+            else{
+                for($i=0;$i<count($etudiants);$i++){
+                    ///////////-----recuperation des données de la table ref----///////////
+                    $NCI_etudiant=$etudiants[$i]["NCI"];
+                    $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$NCI_etudiant'"; //le code mysql
+                    $le_ref_etudiant=recuperation($connexion,$codemysql);
+                    ///////////-----Fin recuperation des données de la table ref----////////
+                    $ligne = $NCI_etudiant." ".$le_ref_etudiant[0]["Nom"]." ".$etudiants[$i]["Nom"]." ".$etudiants[$i]["Naissance"]." ".$etudiants[$i]["Telephone"]." ".$etudiants[$i]["Email"];
+                    if ($tableVide==false && !isset($_POST["recherche"]) || isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) || $tableVide==false && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
+                    //si le code n'est pas vide et que on ne recherche rien                          //si on recherche une chose non vide et que cela face partie de la ligne                                 //si on appuis sur le bouton rechercher alors qu'on n'a rien ecrit afficher tous les éléments                                      
+                        $datN = new DateTime($etudiants[$i]["Naissance"]);
+                        $date = $datN->format('d-m-Y');
+                        echo
+                            '<tr class="row">
+                                <td class="col-md-2 text-center">' . $NCI_etudiant . '</td>
+                                <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
+                                <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"] . '</td>
+                                <td class="col-md-2 text-center">' . $date . '</td>
+                                <td class="col-md-1 text-center">' . $etudiants[$i]["Telephone"] . '</td>
+                                <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
+                                
+                            </tr>';
+                            $nbr++;
+                    }
+                } 
             }
             ####################################------Fin Affichage-----#################################
             echo'</tbody>
