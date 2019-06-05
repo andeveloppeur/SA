@@ -244,8 +244,7 @@ elseif (isset($_POST["ref"])) {
                     $requete->bindParam(":Arrivee", $hArriv);
                     $requete->bindParam(":Depart", $hDepart);
                     $requete->bindParam(":NCI_agents_arrivee", $_SESSION["NCI_agents"]);
-                    $requete->bindParam(":NCI_agents_arrivee", $nci_dep);
-                    echo $_SESSION["NCI_agents"];
+                    $requete->bindParam(":NCI_agents_depart", $nci_dep);
                     $requete->execute(); //excecute la requete qui a été preparé
                 }
                 ####################################------Fin Ajouter-----#################################
