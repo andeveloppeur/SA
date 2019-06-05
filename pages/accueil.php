@@ -58,14 +58,7 @@ $_SESSION["actif"] = "accueil";
         <div id="chartdiv"></div>
         <?php
         try {
-            $serveur = "localhost";
-            $Monlogin = "root";
-            $Monpass = "101419";
-            $connexion = new PDO("mysql:host=$serveur;dbname=SA;charset=utf8", $Monlogin, $Monpass); //se connecte au serveur mysquel
-            $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //setAttribute — Configure l'attribut PDO $connexion
-            
-            
-
+            include("connexionBDD.php");
             ///////////-----recuperation des données referentiels----///////////
             $codemysql = "SELECT id_referentiels,Nom FROM referentiels"; //le code mysql
             $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution

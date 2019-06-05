@@ -40,37 +40,45 @@ if (!isset($_GET["code"])) {
     <header></header>
     <section class="container-fluid">
         <?php
-        $fichier = fopen('emargement.txt', 'r');
-            while (!feof($fichier)) {
-                $line = fgets($fichier);
-                $emargement = explode('|', $line);
-                if(isset($_GET["code"]) && $_GET["code"]==$emargement[0]){
-                    echo'<h1 class="textAccueil">'.$emargement[2].'</h1>';
-                    break;
-                }
-            }
-            fclose($fichier);
+        try {
+            include("connexionBDD.php");
+
+            ///////////-----recuperation le nom de l'etudiant----///////////
+            $NCI=$_GET["code"];
+            $codemysql = "SELECT Nom FROM etudiants WHERE NCI='$NCI'"; //le code mysql
+            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+            $requete->execute();
+            $etudiant=$requete->fetchAll();
+            ///////////-----recuperation le nom de l'etudiant-----///////////
+
+            echo'<h1 class="textAccueil">'.$etudiant[0]["Nom"].'</h1>';
         ?>
         <div id="chartdiv" class="statt"></div>
         <?php
-        $i=0;
-            $fichier = fopen('emargement.txt', 'r');
-            while (!feof($fichier)) {
-                $line = fgets($fichier);
-                $emargement = explode('|', $line);
-                if(isset($_GET["code"]) && $_GET["code"]==$emargement[0]){
-                    $i++;
-                echo'<div id="jour'.$i.'" class="'.$emargement[3].'"></div>
-                     <div id="arrivee'.$i.'" class="'.$emargement[4].'"></div>
-                     <div id="depart'.$i.'" class="'.$emargement[5].'"></div>';
+        $j=0;
+            ///////////-----recuperation des données de la table emargement----///////////
+            $codemysql = "SELECT * FROM emargement"; //le code mysql
+            $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+            $requete->execute();
+            $emargement=$requete->fetchAll();
+            ///////////-----recuperation des données de la table emargement-----///////////
+            for($i=0;$i<count($emargement);$i++) {
+                if(isset($_GET["code"]) && $_GET["code"]==$emargement[$i]["NCI"]){
+                    $j++;
+                echo'<div id="jour'.$j.'" class="'.$emargement[$i]["Date_emargement"].'"></div>
+                     <div id="arrivee'.$j.'" class="'.$emargement[$i]["Arrivee"].'"></div>
+                     <div id="depart'.$j.'" class="'.$emargement[$i]["Depart"].'"></div>';
 
                 }
             }
-            fclose($fichier);
-            echo'<div id="jourPresent" class="'.$i.'"></div>';
+            echo'<div id="jourPresent" class="'.$j.'"></div>';
         ?>
     </section>   
     <?php
+        } 
+        catch (PDOException $e) {
+            echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
+        }
     echo "
             <footer class='piedPageaccueil'>
                 <p class='cpr'>Copyright 2019 Sonatel Academy</p>

@@ -34,13 +34,13 @@ elseif (isset($_POST["Ref"])) {
             border:1px solid #007bffb9;
             border-radius: 50px;
             font-size:30px;
-            background-color: white;
+            background-color: #d0c9d6;
             padding:2px 10px 3px 10px;
             text-decoration: none ;
             color: #212529;
         }
         .pager{
-            padding-left:33%;
+            justify-content: center;
         }
         .page_link:hover,.prev_link:hover,.next_link:hover{
             text-decoration: none;
@@ -53,7 +53,6 @@ elseif (isset($_POST["Ref"])) {
         .table {
             margin-bottom: 2em;
         }
-
     </style>
 </head>
 
@@ -65,11 +64,7 @@ elseif (isset($_POST["Ref"])) {
     <section class="container-fluid  pageLister">
         <?php
         try {
-            $serveur = "localhost";
-            $Monlogin = "root";
-            $Monpass = "101419";
-            $connexion = new PDO("mysql:host=$serveur;dbname=SA;charset=utf8", $Monlogin, $Monpass); //se connecte au serveur mysquel
-            $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //setAttribute — Configure l'attribut PDO $connexion
+            include("connexionBDD.php");
              ///////////-----recuperation des données de la table emargement----///////////
             $codemysql = "SELECT * FROM emargement"; //le code mysql
             $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution

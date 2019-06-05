@@ -19,51 +19,31 @@ session_start();
     </nav>
     <header></header>
     <section class="container cAuth">
-        <form method="POST" action="index.php" class="MonForm row">
+        <form method="POST" action="pages/traitement.php" class="MonForm row">
             <div class="col-md-3"></div>
             <div class="col-md-6 bor">
                 <div class="row">
                     <div class="col-md-2"></div>
-                    <input class="form-control col-md-8 espace" type="text" id="login" name="login" placeholder="Login">
+                    <input <?php echo'class="form-control col-md-8 espace'; if(isset($_SESSION["ancLogin"])){echo " rougMoins";} echo'"';?> type="text" id="login" name="login" placeholder="Login" <?php if(isset($_SESSION["ancLogin"])){echo 'value="'.$_SESSION["ancLogin"].'"';}?>>
                 </div>
                 <div class="row">
                     <div class="col-md-2"></div>
-                    <input class="form-control col-md-8 espace" type="password" id="MDP" name="MDP" placeholder="Mot de passe">
+                    <input <?php echo'class="form-control col-md-8 espace'; if(isset($_SESSION["ancMDP"])){echo " rougMoins";} echo'"';?>  type="password" id="MDP" name="MDP" placeholder="Mot de passe" <?php if(isset($_SESSION["ancMDP"])){ echo 'value="'.$_SESSION["ancMDP"].'"';}?>>
                 </div>
                 <div class="row">
                     <div class="col-md-3"></div>
                     <input type="submit" class="form-control col-md-6 espace" value="Connexion" name="submit">
                 </div>
                 <?php
-                if (isset($_POST["submit"])) {
-                    $reussi = 0;
-                    $bloquer = 0;
-                    $login = "";
-                    $mDp = "";
-
-                    $login = $_POST["login"]; //recuperation du login 
-                    $mDp = $_POST["MDP"]; //recuperation du MDP
-                    if ($login != "" && $mDp != "") {
-                        if ($login == "Abdou") {
-                            if ($mDp == "azerty") {
-                                header('Location: pages/accueil.php');
-                                $_SESSION["nom"] = "Abdoulaye Ndoye";
-                                $_SESSION['ouvert'] = 1;
-                                $reussi = 1;
-                            }
-                        }
-                    }
-
-                    if ($reussi == 0) { //verification du login et du MDP
+                    if (isset( $_SESSION["reussi"]) &&  $_SESSION["reussi"]==false) { //verification du login et du MDP
                         echo "
                             <div class='row'>
-                            <div class=col-md-3></div>
+                            <div class='col-md-3'></div>
                             <p class='blocAcc'>";
-                        echo "Erreur sur le login ou le mot de passe ";
+                        echo "Erreur sur le login ou le mot de passe";
                         echo "!!</p>
                             </div>";
                     }
-                }
                 ?>
             </div>
         </form>

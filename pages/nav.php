@@ -40,20 +40,14 @@ echo '<nav class="navbar navbar-expand-lg navbar-light row fixed-top" style="bac
       echo'<li class="nav-item">
         <a class="nav-link" href="deconnexion.php">Déconnexion</a>
       </li>
-    </ul>';
-    if($_SESSION["actif"] !="presence" && $_SESSION["actif"] !="stat"){
-      echo'<form class="form-inline my-2 my-lg-0" method="POST" action="">
+    </ul>
+    <form class="form-inline my-2 my-lg-0" method="POST" action="">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="aRechercher"';
         if(isset($_POST[ "recherche"]) && !empty($_POST[ "aRechercher"])){echo'value="'.$_POST["aRechercher"].'"'; } if ($_SESSION["actif"] == "presence" || $_SESSION["actif"] == "accueil") {echo ' readonly="readonly" ';} echo'>
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="recherche"';if ($_SESSION["actif"] == "presence" || $_SESSION["actif"] == "accueil") {echo ' disabled ';} echo' >Search</button>';
         if(isset($_POST[ "recherche"]) && !empty($_POST[ "aRechercher"])){echo'<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="finRecherche">Fin</button>';}
       echo'</form>';
-    }
-    else{
-      echo'<form method="POST" action="presence.php" class="form-inline my-2 my-lg-0">
-              <input type="submit" class="btn btn-outline-success" value="Exporter les données" name="export">
-            </form>';
-    }
+
   echo'</div>
 </nav>';
 ?>

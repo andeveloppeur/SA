@@ -14,9 +14,9 @@ for (var i = 1; i <= nbrJours; i++) {
     //------la date----////
     var divDate = document.getElementById("jour" + i);
     var laDate = divDate.getAttribute("class");
-    var leJour = laDate.slice(0, 2);
-    var leMois = laDate.slice(3, 5) - 1;
-    var lAnne = laDate.slice(6, 10);
+    var lAnne = laDate.slice(0, 4);
+    var leMois = laDate.slice(5, 7) - 1;
+    var leJour = laDate.slice(8, 10);
     //------la date----////
 
     //------arrivee----////

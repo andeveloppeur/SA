@@ -31,6 +31,29 @@ elseif (isset($_POST["promo"])) {
     .nonSoulign:hover{
         color:#495057;
     }
+    .page_link,.prev_link,.next_link{
+        border:1px solid #007bffb9;
+        border-radius: 50px;
+        font-size:30px;
+        background-color: #d0c9d6;
+        padding:2px 10px 3px 10px;
+        text-decoration: none ;
+        color: #212529;
+    }
+    .pager{
+        justify-content: center;
+    }
+    .page_link:hover,.prev_link:hover,.next_link:hover{
+        text-decoration: none;
+        color: #212529;
+    }
+    .pager>.active>a{
+        border-radius: 50px;
+        background-color: #007bffb9;
+    }
+    .table {
+        margin-bottom: 2em;
+    }
     </style>
 </head>
 
@@ -259,8 +282,8 @@ elseif (isset($_POST["promo"])) {
             ####################################------Sortie----#############################
         }
             if($FichierVide==false && !isset($_GET["aModifier"]) || isset($_GET["code"]) || isset($_POST["valider"])){
-            echo '<table class="col-12 tabliste table">
-            <thead class="thead-dark">
+            echo '<table class="col-12 table tabliste table-hover">
+            <thead class="">
                 <tr class="row">
                     <td class="col-md-2 text-center gras">N° CI</td>
                     <td class="col-md-2 text-center gras">Référentiel</td>
@@ -270,7 +293,8 @@ elseif (isset($_POST["promo"])) {
                     <td class="col-md-1 text-center gras">Sortie</td>
                     <td class="col-md-2 text-center gras">Modification</td>
                 </tr>
-            </thead>';
+            </thead>
+            <tbody id="developers">';
             }
             /////////////////////////////////////////------Debut Affichage-----///////////////////////// 
             if(!isset($_POST["valider"]) && !isset($_GET["aModifier"])){
@@ -279,7 +303,7 @@ elseif (isset($_POST["promo"])) {
                     $datN = new DateTime($_POST["jourRech"]);
                     $date = $datN->format('d-m-Y');
                 }
-                
+                $nbr=0;
                 while (!feof($monfichier)) {
                     $ligne = fgets($monfichier);
                     $etudiant = explode('|', $ligne);
@@ -294,6 +318,7 @@ elseif (isset($_POST["promo"])) {
                                 <td class="col-md-1 text-center">' . $etudiant[5] . '</td>
                                 <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$etudiant[0].'&promo='.$etudiant[1].'&&date='.$etudiant[3].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
                             </tr>';
+                            $nbr++;
                     }
                 }
                 fclose($monfichier);
@@ -311,15 +336,26 @@ elseif (isset($_POST["promo"])) {
                         <td class="col-md-1 text-center">' . $_POST["depart"]  . '</td>
                         <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&promo='.$_POST["promo"].'&&date='.$date.'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
                     </tr>';
+                    $nbr++;
             }
             ####################################------Fin Affichage-----#################################
-       
+        echo'</tbody>
+                </table>';
+                if($nbr>8){
+                    echo'<div class="col-md-12 text-center">
+                        <ul class="pagination pagination-sm pager" id="developer_page"></ul>
+                    </div>';
+                }
+                echo'<div class="bas"></div>';
         ?>
-        </table>
+        
     </section>
     <?php
     include("piedDePage.php");
     ?>
+    <script src="../js/jq.js"></script>
+    <script src="../js/bootstrap-table-pagination.js"></script>
+    <script src="../js/monjs.js"></script>
 </body>
 
 </html>
