@@ -115,6 +115,7 @@ elseif (isset($_POST["ref"])) {
                                     $codeRecup=$etudiants[$i]["NCI"];
                                 }
                             }
+                            $dateNow = date('Y-m-d');
                             if($sortie==false){
                                 $heureNow=date("H:i");
                             }
@@ -234,15 +235,17 @@ elseif (isset($_POST["ref"])) {
                     $date_emar = securisation($_POST["auj"]);
                     $hArriv = securisation($_POST["arrivee"]);
                     $hDepart = securisation($_POST["depart"]);
-
-                    $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,NCI_agents)
-                        VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:NCI_agents_arrivee)"; //le code mysql
+                    $nci_dep="";
+                    $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,NCI_agents_arrivee,NCI_agents_depart)
+                        VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:NCI_agents_arrivee,:NCI_agents_depart)"; //le code mysql
                     $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
                     $requete->bindParam(":NCI", $code);
                     $requete->bindParam(":Date_emargement", $date_emar);
                     $requete->bindParam(":Arrivee", $hArriv);
                     $requete->bindParam(":Depart", $hDepart);
                     $requete->bindParam(":NCI_agents_arrivee", $_SESSION["NCI_agents"]);
+                    $requete->bindParam(":NCI_agents_arrivee", $nci_dep);
+                    echo $_SESSION["NCI_agents"];
                     $requete->execute(); //excecute la requete qui a été preparé
                 }
                 ####################################------Fin Ajouter-----#################################
@@ -251,12 +254,18 @@ elseif (isset($_POST["ref"])) {
                 if (isset($_POST["valider"])  && $sortie == true) {
                     for($i=0;$i<count($emargement);$i++) {
                         if ($emargement[$i]["NCI"]== $_POST["code"] &&$_POST["auj"]==$emargement[$i]["Date_emargement"] && !isset($_GET["aModifier"])|| isset($_GET["aModifier"]) && $emargement[$i]["NCI"] == $_GET["aModifier"] && $_POST["auj"]==$emargement[$i]["Date_emargement"] ) {//modifier si le code correspond                             
+
                             $NCI_etudiant=securisation($_POST["code"]);
                             $datEmar=securisation($_POST["auj"]);
                             $hArriv=securisation($_POST["arrivee"]);
                             $hDepart=securisation($_POST["depart"]);
                             $NCI_agents_depart=$_SESSION["NCI_agents"];
-                            $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',NCI_agents_depart='$NCI_agents_depart' WHERE NCI='$NCI_etudiant' ";
+                            ///////////-----recuperation des données de la table emargement----///////////
+                            $codemysql = "SELECT id_emargement FROM emargement WHERE NCI='$NCI_etudiant' AND Date_emargement='$datEmar' "; //le code mysql
+                            $id_emargement=recuperation($connexion,$codemysql);
+                            ///////////-----recuperation des données de la table emargement-----///////////
+                            $id_emarg=$id_emargement[0]["id_emargement"];
+                            $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',NCI_agents_depart='$NCI_agents_depart' WHERE id_emargement='$id_emarg'";
                             $requete = $connexion->prepare($codemysql);
                             $requete->execute();
                         }
@@ -279,6 +288,7 @@ elseif (isset($_POST["ref"])) {
                 </thead>
                 <tbody id="developers">';
                 }
+                $nbr=0;
                 /////////////////////////////////////////------Debut Affichage-----///////////////////////// 
                 if(!isset($_POST["valider"]) && !isset($_GET["aModifier"])){
                     ///////////-----recuperation des données de la table emargement----///////////
@@ -288,28 +298,37 @@ elseif (isset($_POST["ref"])) {
                     $nbr=0;
                     for($i=0;$i<count($emargement);$i++){
                         $leNCI=$emargement[$i]["NCI"];
+
                         ///////////-----recuperation des données des etudiants----///////////
-                        $codemysql = "SELECT * FROM etudiants WHERE NCI='$leNCI'"; //le code mysql
+                        $codemysql = "SELECT Nom FROM etudiants WHERE NCI='$leNCI'"; //le code mysql
                         $etudiants=recuperation($connexion,$codemysql);
                         ///////////-----Fin recuperation des données des etudiants----///////
-                        $ligne = fgets($monfichier);
-                        if (isset($_POST["validerRechJour"]) && $tableVide==false && $etudiant[3]==$date||!isset($_POST["validerRechJour"]) && $tableVide==false && !isset($_POST["recherche"]) && $etudiant[3]==date('Y-m-d')||!isset($_POST["validerRechJour"]) &&  $tableVide==false && isset($_POST["recherche"])  && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && !empty($_POST["aRechercher"]) ||!isset($_POST["validerRechJour"]) &&  $tableVide==false && $etudiant[1] == $ref && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
-                            $datN = new DateTime($_POST["jourRech"]);
-                            $date = $datN->format('d-mY');
+
+                        ///////////-----recuperation des données de la table ref----///////////
+                        $codemysql = "SELECT referentiels.Nom FROM referentiels INNER JOIN etudiants ON referentiels.id_referentiels=etudiants.id_referentiels WHERE etudiants.NCI='$leNCI'"; //le code mysql
+                        $le_ref_etudiant=recuperation($connexion,$codemysql);
+                        ///////////-----Fin recuperation des données de la table ref----////////
+
+                        $ligne = $etudiants[0]["Nom"]." ".$le_ref_etudiant[0]["Nom"]." ".$emargement[$i]["Date_emargement"]." ".$emargement[$i]["Arrivee"]." ".$emargement[$i]["Depart"];
+                        if(isset($_POST["validerRechJour"]) && $tableVide==false && $emargement[$i]["Date_emargement"]==$_POST["jourRech"]||
+                        !isset($_POST["validerRechJour"]) && $tableVide==false && !isset($_POST["recherche"]) && $emargement[$i]["Date_emargement"]==date('Y-m-d')||
+                        !isset($_POST["validerRechJour"]) && $tableVide==false && isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && !empty($_POST["aRechercher"]) ||
+                        !isset($_POST["validerRechJour"]) && $tableVide==false && $le_ref_etudiant[0]["Nom"] == $ref && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
+                            $datN = new DateTime($emargement[$i]["Date_emargement"]);
+                            $date = $datN->format('d-m-Y');
                             echo
                                 '<tr class="row">
-                                    <td class="col-md-2 text-center">' . $etudiant[0] . '</td>
-                                    <td class="col-md-2 text-center">' . $etudiant[1] . '</td>
-                                    <td class="col-md-2 text-center">' . $etudiant[2] . '</td>
-                                    <td class="col-md-2 text-center">' . $etudiant[3] . '</td>
-                                    <td class="col-md-1 text-center">' . $etudiant[4] . '</td>
-                                    <td class="col-md-1 text-center">' . $etudiant[5] . '</td>
-                                    <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$etudiant[0].'&ref='.$etudiant[1].'&&date='.$etudiant[3].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
+                                    <td class="col-md-2 text-center">' . $leNCI . '</td>
+                                    <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"]. '</td>
+                                    <td class="col-md-2 text-center">' . $etudiants[0]["Nom"] . '</td>
+                                    <td class="col-md-2 text-center">' . $date . '</td>
+                                    <td class="col-md-1 text-center">' . $emargement[$i]["Arrivee"] . '</td>
+                                    <td class="col-md-1 text-center">' . $emargement[$i]["Depart"] . '</td>
+                                    <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$leNCI.'&ref='.$le_ref_etudiant[0]["Nom"].'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
                                 </tr>';
                                 $nbr++;
                         }
                     }
-                    fclose($monfichier);
                 }
                 elseif(isset($_POST["valider"])){
                     $datN = new DateTime($_POST["auj"]);
@@ -345,9 +364,9 @@ elseif (isset($_POST["ref"])) {
     <?php
     include("piedDePage.php");
     ?>
-    <script src="../js/jq.js"></script>
+    <!-- <script src="../js/jq.js"></script>
     <script src="../js/bootstrap-table-pagination.js"></script>
-    <script src="../js/monjs.js"></script>
+    <script src="../js/monjs.js"></script> -->
 </body>
 
 </html>
