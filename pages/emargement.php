@@ -237,7 +237,7 @@ elseif (isset($_POST["ref"])) {
                     $codemysql = "SELECT id_emargement FROM emargement WHERE NCI='$NCI_etudiant' AND Date_emargement='$datEmar' "; //le code mysql
                     $id_emargement=recuperation($connexion,$codemysql);
                     ///////////-----recuperation des données de la table emargement-----///////////
-                    if(!isset($id_emargement[0]["id_emargement"])){
+                    if(!isset($id_emargement[0]["id_emargement"])){//donc il n a pas encore emarger
                         $code= securisation($_POST["code"]);
                         $date_emar = securisation($_POST["auj"]);
                         $hArriv = securisation($_POST["arrivee"]);
@@ -254,8 +254,8 @@ elseif (isset($_POST["ref"])) {
                         $requete->bindParam(":NCI_agents_depart", $nci_dep);
                         $requete->execute(); //excecute la requete qui a été preparé
                     }
-                    else{
-                        $NCI_etudiant=securisation($_GET["aModifer"]);
+                    else{//donc il a emarger et on le modifie
+                        $NCI_etudiant=securisation($_POST["code"]);
                         $datEmar=securisation($_POST["auj"]);
                         $hArriv=securisation($_POST["arrivee"]);
                         $hDepart=securisation($_POST["depart"]);
