@@ -106,7 +106,7 @@ $_SESSION["actif"] = "ModifierPromo";
                         echo '<div class="row">
                             <div class="col-md-2"></div>
                             <select class="form-control col-md-8 espace" name="mois" >';
-                        $ann = 2019;
+                        
                         for ($i = 0; $i < 12; $i++) {
                             if (!isset($_POST["AjouterFin"]) && !isset($_POST["valider"])) {
                                 if ($existeDeja == true && $ancMois == $Tablemois[$i]) {
@@ -184,61 +184,30 @@ $_SESSION["actif"] = "ModifierPromo";
                     </div>
                 </div>
                 <?php
-                if (isset($_POST["Annuler"])) {
-                    //header("location: ModifierPromo.php");
-                }
+
                 $existeDeja = 0;
                 ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
                 if (isset($_POST["AjouterFin"]) && !empty($_POST["nom"]) && $promoDejaAjouter == false) {
-
-                    $monfichier = fopen('promos.txt', 'r');
-                    while (!feof($monfichier)) {
-                        $ligne = fgets($monfichier);
-                        $tab = explode("|", $ligne);
-                    }
-                    fclose($monfichier);
-                    $code = str_replace("SA-", "", $tab[0]);
-                    $code = intval($code) + 1;
-                    $code = "SA-" . $code;
-
-                    $nom = $_POST["nom"];
-                    $mois = $_POST["mois"];
-                    $annee = $_POST["annee"];
-
-                    $monfichier = fopen('promos.txt', 'a+');
-                    if($tableVide==false){
-                        $nouvU = "\n" . $code . "|" .  $nom . "|" . $mois . "|" . $annee . "|"; //ajout d un nouvel utilisateur
-                    }
-                    else{
-                        $nouvU = $code . "|" .  $nom . "|" . $mois . "|" . $annee . "|"; //ajout d un nouvel utilisateur
-                    }
-                    
-                    
-                    fwrite($monfichier, $nouvU); //ajout 
-                    fclose($monfichier);
+                    $nom = securisation($_POST["nom"]);
+                    $mois = securisation($_POST["mois"]);
+                    $annee = securisation($_POST["annee"]);
+                    $codemysql = "INSERT INTO `referentiels` (Nom,Mois,Annee) VALUES(:Nom,:Mois,:Annee)"; //le code mysql
+                    $requete = $connexion->prepare($codemysql);
+                    $requete->bindParam(":Nom", $nom);
+                    $requete->bindParam(":Mois", $mois);
+                    $requete->bindParam(":Annee", $annee);
+                    $requete->execute(); //excecute la requete qui a été preparé
                 }
                 ####################################------Fin Ajouter-----#################################
 
                 ///////////////////////////////////------Debut Modification-----///////////////////////////
                 if (isset($_POST["valider"]) && !empty($_POST["nom"])) {
-                    $reecrire = "";
-                    $monfichier = fopen('promos.txt', 'r');
-                    while (!feof($monfichier)) {
-
-                        $ligne = fgets($monfichier);
-                        $tab = explode("|", $ligne);
-                        if ($tab[1] == $_POST["nom"]) {
-                            $modif = $tab[0] . "|" . $_POST["nom"] . "|" . $_POST["mois"] . "|" . $_POST["annee"] . "|"  . "\n";
-                        } 
-                        else {
-                            $modif = $ligne;
-                        }
-                        $reecrire = $reecrire . $modif;
-                    }
-                    fclose($monfichier);
-                    $monfichier = fopen('promos.txt', 'w+');
-                    fwrite($monfichier, trim($reecrire));
-                    fclose($monfichier);
+                    $nom = securisation($_POST["nom"]);
+                    $mois = securisation($_POST["mois"]);
+                    $annee = securisation($_POST["annee"]);
+                    $codemysql = "UPDATE `referentiels` SET Nom='$nom',Mois='$mois',Annee='$annee' WHERE Nom='$nom' ";
+                    $requete = $connexion->prepare($codemysql);
+                    $requete->execute();
                 }
                 ####################################------Fin Modification----#############################S
                 ?>
