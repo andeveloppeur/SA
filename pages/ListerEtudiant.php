@@ -123,7 +123,7 @@ elseif (isset($_POST["ref"])) {
             /////////////////////////////////////////------Debut Affichage-----///////////////////////// 
             $actualisation=false;
             $nbr=0;
-            $monfichier = fopen('etudiants.txt', 'r');
+
             ///////////-----recuperation des données des etudiants----///////////
             $codemysql = "SELECT * FROM etudiants"; //le code mysql
             $etudiants=recuperation($connexion,$codemysql);
@@ -156,7 +156,6 @@ elseif (isset($_POST["ref"])) {
                         $nbr++;
                 }
             }
-            fclose($monfichier);
             ####################################------Fin Affichage-----#################################
                 echo'</tbody>
                 </table>';
