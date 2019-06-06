@@ -141,8 +141,11 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             for($i=0;$i<count($emargement);$i++) {
                                 if($emargement[$i]["NCI"]==$_GET["aModifier"] && $emargement[$i]["Date_emargement"]==$_GET["date"]){
                                     $codeRecup=$emargement[$i]["NCI"];
-
-                                    $nomRecup = $emargement[$i]["NCI"];//a recup sur etudiant
+                                    ///////////-----recuperation des données des etudiants----///////////
+                                    $codemysql = "SELECT Nom FROM etudiants WHERE NCI='$codeRecup'"; //le code mysql
+                                    $nom_etudiants=recuperation($connexion,$codemysql);
+                                    ///////////-----Fin recuperation des données des etudiants----///////
+                                    $nomRecup = $nom_etudiants[0]["Nom"];
                                     $dateNow = $emargement[$i]["Date_emargement"];
                                     $heureNow = $emargement[$i]["Arrivee"];
                                     $heureDepart = $emargement[$i]["Depart"];

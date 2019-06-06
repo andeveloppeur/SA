@@ -62,7 +62,7 @@ $_SESSION["actif"] = "visiteur";
                 $valAjout = false;
                 try {
                     include("connexionBDD.php");
-                    ############################--Debut contenu fichier--############################
+                    ############################--Debut contenu table--############################
                     ///////////-----recuperation des données des etudiants----///////////
                     $codemysql = "SELECT * FROM visiteurs"; //le code mysql
                     $visiteurs=recuperation($connexion,$codemysql);
@@ -70,7 +70,7 @@ $_SESSION["actif"] = "visiteur";
                     if(isset($visiteurs[0][1])){
                         $tableVide=false;
                     }
-                    ############################--Fin contenu fichier--##############################
+                    ############################--Fin contenu table--##############################
 
 
                 ///////////////////////////////----Validation des élements avant ajout definitif------/////////////////
@@ -157,7 +157,7 @@ $_SESSION["actif"] = "visiteur";
                 //////////////////////////-------Fin Nom----------------------/////////////////////////
 
                 if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"]) || isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) {
-                    //////////////////////////-------Date de naissance----------------------//////////////////////
+                    //////////////////////////-------date visite----------------------//////////////////////
                     echo '<div class="row">
                         <div class="col-md-2"></div>';
                     if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
@@ -165,16 +165,19 @@ $_SESSION["actif"] = "visiteur";
                         if ($existeDeja == true) {
                             echo 'value="' . $date_deVisite . '" ';
                         }
+                        elseif(isset($_POST["Ajouter"])){
+                             echo 'value="' . date("Y-m-d") . '" ';
+                        }
                     } 
-                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["datevisite"]) || isset($_POST["valider"]) && empty($_POST["datevisite"])) { //si la date de naissance vide lors de l'ajout
+                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["datevisite"]) || isset($_POST["valider"]) && empty($_POST["datevisite"])) { //si la date visite vide lors de l'ajout
                         echo '<input class="form-control col-md-8 espace rougMoins" type="date" id="datevisite" name="datevisite" ';
                     } 
-                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre la date de naissance
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre la date visite
                         echo '<input class="form-control col-md-8 espace " type="date" id="datevisite" name="datevisite" value ="' . $_POST["datevisite"] . '" ';
                     }
                     echo '>
                     </div>';
-                    //////////////////////////-------Fin Date de naissance----------------------//////////////////////
+                    //////////////////////////-------Fin date visite----------------------//////////////////////
 
                     //////////////////////////-------Telephone----------------------//////////////////////
                     echo '<div class="row">
@@ -252,17 +255,29 @@ $_SESSION["actif"] = "visiteur";
 
             ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
             if (isset($_POST["AjouterFin"]) && $valAjout == true) {
-
+                ///////////-----recuperation des données des etudiants----///////////
+                $codemysql = "SELECT id_visiteurs FROM visiteurs"; //le code mysql
+                $id_des_visiteurs=recuperation($connexion,$codemysql);
+                ///////////-----Fin recuperation des données des etudiants----///////
+                if(isset($id_des_visiteurs[0]["id_visiteurs"])){
+                    $id_visiteurs=$id_des_visiteurs[count($id_des_visiteurs)-1]["id_visiteurs"];//l'id du dernier visiteur
+                    $id_visiteurs=str_replace("SA-V-","",$id_visiteurs);
+                    $id_visiteurs=$id_visiteurs+1;
+                    $id_visiteurs="SA-V-".$id_visiteurs;
+                }
+                else{
+                    $id_visiteurs="SA-V-1";
+                }
                 $nom = securisation($_POST["nom"]);
                 $datVis = securisation($_POST["datevisite"]);
 
                 $tel = securisation($_POST["tel"]);
                 $email = securisation($_POST["email"]);
                 $agent=$_SESSION["NCI_agents"];
-                $codemysql = "INSERT INTO `visiteurs` (Nom,Date,Telephone,Email,NCI_agents)
-                            VALUES(:Nom,:Date,:Telephone,:Email,:NCI_agents)"; //le code mysql
+                $codemysql = "INSERT INTO `visiteurs` (id_visiteurs,Nom,Date,Telephone,Email,NCI_agents)
+                            VALUES(:id_visiteurs,:Nom,:Date,:Telephone,:Email,:NCI_agents)"; //le code mysql
                 $requete = $connexion->prepare($codemysql);
-                
+                $requete->bindParam(":id_visiteurs", $id_visiteurs);
                 $requete->bindParam(":Nom", $nom);
                 $requete->bindParam(":Date", $datVis);
                 $requete->bindParam(":Telephone", $tel);
@@ -297,12 +312,12 @@ $_SESSION["actif"] = "visiteur";
         </form>
         <!-- ///////////////////////////////////------Debut Affichage-----//////////////////////// -->
         <?php
-        if($tableVide==false){
+        if($tableVide==false || isset($_POST["AjouterFin"]) && $valAjout == true){
         echo'<table class="col-12 table tabliste table-hover">
             <thead class="">
                 <tr class="row">
                     <td class="col-md-1 text-center gras"></td>
-                    <td class="col-md-2 text-center gras">N°</td>
+                    <td class="col-md-2 text-center gras">Code</td>
                     <td class="col-md-2 text-center gras">Nom</td>
                     <td class="col-md-2 text-center gras">Date</td>
                     <td class="col-md-2 text-center gras">Téléphone</td>
@@ -316,11 +331,19 @@ $_SESSION["actif"] = "visiteur";
             if(isset($_POST["AjouterFin"]) && $valAjout == true || isset($_POST["valider"]) && $valAjout == true ){//si ajouter ou modifier n'afficher que la ligne
                 $datN = new DateTime($_POST["datevisite"]);
                     $date = $datN->format('d-m-Y');
-                    if(isset($_POST["ancienCode"])){
+                    if(isset($_POST["ancienCode"])){//modification : ils sont plusieurs à avoir ce nom
                         $leCode=$_POST["ancienCode"];
                     }
-                    else{
-                        $leCode=$_POST["code"];
+                    elseif(isset($_POST["valider"])){//modification : un seul à ce nom
+                        $nom_visiteur=$_POST["nom"];
+                        ///////////-----recuperation des données des etudiants----///////////
+                        $codemysql = "SELECT id_visiteurs FROM visiteurs WHERE Nom='$nom_visiteur'"; //le code mysql
+                        $id_des_visiteurs=recuperation($connexion,$codemysql);
+                        ///////////-----Fin recuperation des données des etudiants----///////
+                        $leCode=$id_des_visiteurs[0]["id_visiteurs"];
+                    }
+                    elseif(isset($_POST["AjouterFin"])){//on viens de l'ajouter
+                        $leCode=$id_visiteurs;
                     }
                     echo
                                 '<tr class="row">
@@ -379,6 +402,7 @@ $_SESSION["actif"] = "visiteur";
     <?php
     include("piedDePage.php");
     ?>
+    
     <script src="../js/jq.js"></script>
     <script src="../js/bootstrap-table-pagination.js"></script>
     <script src="../js/monjs.js"></script>
