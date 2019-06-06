@@ -1,20 +1,39 @@
 <?php
 require('../fpdf.php');
 try {
+    
+    if(isset($_GET["date_pdf"])) {
+        $datN=new DateTime($_GET["date_pdf"]);
+        $ladate = $datN->format('Y-m-d');
+    }
     $tout="";
     include("../../pages/connexionBDD.php");
-    ///////////-----recuperation des données des etudiants----///////////
-    $codemysql = "SELECT * FROM etudiants ORDER BY id_referentiels"; //le code mysql
-    $etudiants=recuperation($connexion,$codemysql);
+    /////////-----recuperation des données des etudiants----///////////
+    if(isset($_GET["date_pdf"])) {
+        $codemysql = "SELECT * FROM emargement WHERE Date_emargement='$ladate'";
+    }
+    else{
+        $codemysql = "SELECT * FROM emargement ORDER BY Date_emargement ASC";
+    }
+    $emargement=recuperation($connexion,$codemysql);
     ///////////-----Fin recuperation des données des etudiants----///////
-    for($i=0;$i<count($etudiants);$i++) {
-        $id_ref=$etudiants[$i]["id_referentiels"];
+    for($i=0;$i<count($emargement);$i++) {
+        $nci=$emargement[$i]["NCI"];
+
+        ///////////-----recuperation des données des etudiants----///////////
+        $codemysql = "SELECT etudiants.Nom,etudiants.id_referentiels FROM etudiants WHERE NCI='$nci'"; //le code mysql
+        $etudiants=recuperation($connexion,$codemysql);
+        ///////////-----Fin recuperation des données des etudiants----///////
+        
+        $id_ref=$etudiants[0]["id_referentiels"];
+
         ///////////-----recuperation des données des etudiants----///////////
         $codemysql = "SELECT referentiels.Nom FROM referentiels WHERE id_referentiels='$id_ref'"; //le code mysql
         $nom_ref=recuperation($connexion,$codemysql);
         ///////////-----Fin recuperation des données des etudiants----///////
-        $tout=$tout.$etudiants[$i]["NCI"].";".$nom_ref[0]["Nom"].";".$etudiants[$i]["Nom"].";".$etudiants[$i]["Naissance"].";".$etudiants[$i]["Telephone"].";".$etudiants[$i]["Email"].";\n";
-        $monfichier=fopen("../Mes_fichiers_texte/etudiants.txt","w");
+
+        $tout=$tout.$emargement[$i]["NCI"].";".$nom_ref[0]["Nom"].";".$etudiants[0]["Nom"].";".$emargement[$i]["Date_emargement"].";".$emargement[$i]["Arrivee"].";".$emargement[$i]["Depart"].";".$emargement[$i]["NCI_agents_arrivee"].";".$emargement[$i]["NCI_agents_depart"].";\n";
+        $monfichier=fopen("../Mes_fichiers_texte/emargement.txt","w");
         fwrite($monfichier,trim($tout));
         fclose($monfichier);
     }
@@ -47,7 +66,7 @@ class PDF extends FPDF
         $a=0;
         foreach($data as $row)
         {
-            $w = array(30, 17, 55, 20,20,53);//modifier le nombre d'élement max 190
+            $w = array(30, 17, 57, 22,17,17,17,17);//modifier le nombre d'élement max 190
             if($a!=0 && $a%43==0){
                 $this->Cell(array_sum($w),0,' ','T');//tracer jusqu'a la fin
                 $this->Cell(-array_sum($w),0,' ','');//revenir à la ligne
@@ -75,7 +94,7 @@ class PDF extends FPDF
             }
             
             $a++;
-            for($données=0;$données<=5;$données++){
+            for($données=0;$données<=7;$données++){
                 $this->Cell($w[$données],6,pour_conversion($row[$données]),'LR',0,'L',$fill);
             } 
             $this->Ln();
@@ -88,9 +107,9 @@ class PDF extends FPDF
 
 $pdf = new PDF();
 // Titres des colonnes
-$header = array('NCI', 'Ref', 'Nom', 'Naissance',"Telephone","Email");
+$header = array('NCI', 'Ref', 'Nom', 'Date',"Arrive","Depart","Agent 1","Agent 2");
 // Chargement des données
-$data = $pdf->LoadData('../Mes_fichiers_texte/etudiants.txt');
+$data = $pdf->LoadData('../Mes_fichiers_texte/emargement.txt');
 $pdf->SetFont('Arial','',10);
 $pdf->AddPage();
 
