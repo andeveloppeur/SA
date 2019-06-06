@@ -25,7 +25,14 @@ $_SESSION["actif"] = "accueil";
         text-decoration: none !important;
     }
     .margBot{
-        margin-bottom:15%;
+        margin-bottom:25%;
+    }
+    .active>.nav-link{
+        background-color: #d0c9d675;
+        border-bottom: 4px solid #ce2e7469;
+    }
+    .navbar-expand-lg{
+            padding:0px 16px 0px 16px;
     }
     </style>
 </head>
@@ -121,11 +128,9 @@ $_SESSION["actif"] = "accueil";
         }
 
         echo "<h2 class='margBot'></h2>
-        </section>
-            <footer class='piedPageaccueil'>
-                <p class='cpr'>Copyright 2019 Sonatel Academy</p>
-            </footer>";
-        ?>
+        </section>";
+    include("piedDePage.php");
+    ?>
     <script src="../js/core.js"></script>
     <script src="../js/charts.js"></script>
     <script src="../js/animated.js"></script>

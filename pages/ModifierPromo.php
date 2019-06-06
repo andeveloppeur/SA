@@ -18,7 +18,15 @@ $_SESSION["actif"] = "ModifierPromo";
     <link rel="stylesheet" type="text/css" media="screen" href="../css/MonStyle.css">
     <title>Gestion des promos</title>
 </head>
-
+<style>
+    .active>.nav-link{
+        background-color: #d0c9d675;
+        border-bottom: 4px solid #ce2e7469;
+    }
+    .navbar-expand-lg{
+        padding:0px 16px 0px 16px;
+    }
+</style>
 <body>
     <?php
     include("nav.php");

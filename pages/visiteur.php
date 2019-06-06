@@ -42,6 +42,13 @@ $_SESSION["actif"] = "visiteur";
         .table {
             margin-bottom: 2em;
         }
+        .active>.nav-link{
+            background-color: #d0c9d675;
+            border-bottom: 4px solid #ce2e7469;
+        }
+        .navbar-expand-lg{
+            padding:0px 16px 0px 16px;
+        }
     </style>
 </head>
 

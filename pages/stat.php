@@ -30,6 +30,13 @@ if (!isset($_GET["code"])) {
         margin-top: 2%;
         margin-bottom: 5%;
     }
+    .active>.nav-link{
+        background-color: #d0c9d675;
+        border-bottom: 4px solid #ce2e7469;
+    }
+    .navbar-expand-lg{
+        padding:0px 16px 0px 16px;
+    }
     </style>
 </head>
 
@@ -75,10 +82,7 @@ if (!isset($_GET["code"])) {
         catch (PDOException $e) {
             echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
         }
-    echo "
-            <footer class='piedPageaccueil'>
-                <p class='cpr'>Copyright 2019 Sonatel Academy</p>
-            </footer>";
+    include("piedDePage.php");
     ?>
     <script src="../js/core.js"></script>
     <script src="../js/charts.js"></script>

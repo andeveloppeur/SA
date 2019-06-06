@@ -12,6 +12,10 @@ try {
     if(isset($_GET["date_pdf"])) {
         $codemysql = "SELECT * FROM emargement WHERE Date_emargement='$ladate'";
     }
+    elseif(isset($_GET["Nci_etudiant"])){
+        $nci_etudiants=$_GET["Nci_etudiant"];
+        $codemysql = "SELECT * FROM emargement WHERE NCI='$nci_etudiants'";
+    }
     else{
         $codemysql = "SELECT * FROM emargement ORDER BY Date_emargement ASC";
     }
