@@ -13,6 +13,14 @@ if (isset($_GET["ref"])) {
 elseif (isset($_POST["ref"])) {
     $ref = $_POST["ref"];
 }
+
+if(isset($_POST["validerRechJour"])){//pour barre de recherche
+    $_SESSION["jourChercjer"]=$_POST["jourRech"];
+}
+elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
+    $_SESSION["jourChercjer"]=date("Y-m-d");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="FR-fr">
@@ -91,6 +99,7 @@ elseif (isset($_POST["ref"])) {
                         $nomRecup="";
                         $dateNow="";
                         $heureNow="";
+                        
                         ///////////////////////////-------ref---------------------//////////////////////
                         echo '<div class="row">
                                 <div class="col-md-2"></div>
@@ -214,7 +223,11 @@ elseif (isset($_POST["ref"])) {
                         <div class="col-md-6 bor">';
                         echo '<div class="row">
                             <div class="col-md-2"></div>
-                            <input type="date" class="form-control col-md-8 espace" name="jourRech"'; if(!isset($_POST["jourRech"])){echo' value="'.date('Y-m-d').'" ';}else{echo' value="'.$_POST["jourRech"].'" ';} echo'>
+                            <input type="date" class="form-control col-md-8 espace" name="jourRech"'; 
+                            if(!isset($_POST["jourRech"]) && !isset($_POST["recherche"])){echo' value="'.date('Y-m-d').'" ';}
+                            elseif(isset($_POST["jourRech"])){echo' value="'.$_POST["jourRech"].'" ';} 
+                            elseif(isset($_POST["recherche"]) && isset($_SESSION["jourChercjer"])){echo' value="'.$_SESSION["jourChercjer"].'" ';} 
+                            echo'>
                         </div>';
                         echo '<div class="row">
                             <div class="col-md-3"></div>
@@ -333,7 +346,7 @@ elseif (isset($_POST["ref"])) {
                         $ligne = $etudiants[0]["Nom"]." ".$le_ref_etudiant[0]["Nom"]." ".$emargement[$i]["Date_emargement"]." ".$emargement[$i]["Arrivee"]." ".$emargement[$i]["Depart"];
                         if(isset($_POST["validerRechJour"]) && $tableVide==false && $emargement[$i]["Date_emargement"]==$_POST["jourRech"]||
                         !isset($_POST["validerRechJour"]) && $tableVide==false && !isset($_POST["recherche"]) && $emargement[$i]["Date_emargement"]==date('Y-m-d')||
-                        !isset($_POST["validerRechJour"]) && $tableVide==false && isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && !empty($_POST["aRechercher"]) ||
+                        !isset($_POST["validerRechJour"]) && $tableVide==false && isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && $_SESSION["jourChercjer"]==$emargement[$i]["Date_emargement"] ||
                         !isset($_POST["validerRechJour"]) && $tableVide==false && $le_ref_etudiant[0]["Nom"] == $ref && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
                             $datN = new DateTime($emargement[$i]["Date_emargement"]);
                             $date = $datN->format('d-m-Y');

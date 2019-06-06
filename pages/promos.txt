@@ -1,3 +1,0 @@
-SA-1|Dev Web|Mars|2019|
-SA-2|Ref Dig|Mars|2019|
-SA-3|Data Art|Mars|2019|
