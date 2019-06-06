@@ -230,22 +230,45 @@ elseif (isset($_POST["ref"])) {
             if (isset($_POST["ref"]) || isset($_GET["ref"])) {
 
                 ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
-                if (isset($_POST["valider"]) && $sortie==false) {
-                    $code= securisation($_POST["code"]);
-                    $date_emar = securisation($_POST["auj"]);
-                    $hArriv = securisation($_POST["arrivee"]);
-                    $hDepart = securisation($_POST["depart"]);
-                    $nci_dep="";
-                    $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,NCI_agents_arrivee,NCI_agents_depart)
-                        VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:NCI_agents_arrivee,:NCI_agents_depart)"; //le code mysql
-                    $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
-                    $requete->bindParam(":NCI", $code);
-                    $requete->bindParam(":Date_emargement", $date_emar);
-                    $requete->bindParam(":Arrivee", $hArriv);
-                    $requete->bindParam(":Depart", $hDepart);
-                    $requete->bindParam(":NCI_agents_arrivee", $_SESSION["NCI_agents"]);
-                    $requete->bindParam(":NCI_agents_depart", $nci_dep);
-                    $requete->execute(); //excecute la requete qui a été preparé
+                if(isset($_POST["valider"]) && $sortie==false) {
+                    $NCI_etudiant=securisation($_POST["code"]);
+                    $datEmar=securisation($_POST["auj"]);
+                    ///////////-----recuperation des données de la table emargement----///////////
+                    $codemysql = "SELECT id_emargement FROM emargement WHERE NCI='$NCI_etudiant' AND Date_emargement='$datEmar' "; //le code mysql
+                    $id_emargement=recuperation($connexion,$codemysql);
+                    ///////////-----recuperation des données de la table emargement-----///////////
+                    if(!isset($id_emargement[0]["id_emargement"])){
+                        $code= securisation($_POST["code"]);
+                        $date_emar = securisation($_POST["auj"]);
+                        $hArriv = securisation($_POST["arrivee"]);
+                        $hDepart = securisation($_POST["depart"]);
+                        $nci_dep="";
+                        $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,NCI_agents_arrivee,NCI_agents_depart)
+                            VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:NCI_agents_arrivee,:NCI_agents_depart)"; //le code mysql
+                        $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
+                        $requete->bindParam(":NCI", $code);
+                        $requete->bindParam(":Date_emargement", $date_emar);
+                        $requete->bindParam(":Arrivee", $hArriv);
+                        $requete->bindParam(":Depart", $hDepart);
+                        $requete->bindParam(":NCI_agents_arrivee", $_SESSION["NCI_agents"]);
+                        $requete->bindParam(":NCI_agents_depart", $nci_dep);
+                        $requete->execute(); //excecute la requete qui a été preparé
+                    }
+                    else{
+                        $NCI_etudiant=securisation($_GET["aModifer"]);
+                        $datEmar=securisation($_POST["auj"]);
+                        $hArriv=securisation($_POST["arrivee"]);
+                        $hDepart=securisation($_POST["depart"]);
+                        $NCI_agents_arrivee=$_SESSION["NCI_agents"];
+                        ///////////-----recuperation des données de la table emargement----///////////
+                        $codemysql = "SELECT id_emargement FROM emargement WHERE NCI='$NCI_etudiant' AND Date_emargement='$datEmar' "; //le code mysql
+                        $id_emargement=recuperation($connexion,$codemysql);
+                        ///////////-----recuperation des données de la table emargement-----///////////
+                        $id_emarg=$id_emargement[0]["id_emargement"];
+                        $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',NCI_agents_arrivee='$NCI_agents_arrivee' WHERE id_emargement='$id_emarg'";
+                        $requete = $connexion->prepare($codemysql);
+                        $requete->execute();
+                    }
                 }
                 ####################################------Fin Ajouter-----#################################
 
@@ -253,7 +276,6 @@ elseif (isset($_POST["ref"])) {
                 if (isset($_POST["valider"])  && $sortie == true) {
                     for($i=0;$i<count($emargement);$i++) {
                         if ($emargement[$i]["NCI"]== $_POST["code"] &&$_POST["auj"]==$emargement[$i]["Date_emargement"] && !isset($_GET["aModifier"])|| isset($_GET["aModifier"]) && $emargement[$i]["NCI"] == $_GET["aModifier"] && $_POST["auj"]==$emargement[$i]["Date_emargement"] ) {//modifier si le code correspond                             
-
                             $NCI_etudiant=securisation($_POST["code"]);
                             $datEmar=securisation($_POST["auj"]);
                             $hArriv=securisation($_POST["arrivee"]);
@@ -363,9 +385,9 @@ elseif (isset($_POST["ref"])) {
     <?php
     include("piedDePage.php");
     ?>
-    <!-- <script src="../js/jq.js"></script>
+    <script src="../js/jq.js"></script>
     <script src="../js/bootstrap-table-pagination.js"></script>
-    <script src="../js/monjs.js"></script> -->
+    <script src="../js/monjs.js"></script>
 </body>
 
 </html>
