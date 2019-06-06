@@ -4,7 +4,7 @@ try {
     $tout="";
     include("../../pages/connexionBDD.php");
     ///////////-----recuperation des données des etudiants----///////////
-    $codemysql = "SELECT * FROM etudiants"; //le code mysql
+    $codemysql = "SELECT * FROM etudiants ORDER BY id_referentiels"; //le code mysql
     $etudiants=recuperation($connexion,$codemysql);
     ///////////-----Fin recuperation des données des etudiants----///////
     for($i=0;$i<count($etudiants);$i++) {
@@ -23,62 +23,67 @@ catch (PDOException $e) {
     echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
 } 
 
-
-
-
 function pour_conversion($value){//pour consersion en utf-8
     $value = mb_convert_encoding($value, 'ISO-8859-1', 'UTF-8');
     return $value;
 }
 class PDF extends FPDF
 {
-// Chargement des données
-function LoadData($file){
-    // Lecture des lignes du fichier
-    $lines = file($file);
-    $data = array();
-    foreach($lines as $line)
-        $data[] = explode(';',trim($line));
-    return $data;
-}
-
-// Tableau coloré
-function FancyTable($header, $data)
-{
-    // Couleurs, épaisseur du trait et police grasse
-    $this->SetFillColor(255,0,0);
-    $this->SetTextColor(255);
-    $this->SetDrawColor(128,0,0);
-    $this->SetLineWidth(.3);
-    $this->SetFont('','B');
-    // En-tête
-    $w = array(30, 17, 55, 20,20,53);//modifier le nombre d'élement max 190
-
-    for($i=0;$i<count($header);$i++)
-        $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
-    $this->Ln();
-
-    // Restauration des couleurs et de la police
-    $this->SetFillColor(224,235,255);
-    $this->SetTextColor(0);
-    $this->SetFont('');
-    // Données
-    $fill = false;
-
-
-
-    foreach($data as $row)
-    {
-        for($i=0;$i<=5;$i++){
-            $this->Cell($w[$i],6,pour_conversion($row[$i]),'LR',0,'L',$fill);
-        } 
-
-        $this->Ln();
-        $fill = !$fill;
+    // Chargement des données
+    function LoadData($file){
+        // Lecture des lignes du fichier
+        $lines = file($file);
+        $data = array();
+        foreach($lines as $line)
+            $data[] = explode(';',trim($line));
+        return $data;
     }
-    // Trait de terminaison
-    $this->Cell(array_sum($w),0,'','T');
-}
+
+    // Tableau coloré
+    function FancyTable($header, $data)
+    {
+        // Données
+        $fill = false;
+        $a=0;
+        foreach($data as $row)
+        {
+            $w = array(30, 17, 55, 20,20,53);//modifier le nombre d'élement max 190
+            if($a!=0 && $a%43==0){
+                $this->Cell(array_sum($w),0,' ','T');//tracer jusqu'a la fin
+                $this->Cell(-array_sum($w),0,' ','');//revenir à la ligne
+            }
+                
+            if($a==0||$a%43==0){
+                // Couleurs, épaisseur du trait et police grasse
+                $this->SetFillColor(255,0,0);
+                $this->SetTextColor(255);
+                $this->SetDrawColor(128,0,0);
+                $this->SetLineWidth(.3);
+                $this->SetFont('','B');
+                // En-tête
+                
+                
+                for($i=0;$i<count($header);$i++){
+                    $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
+                }
+                $this->Ln();
+                
+                // Restauration des couleurs et de la police
+                $this->SetFillColor(224,235,255);
+                $this->SetTextColor(0);
+                $this->SetFont('');
+            }
+            
+            $a++;
+            for($données=0;$données<=5;$données++){
+                $this->Cell($w[$données],6,pour_conversion($row[$données]),'LR',0,'L',$fill);
+            } 
+            $this->Ln();
+            $fill = !$fill;
+        }
+        // Trait de terminaison
+        $this->Cell(array_sum($w),0,'','T');
+    }
 }
 
 $pdf = new PDF();
