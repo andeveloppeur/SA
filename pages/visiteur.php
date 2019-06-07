@@ -268,12 +268,12 @@ $_SESSION["actif"] = "visiteur";
                 ///////////-----Fin recuperation des données des etudiants----///////
                 if(isset($id_des_visiteurs[0]["id_visiteurs"])){
                     $id_visiteurs=$id_des_visiteurs[count($id_des_visiteurs)-1]["id_visiteurs"];//l'id du dernier visiteur
-                    $id_visiteurs=str_replace("SA-V-","",$id_visiteurs);
+                    $id_visiteurs=str_replace("SA-V- ","",$id_visiteurs);
                     $id_visiteurs=$id_visiteurs+1;
-                    $id_visiteurs="SA-V-".$id_visiteurs;
+                    $id_visiteurs=$id_visiteurs." V-SA";
                 }
                 else{
-                    $id_visiteurs="SA-V-1";
+                    $id_visiteurs="1 V-SA";
                 }
                 $nom = securisation($_POST["nom"]);
                 $datVis = securisation($_POST["datevisite"]);
