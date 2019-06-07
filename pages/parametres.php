@@ -269,24 +269,24 @@ if($_SESSION["Code_agents"]=="1 AS"){
             ####################################------Fin Ajouter-----#################################
 
             ///////////////////////////////////------Debut Modification-----///////////////////////////
-            // if (isset($_POST["valider_modif"])  && $admin == false && $login_existe==false && $bon_mdp==true) {
-            //     $sonId=$_SESSION["Code_agents"];
-            //     $nom = securisation($_POST["nom"]);
-            //     $tel = securisation($_POST["tel"]);
-            //     $login = securisation($_POST["login"]);
+            if (isset($_POST["valider_modif"])  && $admin == false && $login_existe==false && $bon_mdp==true) {
+                $sonId=$_SESSION["Code_agents"];
+                $nom = securisation($_POST["nom"]);
+                $tel = securisation($_POST["tel"]);
+                $login = securisation($_POST["login"]);
                 
-            //     if ( isset($_POST["ancienCode"])) {
-            //         $codemysql = "UPDATE `agents` SET Nom='$nom',Telephone='$tel',Login='$login' WHERE Code_agents='$sonId' ";
-            //         $requete = $connexion->prepare($codemysql);
-            //         $requete->execute();                   
-            //     }
-            //     if(isset($_POST["mdp"])){
-            //         $mdp = securisation($_POST["mdp"]);
-            //         $codemysql = "UPDATE `agents` SET mdp='$mdp' WHERE Code_agents='$sonId' ";
-            //         $requete = $connexion->prepare($codemysql);
-            //         $requete->execute();
-            //     }
-            // }
+                if ( isset($_POST["ancienCode"])) {
+                    $codemysql = "UPDATE `agents` SET Nom='$nom',Telephone='$tel',Login='$login' WHERE Code_agents='$sonId' ";
+                    $requete = $connexion->prepare($codemysql);
+                    $requete->execute();                   
+                }
+                if(isset($_POST["mdp"])){
+                    $mdp = securisation($_POST["mdp"]);
+                    $codemysql = "UPDATE `agents` SET mdp='$mdp' WHERE Code_agents='$sonId' ";
+                    $requete = $connexion->prepare($codemysql);
+                    $requete->execute();
+                }
+            }
             ####################################------Fin Modification----#############################
             if($admin==true) {
                 ///////////////////////////////////------Debut Affichage-----////////////////////////
