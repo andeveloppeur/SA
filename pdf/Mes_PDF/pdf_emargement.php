@@ -36,7 +36,7 @@ try {
         $nom_ref=recuperation($connexion,$codemysql);
         ///////////-----Fin recuperation des données des etudiants----///////
 
-        $tout=$tout.$emargement[$i]["NCI"].";".$nom_ref[0]["Nom"].";".$etudiants[0]["Nom"].";".$emargement[$i]["Date_emargement"].";".$emargement[$i]["Arrivee"].";".$emargement[$i]["Depart"].";".$emargement[$i]["NCI_agents_arrivee"].";".$emargement[$i]["NCI_agents_depart"].";\n";
+        $tout=$tout.$emargement[$i]["NCI"].";".$nom_ref[0]["Nom"].";".$etudiants[0]["Nom"].";".$emargement[$i]["Date_emargement"].";".$emargement[$i]["Arrivee"].";".$emargement[$i]["Depart"].";".$emargement[$i]["Code_agents_arrivee"].";".$emargement[$i]["Code_agents_depart"].";\n";
         $monfichier=fopen("../Mes_fichiers_texte/emargement.txt","w");
         fwrite($monfichier,trim($tout));
         fclose($monfichier);
