@@ -87,7 +87,7 @@ if (nom_page.includes("accueil.php")) {
 }
 ////////////----Fin pour graphique accueil----////////
 
-/////////////////////////////----pour la page paramettre lors de l ajout d un agent----//////
+/////////////////////////////----Pour la page paramettre----//////
 var nom_page = window.location.pathname;
 if (nom_page.includes("parametres.php")) {
     var nom = document.getElementById("nom_ag");
@@ -100,16 +100,15 @@ if (nom_page.includes("parametres.php")) {
 
     var ConfMDP = document.getElementById("confMdp_ag");
 
-    var Envoie = document.getElementById("valider_ajout_ag");
-
-    if (Envoie) { Envoie.addEventListener("click", verification); } //car parfois le bouton est cacher
 
     function verification(e) { //verification des deux mots de passe lors de l inscription
-        if (MDP.value != ConfMDP.value) {
-            ConfMDP.style.backgroundColor = "rgba(255, 0, 0, 0.5)"; //l equivalent de la classe rougMoins
-            ConfMDP.value = "";
-            ConfMDP.setAttribute("placeholder", "MOT DE PASSE DIFFERENT");
-            e.preventDefault();
+        if (MDP) {
+            if (MDP.value != ConfMDP.value) {
+                ConfMDP.style.backgroundColor = "rgba(255, 0, 0, 0.5)"; //l equivalent de la classe rougMoins
+                ConfMDP.value = "";
+                ConfMDP.setAttribute("placeholder", "MOT DE PASSE DIFFERENT");
+                e.preventDefault();
+            }
         }
         if (nom.value == "" || tel.value == "" || login.value == "" || MDP.value == "" || ConfMDP.value == "") {
             if (nom.value == "") {
@@ -135,5 +134,18 @@ if (nom_page.includes("parametres.php")) {
             e.preventDefault();
         }
     }
+    /////////////////////////////----pour la page paramettre lors de l ajout d un agent----//////
+    var valider_ajout_ag = document.getElementById("valider_ajout_ag");
+
+    if (valider_ajout_ag) { valider_ajout_ag.addEventListener("click", verification); } //car parfois le bouton est cacher
+    /////////////////////////////----Fin pour la page paramettre lors de l ajout d un agent----//////
+
+    //////////////////////////////----Pour la page paramettre lors de la modification d un agent----/////////
+    var valider_modif_ag = document.getElementById("valider_modif_ag");
+
+    if (valider_modif_ag) { valider_modif_ag.addEventListener("click", verification); }
+
+    /////////////////////////////----Fin pour la page paramettre lors de la modification d un agent----//////
+
 }
-/////////////////////////////----Fin pour la page paramettre lors de l ajout d un agent----//////
+/////////////////////////////----Fin pour la page paramettre ----//////
