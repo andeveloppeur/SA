@@ -135,7 +135,8 @@ $_SESSION["actif"] = "accueil";
     <script src="../js/charts.js"></script>
     <script src="../js/animated.js"></script>
     <script src="../js/index.js"></script>
-    <script src="../js/jq.js"></script>
+    <script src="../js/jq.js"></script><!--Non utiliser ici c'est pour la pagination mais ne pas enlever sinon il y aura une erreur dans mon js qui utilise une fonction presente ici-->
+    <script src="../js/bootstrap-table-pagination.js"></script><!--Non utiliser ici c'est pour la pagination mais ne pas enlever sinon il y aura une erreur dans mon js qui utilise une fonction presente ici-->
     <script src="../js/monjs.js"></script>
 </body>
 

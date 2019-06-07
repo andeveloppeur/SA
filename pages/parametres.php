@@ -81,28 +81,28 @@ $_SESSION["actif"] = "parametres";
             <div class="col-md-6 bor">
                 <div class="row">
                     <div class="col-md-2"></div>
-                    <input  type="text" id="nom" name="nom" class="form-control col-md-8 espace" placeholder= "Nom de l'agent">
+                    <input  type="text" id="nom_ag" name="nom" class="form-control col-md-8 espace" placeholder= "Nom de l'agent">
                 </div>
                 <div class="row">
                     <div class="col-md-2"></div>
-                    <input  type="text" id="tel" name="tel" class="form-control col-md-8 espace" placeholder= "Téléphone">
+                    <input  type="text" id="tel_ag" name="tel" class="form-control col-md-8 espace" placeholder= "Téléphone">
                 </div>
                 <div class="row">
                     <div class="col-md-2"></div>
-                    <input  type="text" id="login" name="login" class="form-control col-md-8 espace" placeholder= "Login">
+                    <input  type="text" id="login_ag" name="login" class="form-control col-md-8 espace" placeholder= "Login">
                 </div>
                 <div class="row">
                     <div class="col-md-2"></div>
-                    <input  type="password" id="mdp" name="mdp" class="form-control col-md-8 espace" placeholder= "Mot de passe">
+                    <input  type="password" id="mdp_ag" name="mdp" class="form-control col-md-8 espace" placeholder= "Mot de passe">
                 </div>
                 <div class="row">
                     <div class="col-md-2"></div>
-                    <input  type="password" id="confMdp" name="confMdp" class="form-control col-md-8 espace" placeholder= "Confirmez le mot de passe">
+                    <input  type="password" id="confMdp_ag" name="confMdp" class="form-control col-md-8 espace" placeholder= "Confirmez le mot de passe">
                 </div>
                 <div class="row">
                     <div class="col-md-2"></div>
                         <input type="submit" class="form-control col-md-4 espace" value="Annuller" name="Annuller">
-                        <input type="submit" class="form-control col-md-4 espace" value="Enregister" name="valider">
+                        <input type="submit" id="valider_ajout_ag" class="form-control col-md-4 espace" value="Enregister" name="valider">
                     </div>
                 </div>
             </div>
@@ -178,7 +178,6 @@ $_SESSION["actif"] = "parametres";
     <?php
     include("piedDePage.php");
     ?>
-    
     <script src="../js/jq.js"></script>
     <script src="../js/bootstrap-table-pagination.js"></script>
     <script src="../js/monjs.js"></script>
