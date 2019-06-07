@@ -20,10 +20,9 @@ if (isset($_POST["submit"])) {
         exit();
     }
 
-
     if ($login != "" && $mDp != "") {
         for($i=0;$i<count($agents);$i++){
-            if ($login == $agents[$i]["Login"] && $mDp==$agents[$i]["MDP"] ) {
+            if ($login == $agents[$i]["Login"] && md5($mDp)==$agents[$i]["MDP"] && $agents[$i]["statut"]=="Actif") {
                     header('Location: accueil.php');
                     $_SESSION["nom"] = $agents[$i]["Nom"];
                     $_SESSION["Code_agents"] = $agents[$i]["Code_agents"];

@@ -107,7 +107,7 @@ if (nom_page.includes("parametres.php")) {
     function verification(e) { //verification des deux mots de passe lors de l inscription
         if (MDP.value != ConfMDP.value) {
             ConfMDP.style.backgroundColor = "rgba(255, 0, 0, 0.5)"; //l equivalent de la classe rougMoins
-            ConfMDP.textContent = "";
+            ConfMDP.value = "";
             ConfMDP.setAttribute("placeholder", "MOT DE PASSE DIFFERENT");
             e.preventDefault();
         }
