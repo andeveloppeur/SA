@@ -25,6 +25,9 @@ echo '<nav class="navbar navbar-expand-lg navbar-light row fixed-top" style="bac
         </li>
         <li class="nav-item ';if ($_SESSION["actif"] == "visiteur") {echo 'active';}echo '">
           <a class="nav-link" href="visiteur.php">Visiteurs</a>
+        </li>
+        <li class="nav-item ';if ($_SESSION["actif"] == "parametres") {echo 'active';}echo '">
+          <a class="nav-link" href="parametres.php">Paramètres</a>
         </li>';
       }
       elseif($_SESSION["actif"] =="presence" ||$_SESSION["actif"] =="stat"){

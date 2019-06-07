@@ -266,15 +266,15 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         $hArriv = securisation($_POST["arrivee"]);
                         $hDepart = securisation($_POST["depart"]);
                         $nci_dep="";
-                        $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,NCI_agents_arrivee,NCI_agents_depart)
-                            VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:NCI_agents_arrivee,:NCI_agents_depart)"; //le code mysql
+                        $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,Code_agents_arrivee,Code_agents_depart)
+                            VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:Code_agents_arrivee,:Code_agents_depart)"; //le code mysql
                         $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
                         $requete->bindParam(":NCI", $code);
                         $requete->bindParam(":Date_emargement", $date_emar);
                         $requete->bindParam(":Arrivee", $hArriv);
                         $requete->bindParam(":Depart", $hDepart);
-                        $requete->bindParam(":NCI_agents_arrivee", $_SESSION["NCI_agents"]);
-                        $requete->bindParam(":NCI_agents_depart", $nci_dep);
+                        $requete->bindParam(":Code_agents_arrivee", $_SESSION["Code_agents"]);
+                        $requete->bindParam(":Code_agents_depart", $nci_dep);
                         $requete->execute(); //excecute la requete qui a été preparé
                     }
                     else{//donc il a emarger et on le modifie
@@ -282,13 +282,13 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         $datEmar=securisation($_POST["auj"]);
                         $hArriv=securisation($_POST["arrivee"]);
                         $hDepart=securisation($_POST["depart"]);
-                        $NCI_agents_arrivee=$_SESSION["NCI_agents"];
+                        $Code_agents_arrivee=$_SESSION["Code_agents"];
                         ///////////-----recuperation des données de la table emargement----///////////
                         $codemysql = "SELECT id_emargement FROM emargement WHERE NCI='$NCI_etudiant' AND Date_emargement='$datEmar' "; //le code mysql
                         $id_emargement=recuperation($connexion,$codemysql);
                         ///////////-----recuperation des données de la table emargement-----///////////
                         $id_emarg=$id_emargement[0]["id_emargement"];
-                        $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',NCI_agents_arrivee='$NCI_agents_arrivee' WHERE id_emargement='$id_emarg'";
+                        $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',Code_agents_arrivee='$Code_agents_arrivee' WHERE id_emargement='$id_emarg'";
                         $requete = $connexion->prepare($codemysql);
                         $requete->execute();
                     }
@@ -303,13 +303,13 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             $datEmar=securisation($_POST["auj"]);
                             $hArriv=securisation($_POST["arrivee"]);
                             $hDepart=securisation($_POST["depart"]);
-                            $NCI_agents_depart=$_SESSION["NCI_agents"];
+                            $Code_agents_depart=$_SESSION["Code_agents"];
                             ///////////-----recuperation des données de la table emargement----///////////
                             $codemysql = "SELECT id_emargement FROM emargement WHERE NCI='$NCI_etudiant' AND Date_emargement='$datEmar' "; //le code mysql
                             $id_emargement=recuperation($connexion,$codemysql);
                             ///////////-----recuperation des données de la table emargement-----///////////
                             $id_emarg=$id_emargement[0]["id_emargement"];
-                            $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',NCI_agents_depart='$NCI_agents_depart' WHERE id_emargement='$id_emarg'";
+                            $codemysql = "UPDATE `emargement` SET Date_emargement='$datEmar',Arrivee='$hArriv',Depart='$hDepart',Code_agents_depart='$Code_agents_depart' WHERE id_emargement='$id_emarg'";
                             $requete = $connexion->prepare($codemysql);
                             $requete->execute();
                         }

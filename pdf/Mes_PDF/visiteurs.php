@@ -18,7 +18,7 @@ try {
     $visiteurs=recuperation($connexion,$codemysql);
     ///////////-----Fin recuperation des données des etudiants----///////
     for($i=0;$i<count($visiteurs);$i++) {
-        $tout=$tout.$visiteurs[$i]["id_visiteurs"].";".$visiteurs[$i]["Nom"].";".$visiteurs[0]["Date"].";".$visiteurs[$i]["Telephone"].";".$visiteurs[$i]["Email"].";".$visiteurs[$i]["NCI_agents"].";\n";
+        $tout=$tout.$visiteurs[$i]["id_visiteurs"].";".$visiteurs[$i]["Nom"].";".$visiteurs[0]["Date"].";".$visiteurs[$i]["Telephone"].";".$visiteurs[$i]["Email"].";".$visiteurs[$i]["Code_agents"].";\n";
         $monfichier=fopen("../Mes_fichiers_texte/visiteurs.txt","w");
         fwrite($monfichier,trim($tout));
         fclose($monfichier);

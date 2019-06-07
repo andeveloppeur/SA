@@ -5,7 +5,7 @@ if (!isset($_SESSION["nom"])) {
     header('Location: ../index.php');
     exit();
 }
-$_SESSION["actif"] = "visiteur";
+$_SESSION["actif"] = "parametres";
 ?>
 
 <!DOCTYPE html>
@@ -71,10 +71,10 @@ $_SESSION["actif"] = "visiteur";
                     include("connexionBDD.php");
                     ############################--Debut contenu table--############################
                     ///////////-----recuperation des données des etudiants----///////////
-                    $codemysql = "SELECT * FROM visiteurs"; //le code mysql
-                    $visiteurs=recuperation($connexion,$codemysql);
+                    $codemysql = "SELECT * FROM agents"; //le code mysql
+                    $agents=recuperation($connexion,$codemysql);
                     ///////////-----Fin recuperation des données des etudiants----///////
-                    if(isset($visiteurs[0][1])){
+                    if(isset($agents[0][1])){
                         $tableVide=false;
                     }
                     ############################--Fin contenu table--##############################
@@ -82,7 +82,7 @@ $_SESSION["actif"] = "visiteur";
 
                 ///////////////////////////////----Validation des élements avant ajout definitif------/////////////////
                 if (isset($_POST["AjouterFin"]) || isset($_POST["valider"])) {
-                    if (!empty($_POST["nom"]) && !empty($_POST["datevisite"]) && !empty($_POST["tel"]) && !empty($_POST["email"])) {
+                    if (!empty($_POST["nom"]) && !empty($_POST["nom"]) && !empty($_POST["login"]) && !empty($_POST["mdp"]) && !empty($_POST["confMdp"])) {
                         $valAjout = true;
                     }
                 }
@@ -90,8 +90,8 @@ $_SESSION["actif"] = "visiteur";
 
                 if (isset($_POST["premierValidation"])) {
                     ////////////----même nom----//////////////////
-                   for($i=0;$i<count($visiteurs);$i++) {
-                        if ($tableVide==false && strtolower($visiteurs[$i]["Nom"]) == strtolower($_POST["nom"])) {
+                   for($i=0;$i<count($agents);$i++) {
+                        if ($tableVide==false && strtolower($agents[$i]["Nom"]) == strtolower($_POST["nom"])) {
                             $nombre++;
                             $existeDeja = true;
                         }
@@ -99,13 +99,13 @@ $_SESSION["actif"] = "visiteur";
                     ////////////----Fin même nom----//////////////
 
                     ////////////----Recupération anciennes données---//////////////
-                    for($i=0;$i<count($visiteurs);$i++) {
-                        if ($tableVide==false && strtolower($visiteurs[$i]["Nom"]) == strtolower($_POST["nom"]) && $nombre == 1 || isset($_POST["ancienCode"]) && strtolower($visiteurs[$i]["Nom"]) == strtolower($_POST["nom"]) && $nombre > 1 && $_POST["ancienCode"] == $visiteurs[$i]["id_visiteurs"]) {
+                    for($i=0;$i<count($agents);$i++) {
+                        if ($tableVide==false && strtolower($agents[$i]["Nom"]) == strtolower($_POST["nom"]) && $nombre == 1 || isset($_POST["ancienCode"]) && strtolower($agents[$i]["Nom"]) == strtolower($_POST["nom"]) && $nombre > 1 && $_POST["ancienCode"] == $agents[$i]["id_visiteurs"]) {
                             //soit on cherche avec le nom si il y a une seule personne qui porte ce nom soit avec le nom et le code si plusieurs personnes ont ce nom
                             $_POST["nom"] = $visiteurs[$i]["Nom"]; //pouvoir utiliser le bon nom
                             $date_deVisite =$visiteurs[$i]["Date"];
-                            $ancTel = $visiteurs[$i]["Telephone"];
-                            $ancEmail = $visiteurs[$i]["Email"];
+                            $anclogin = $visiteurs[$i]["loginephone"];
+                            $ancmdp = $visiteurs[$i]["mdp"];
                             $confirmer = true;
                         }
                     }
@@ -126,6 +126,24 @@ $_SESSION["actif"] = "visiteur";
                         }
                     }
                     echo '</select>
+                    </div>';
+                }
+                elseif (isset($_POST["Ajouter"]) || isset($_POST["AjouterFin"]) && $valAjout == false) {
+                        echo '<div class="row">
+                        <div class="col-md-2"></div>';
+                    if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
+                        echo '<input class="form-control col-md-8 espace" name="code" placeholder="Numéro carte d\'identité" ';
+                    } 
+                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["code"]) || isset($_POST["valider"]) && empty($_POST["code"])) { //si le téléphone vide lors de l'ajout
+                        echo '<input class="form-control col-md-8 espace rougMoins" type="text" name="code" placeholder="Remplir le numéro de le carte d\'identité" ';
+                    } 
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false && $ne_pas_ajouter_code_existe==false|| isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre le téléphone
+                        echo '<input class="form-control col-md-8 espace" type="text"  name="code" placeholder="Numéro carte d\'identité" value ="' . $_POST["code"] . '" ';
+                    }
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false && $ne_pas_ajouter_code_existe==true) { //si il manque des informations avant l'ajout remettre le téléphone
+                        echo '<input class="form-control col-md-8 espace rougMoins" type="text"  name="code" placeholder ="' . $_POST["code"] . ' existe déja !" ';
+                    }
+                    echo '">
                     </div>';
                 }
                 //////////////////////////-------Fin Code----------------------//////////////////////
@@ -164,68 +182,61 @@ $_SESSION["actif"] = "visiteur";
                 //////////////////////////-------Fin Nom----------------------/////////////////////////
 
                 if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"]) || isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) {
-                    //////////////////////////-------date visite----------------------//////////////////////
+                    
+                    //////////////////////////-------Login----------------------//////////////////////
                     echo '<div class="row">
                         <div class="col-md-2"></div>';
                     if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
-                        echo '<input class="form-control col-md-8 espace" type="date" id="datevisite" name="datevisite" ';
+                        echo '<input class="form-control col-md-8 espace" type="text" id="login" name="login" placeholder="Login" ';
                         if ($existeDeja == true) {
-                            echo 'value="' . $date_deVisite . '" ';
-                        }
-                        elseif(isset($_POST["Ajouter"])){
-                             echo 'value="' . date("Y-m-d") . '" ';
+                            echo 'value="' . $anclogin . '" ';
                         }
                     } 
-                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["datevisite"]) || isset($_POST["valider"]) && empty($_POST["datevisite"])) { //si la date visite vide lors de l'ajout
-                        echo '<input class="form-control col-md-8 espace rougMoins" type="date" id="datevisite" name="datevisite" ';
+                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["login"]) || isset($_POST["valider"]) && empty($_POST["login"])) { //si le Login vide lors de l'ajout
+                        echo '<input class="form-control col-md-8 espace rougMoins" type="text" id="login" name="login" placeholder="Remplir login" ';
                     } 
-                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre la date visite
-                        echo '<input class="form-control col-md-8 espace " type="date" id="datevisite" name="datevisite" value ="' . $_POST["datevisite"] . '" ';
-                    }
-                    echo '>
-                    </div>';
-                    //////////////////////////-------Fin date visite----------------------//////////////////////
-
-                    //////////////////////////-------Telephone----------------------//////////////////////
-                    echo '<div class="row">
-                        <div class="col-md-2"></div>';
-                    if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
-                        echo '<input class="form-control col-md-8 espace" type="number" id="tel" name="tel" placeholder="Téléphone" ';
-                        if ($existeDeja == true) {
-                            echo 'value="' . $ancTel . '" ';
-                        }
-                    } 
-                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["tel"]) || isset($_POST["valider"]) && empty($_POST["tel"])) { //si le téléphone vide lors de l'ajout
-                        echo '<input class="form-control col-md-8 espace rougMoins" type="number" id="tel" name="tel" placeholder="Remplir le numéro de téléphone" ';
-                    } 
-                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre le téléphone
-                        echo '<input class="form-control col-md-8 espace" type="number" id="tel" name="tel" placeholder="Téléphone" value ="' . $_POST["tel"] . '" ';
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre le Login
+                        echo '<input class="form-control col-md-8 espace" type="text" id="login" name="login" placeholder="Login" value ="' . $_POST["login"] . '" ';
                     }
 
                     echo '">
                     </div>';
-                    //////////////////////////-------Fin Telephone----------------------//////////////////////
+                    //////////////////////////-------Fin Login----------------------//////////////////////
 
 
-                    //////////////////////////-------Email---------------------//////////////////////
+                    //////////////////////////-------mdp---------------------//////////////////////
                     echo '<div class="row">
                         <div class="col-md-2"></div>';
                     if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
-                        echo '<input class="form-control col-md-8 espace" type="email" id="email" name="email" placeholder="Email" ';
-                        if ($existeDeja == true) {
-                            echo 'value="' . $ancEmail . '" ';
-                        }
+                        echo '<input class="form-control col-md-8 espace" type="mdp" id="mdp" name="mdp" placeholder="Mot de passe" ';
                     } 
-                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["email"]) || isset($_POST["valider"]) && empty($_POST["email"])) { //si email vide lors de l'ajout
-                        echo '<input class="form-control col-md-8 espace rougMoins" type="email" id="email" name="email" placeholder="Remplir l\'email" ';
+                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["mdp"]) || isset($_POST["valider"]) && empty($_POST["mdp"])) { //si mdp vide lors de l'ajout
+                        echo '<input class="form-control col-md-8 espace rougMoins" type="mdp" id="mdp" name="mdp" placeholder="Remplir le mot de passe" ';
                     } 
-                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre l'email
-                        echo '<input class="form-control col-md-8 espace" type="email" id="email" name="email" placeholder="Email" value ="' . $_POST["email"] . '" ';
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre l'mdp
+                        echo '<input class="form-control col-md-8 espace" type="mdp" id="mdp" name="mdp" placeholder="Mot de passe" value ="' . $_POST["mdp"] . '" ';
                     }
 
                     echo '>
                     </div>';
-                    //////////////////////////-------Fin Email---------------------//////////////////////
+                    //////////////////////////-------Fin mdp---------------------//////////////////////
+
+                    //////////////////////////-------confMdp---------------------//////////////////////
+                    echo '<div class="row">
+                        <div class="col-md-2"></div>';
+                    if (isset($_POST["premierValidation"]) && $existeDeja == true && $nombre == 1 || isset($_POST["premierValidation"]) && $existeDeja == true && $nombre > 1 && $confirmer == true || isset($_POST["Ajouter"])) {
+                        echo '<input class="form-control col-md-8 espace" type="confMdp" id="confMdp" name="confMdp" placeholder="Confirmez le mot de passe" ';
+                    } 
+                    elseif (isset($_POST["AjouterFin"]) && empty($_POST["confMdp"]) || isset($_POST["valider"]) && empty($_POST["confMdp"])) { //si confMdp vide lors de l'ajout
+                        echo '<input class="form-control col-md-8 espace rougMoins" type="confMdp" id="confMdp" name="confMdp" placeholder="Confirmez le mot de passe" ';
+                    } 
+                    elseif (isset($_POST["AjouterFin"]) && $valAjout == false || isset($_POST["valider"]) && $valAjout == false) { //si il manque des informations avant l'ajout remettre l'mdp
+                        echo '<input class="form-control col-md-8 espace" type="confMdp" id="confMdp" name="confMdp" placeholder="Confirmez le mot de passe" value ="' . $_POST["confMdp"] . '" ';
+                    }
+
+                    echo '>
+                    </div>';
+                    //////////////////////////-------Fin confMdp---------------------//////////////////////
                 }
                 ?>
                 <div class="row">
@@ -259,7 +270,6 @@ $_SESSION["actif"] = "visiteur";
             $existeDeja = 0;
             $nouv = "";
 
-
             ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
             if (isset($_POST["AjouterFin"]) && $valAjout == true) {
                 ///////////-----recuperation des données des etudiants----///////////
@@ -278,18 +288,18 @@ $_SESSION["actif"] = "visiteur";
                 $nom = securisation($_POST["nom"]);
                 $datVis = securisation($_POST["datevisite"]);
 
-                $tel = securisation($_POST["tel"]);
-                $email = securisation($_POST["email"]);
-                $agent=$_SESSION["Code_agents"];
-                $codemysql = "INSERT INTO `visiteurs` (id_visiteurs,Nom,Date,Telephone,Email,Code_agents)
-                            VALUES(:id_visiteurs,:Nom,:Date,:Telephone,:Email,:Code_agents)"; //le code mysql
+                $login = securisation($_POST["login"]);
+                $mdp = securisation($_POST["mdp"]);
+                $agent=$_SESSION["NCI_agents"];
+                $codemysql = "INSERT INTO `visiteurs` (id_visiteurs,Nom,Date,loginephone,mdp,NCI_agents)
+                            VALUES(:id_visiteurs,:Nom,:Date,:loginephone,:mdp,:NCI_agents)"; //le code mysql
                 $requete = $connexion->prepare($codemysql);
                 $requete->bindParam(":id_visiteurs", $id_visiteurs);
                 $requete->bindParam(":Nom", $nom);
                 $requete->bindParam(":Date", $datVis);
-                $requete->bindParam(":Telephone", $tel);
-                $requete->bindParam(":Email", $email);
-                $requete->bindParam(":Code_agents", $agent);
+                $requete->bindParam(":loginephone", $login);
+                $requete->bindParam(":mdp", $mdp);
+                $requete->bindParam(":NCI_agents", $agent);
                 $requete->execute(); //excecute la requete qui a été preparé
             }
             ####################################------Fin Ajouter-----#################################
@@ -298,107 +308,25 @@ $_SESSION["actif"] = "visiteur";
             if (isset($_POST["valider"])  && $valAjout == true) {
                 $nom = securisation($_POST["nom"]);
                 $datVis = securisation($_POST["datevisite"]);
-                $tel = securisation($_POST["tel"]);
-                $email = securisation($_POST["email"]);
+                $login = securisation($_POST["login"]);
+                $mdp = securisation($_POST["mdp"]);
                 if ( isset($_POST["ancienCode"])) {//ils sont plusieurs à avoir ca nom
                     $sonId=securisation($_POST["ancienCode"]);
-                    $codemysql = "UPDATE `visiteurs` SET Nom='$nom',Date='$datVis',Telephone='$tel',Email='$email' WHERE id_visiteurs='$sonId' ";
+                    $codemysql = "UPDATE `visiteurs` SET Nom='$nom',Date='$datVis',loginephone='$login',mdp='$mdp' WHERE id_visiteurs='$sonId' ";
                     $requete = $connexion->prepare($codemysql);
                     $requete->execute();                   
                 }
                 elseif(!isset($_POST["ancienCode"])){//le nom est unique
                     $sonNom=securisation($_POST["nom"]);
-                    $codemysql = "UPDATE `visiteurs` SET Nom='$nom',Date='$datVis',Telephone='$tel',Email='$email' WHERE Nom='$sonNom' ";
+                    $codemysql = "UPDATE `visiteurs` SET Nom='$nom',Date='$datVis',loginephone='$login',mdp='$mdp' WHERE Nom='$sonNom' ";
                     $requete = $connexion->prepare($codemysql);
                     $requete->execute();
                 }
             }
             ####################################------Fin Modification----#############################S
-            ?>
-            </div>
-        </form>
-        <!-- ///////////////////////////////////------Debut Affichage-----//////////////////////// -->
-        <?php
-        if($tableVide==false || isset($_POST["AjouterFin"]) && $valAjout == true){
-        echo'<table class="col-12 table tabliste table-hover">
-            <thead class="">
-                <tr class="row">
-                    <td class="col-md-1 text-center gras"></td>
-                    <td class="col-md-2 text-center gras">Code</td>
-                    <td class="col-md-2 text-center gras">Nom</td>
-                    <td class="col-md-2 text-center gras">Date</td>
-                    <td class="col-md-2 text-center gras">Téléphone</td>
-                    <td class="col-md-2 text-center gras">Email</td>
-                    <td class="col-md-1 text-center gras"></td>
-                </tr>
-            </thead>
-            <tbody id="developers">';
-        }    
-            $nbr=0;
-            if(isset($_POST["AjouterFin"]) && $valAjout == true || isset($_POST["valider"]) && $valAjout == true ){//si ajouter ou modifier n'afficher que la ligne
-                $datN = new DateTime($_POST["datevisite"]);
-                    $date = $datN->format('d-m-Y');
-                    if(isset($_POST["ancienCode"])){//modification : ils sont plusieurs à avoir ce nom
-                        $leCode=$_POST["ancienCode"];
-                    }
-                    elseif(isset($_POST["valider"])){//modification : un seul à ce nom
-                        $nom_visiteur=$_POST["nom"];
-                        ///////////-----recuperation des données des etudiants----///////////
-                        $codemysql = "SELECT id_visiteurs FROM visiteurs WHERE Nom='$nom_visiteur'"; //le code mysql
-                        $id_des_visiteurs=recuperation($connexion,$codemysql);
-                        ///////////-----Fin recuperation des données des etudiants----///////
-                        $leCode=$id_des_visiteurs[0]["id_visiteurs"];
-                    }
-                    elseif(isset($_POST["AjouterFin"])){//on viens de l'ajouter
-                        $leCode=$id_visiteurs;
-                    }
-                    echo
-                                '<tr class="row">
-                                    <td class="col-md-1 text-center"></td>
-                                    <td class="col-md-2 text-center">' . $leCode. '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
-                                    <td class="col-md-2 text-center">' . $date . '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["tel"] . '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["email"] . '</td>
-                                    <td class="col-md-1 text-center"></td>
-                                    
-                                </tr>';
-            }
-            else{
-                ///////////-----recuperation des données des etudiants----///////////
-                $codemysql = "SELECT * FROM visiteurs"; //le code mysql
-                $visiteurs=recuperation($connexion,$codemysql);
-                ///////////-----Fin recuperation des données des etudiants----///////
-                for($i=0;$i<count($visiteurs);$i++) {
-                    $ligne = $visiteurs[$i]["id_visiteurs"]." ".$visiteurs[$i]["Nom"]." ".$visiteurs[$i]["Date"]." ".$visiteurs[$i]["Telephone"]." ".$visiteurs[$i]["Email"];
-                    if ($tableVide==false && !isset($_POST["recherche"]) || isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) || $tableVide==false && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
-                    //si la table n'est pas vide et que on ne recherche rien                          //si on recherche une chose non vide et que cela face partie de la ligne                                 //si on appuis sur le bouton rechercher alors qu'on n'a rien ecrit afficher tous les éléments                                      
-                        $datN = new DateTime($visiteurs[$i]["Date"]);
-                        $datev = $datN->format('d-m-Y');
-                        echo
-                            '<tr class="row">
-                                <td class="col-md-1 text-center"></td>
-                                <td class="col-md-2 text-center">' . $visiteurs[$i]["id_visiteurs"] . '</td>
-                                <td class="col-md-2 text-center">' . $visiteurs[$i]["Nom"]. '</td>
-                                <td class="col-md-2 text-center">' . $datev. '</td>
-                                <td class="col-md-2 text-center">' . $visiteurs[$i]["Telephone"] . '</td>
-                                <td class="col-md-2 text-center">' . $visiteurs[$i]["Email"] . '</td>
-                                <td class="col-md-1 text-center"></td>                            
-                            </tr>';
-                            $nbr++;
-                    }
-                }
-            }
-
-            ####################################------Fin Affichage-----#################################
-            echo'</tbody>
-                </table>';
-                if($nbr>8){
-                    echo'<div class="col-md-12 text-center">
-                        <ul class="pagination pagination-sm pager" id="developer_page"></ul>
-                    </div>';
-                }
-                echo'<div class="bas"></div>';
+            
+            echo'</div>
+        </form>';
         }
         catch (PDOException $e) {
             echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql

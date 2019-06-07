@@ -26,7 +26,7 @@ if (isset($_POST["submit"])) {
             if ($login == $agents[$i]["Login"] && $mDp==$agents[$i]["MDP"] ) {
                     header('Location: accueil.php');
                     $_SESSION["nom"] = $agents[$i]["Nom"];
-                    $_SESSION["NCI_agents"] = $agents[$i]["NCI_agents"];
+                    $_SESSION["Code_agents"] = $agents[$i]["Code_agents"];
                     $reussi = true;
                     break;
             }
