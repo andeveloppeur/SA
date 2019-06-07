@@ -102,7 +102,7 @@ if (nom_page.includes("parametres.php")) {
 
     var Envoie = document.getElementById("valider_ajout_ag");
 
-    Envoie.addEventListener("click", verification);
+    if (Envoie) { Envoie.addEventListener("click", verification); } //car parfois le bouton est cacher
 
     function verification(e) { //verification des deux mots de passe lors de l inscription
         if (MDP.value != ConfMDP.value) {
