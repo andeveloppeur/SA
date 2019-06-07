@@ -53,6 +53,9 @@ if($_SESSION["Code_agents"]=="1 AS"){
         .navbar-expand-lg{
             padding:0px 16px 0px 16px;
         }
+        .entrBouton{
+            margin-left:0.2%;
+        }
     </style>
 </head>
 
@@ -69,27 +72,42 @@ if($_SESSION["Code_agents"]=="1 AS"){
             try {
                 include("connexionBDD.php");
                 ############################--Debut contenu table--############################
-                ///////////-----recuperation des données des etudiants----///////////
+                ///////////-----recuperation des données des agents----///////////
                 $codemysql = "SELECT * FROM agents"; //le code mysql
                 $agents=recuperation($connexion,$codemysql);
-                ///////////-----Fin recuperation des données des etudiants----///////
+                ///////////-----Fin recuperation des données des agents----///////
                 if(isset($agents[0][1])){
                     $tableVide=false;
                 }
                 ############################--Fin contenu table--##############################
 
                 ///////////////////////----Verification du login----///////////////////////////
-                if(isset($_POST["valider"])){
+                if(isset($_POST["valider_ajout"]) || isset($_POST["valider_modif"]) ){
                     for($i=0;$i<count($agents);$i++){
                         if($agents[$i]["Login"]==$_POST["login"]){
                             $login_existe=true;
                         }
                     }
                 }
-                ############################--Fin contenu table--##############################
+                ############################--Verification du login--##############################
+
+                ///////////////////------modification non admin-------//////////////////
+                if($admin==false){
+                    $agent_connecte=$_SESSION["Code_agents"];
+                    ///////////-----recuperation des données des agents----///////////
+                    $codemysql = "SELECT * FROM agents WHERE Code_agents='$agent_connecte'"; //le code mysql
+                    $donnes_agents=recuperation($connexion,$codemysql);
+                    ///////////-----Fin recuperation des données des agents----///////
+                    
+                    $nom_agent_co=$donnes_agents[0]["Nom"];
+                    $tel_agent_co=$donnes_agents[0]["Telephone"];
+                    $login_agent_co=$donnes_agents[0]["Login"];
+                    $mdp_agent_co=$donnes_agents[0]["MDP"];                    
+                }
+                ///////////////////----Fin modification non admin-------//////////////////
 
         ?>
-        <?php  if($admin==true && !isset($_POST["ajouter"])) {?>
+        <?php  if($admin==true && !isset($_POST["ajouter"]) && !isset($_POST["modifier"])) {?>
             <form method="POST" action="" class="MonForm row insc">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 bor">
@@ -99,6 +117,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     </div>
                     <div class="row">
                         <div class="col-md-2"></div>
+
                             <input type="submit" class="form-control col-md-4 espace" value="Ajouter" name="ajouter">
                             <input type="submit" id="valider_ajout_ag" class="form-control col-md-4 espace" value="Modifier" name="modifier">
                         </div>
@@ -107,48 +126,98 @@ if($_SESSION["Code_agents"]=="1 AS"){
             </form>
         <?php } ?>
 
-        <?php  if($admin==true && isset($_POST["ajouter"])) {?>
+        <?php  if(isset($_POST["ajouter"]) || isset($_POST["modifier"]) || $admin==false) {?>
             <form method="POST" action="" class="MonForm row insc">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 bor">
+                    <!--///////////////////////////////-------Nom------///////////////////////////////////-->
                     <div class="row">
                         <div class="col-md-2"></div>
-                        <input  type="text" id="nom_ag" name="nom" class="form-control col-md-8 espace" placeholder= "Nom de l'agent" <?php if($login_existe==true){echo ' value="'.$_POST["nom"].'"';} ?>>
+                        <input  type="text" id="nom_ag" name="nom" class="form-control col-md-8 espace" placeholder= "Nom de l'agent" <?php 
+                        if($login_existe==true || isset($_POST["ajouter"]) || isset($_POST["modifier"])){
+                            echo ' value="'.$_POST["nom"].'"';
+                        }
+                        elseif($admin==false){
+                            echo ' value="'.$nom_agent_co.'"';
+                        }
+                             ?>>
                     </div>
+                    <!--################################------Fin Nom------##############################-->
+
+                    <!--///////////////////////////////-------Telephone------///////////////////////////////////-->
                     <div class="row">
                         <div class="col-md-2"></div>
-                        <input  type="number" id="tel_ag" name="tel" class="form-control col-md-8 espace" placeholder= "Téléphone" <?php if($login_existe==true){echo ' value="'.$_POST["tel"].'"';} ?>>
+                        <input  type="number" id="tel_ag" name="tel" class="form-control col-md-8 espace" placeholder= "Téléphone" <?php 
+                        if($login_existe==true){echo ' value="'.$_POST["tel"].'"';}
+                        elseif($admin==false){echo ' value="'.$tel_agent_co.'"';}?>>
                     </div>
+                    <!--################################-----Fin Telephone-------###################################-->
+
+                    <!--///////////////////////////////-------Login------///////////////////////////////////-->
                     <div class="row">
                         <div class="col-md-2"></div>
                         <?php if($login_existe==false){ ?>
-                        <input  type="text" id="login_ag" name="login" class="form-control col-md-8 espace" placeholder= "Login" >
-                        <?php } 
-                        else { 
-                        echo'<input  type="text" id="login_ag" name="login" class="form-control col-md-8 espace rougMoins" placeholder= "Le login '.$_POST["login"].' existe déja">';
+                        <input  type="text" id="login_ag" name="login" class="form-control col-md-8 espace" placeholder= "Login" <?php if($admin==false){echo ' value="'.$login_agent_co.'"';} ?>>
+                        <?php } else { 
+                        echo'<input type="text" id="login_ag" name="login" class="form-control col-md-8 espace rougMoins" placeholder= "Le login '.$_POST["login"].' existe déja">';
                         }?>
                     </div>
+                    <!--################################------Fin Login-------###################################-->
+
+                    <!--///////////////////////////////-------Ancien mot de passe------///////////////////////////////////-->
+                    <?php if($admin==false){?>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <input type="password" id="ancien_mdp_ag" name="ancien_mdp" class="form-control col-md-4 espace" placeholder= "Ancien mot de passe">
+                            <input type="submit" id="" class="form-control col-md-4 espace entrBouton" value="Modifier mot de passe" name="modif_mdp">
+                        </div>
+                    <?php } ?>
+                    <!--##############################------Fin Ancien mot de passe-------###################################-->
+
+                    <!--///////////////////////////////------changer Mot de passe et confirmation-------///////////////////////////////////-->
+                    <?php if($admin==false && isset($_POST["modif_mdp"])){ ?>
+                        
+                        <!--///////////////////////////////------Nouveau mdp-------///////////////////////////////////-->
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <input  type="password" id="mdp_ag" name="mdp" class="form-control col-md-8 espace" placeholder= "Nouveau mot de passe" <?php 
+                            if($login_existe==true){echo ' value="'.$_POST["mdp"].'"';}?>>
+                        </div>
+                        <!--################################------Fin Nouveau mdp-------###################################-->
+
+                        <!--///////////////////////////////-------Confirmation mdp------///////////////////////////////////-->
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <input  type="password" id="confMdp_ag" name="confMdp" class="form-control col-md-8 espace" placeholder= "Confirmez le mot de passe" <?php if($login_existe==true){echo ' value="'.$_POST["confMdp"].'"';} ?>>
+                        </div>
+                        <!--##############################------Fin Confirmation mdp-------###################################-->
+                    
+                    <?php } ?>
+                    <!--################################------Fin changer Mot de passe et confirmation-------###################################-->
+
+                    <!--///////////////////////////////------Les boutons-------///////////////////////////////////-->
                     <div class="row">
                         <div class="col-md-2"></div>
-                        <input  type="password" id="mdp_ag" name="mdp" class="form-control col-md-8 espace" placeholder= "Mot de passe" <?php if($login_existe==true){echo ' value="'.$_POST["mdp"].'"';} ?>>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"></div>
-                        <input  type="password" id="confMdp_ag" name="confMdp" class="form-control col-md-8 espace" placeholder= "Confirmez le mot de passe" <?php if($login_existe==true){echo ' value="'.$_POST["confMdp"].'"';} ?>>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"></div>
+
                             <input type="submit" class="form-control col-md-4 espace" value="Annuller" name="Annuller">
-                            <input type="submit" id="valider_ajout_ag" class="form-control col-md-4 espace" value="Enregister" name="valider">
+                            <?php if(isset($_POST["ajouter"]) && $admin==true){ ?>
+                                <input type="submit" id="valider_ajout_ag" class="form-control col-md-4 espace" value="Enregister" name="valider_ajout">
+                            <?php } ?>
+
+                            <?php if(!isset($_POST["ajouter"]) && isset($_POST["modifier"]) || $admin==false){ ?>
+                                <input type="submit" id="valider_modif_ag" class="form-control col-md-4 espace entrBouton" value="Modifier" name="valider_modif">
+                            <?php } ?>
+                            
                         </div>
                     </div>
+                    <!--################################------Fin Les boutons-------###################################-->
                 </div>
             </form>
         <?php } ?>
             <?php
 
             ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
-            if (isset($_POST["valider"]) && $login_existe == false) {
+            if (isset($_POST["valider_ajout"]) && $login_existe == false) {
                 ///////////-----recuperation des données des agents----///////////
                 $codemysql = "SELECT Code_agents FROM agents"; //le code mysql
                 $code_des_agents=recuperation($connexion,$codemysql);
@@ -181,7 +250,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
             ####################################------Fin Ajouter-----#################################
 
             ///////////////////////////////////------Debut Modification-----///////////////////////////
-            // if (isset($_POST["valider"])  && $valAjout == true) {
+            // if (isset($_POST["valider_ajout"])  && $valAjout == true) {
             //     $nom = securisation($_POST["nom"]);
             //     $datVis = securisation($_POST["datevisite"]);
             //     $login = securisation($_POST["login"]);
@@ -203,7 +272,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
             if($admin==true) {
                 ///////////////////////////////////------Debut Affichage-----////////////////////////
                 $nbr=0;
-                if($tableVide==false || isset($_POST["valider"]) && $login_existe == false){
+                if($tableVide==false || isset($_POST["valider_ajout"]) && $login_existe == false){
                     echo'<table class="col-12 table tabliste table-hover">
                     <thead class="">
                         <tr class="row">
@@ -218,12 +287,12 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     </thead>
                     <tbody id="developers">';
                 }    
-                if(isset($_POST["valider"]) && $login_existe == false){
+                if(isset($_POST["valider_ajout"]) && $login_existe == false){
                     $login=$_POST["login"];
-                    ///////////-----recuperation des données des etudiants----///////////
+                    ///////////-----recuperation des données des agents----///////////
                     $codemysql = "SELECT Code_agents,statut FROM agents WHERE Login='$login'"; //le code mysql
                     $inf_agents=recuperation($connexion,$codemysql);
-                    ///////////-----Fin recuperation des données des etudiants----///////
+                    ///////////-----Fin recuperation des données des agents----///////
                     echo
                         '<tr class="row">
                             <td class="col-md-1 text-center"></td>
@@ -237,10 +306,10 @@ if($_SESSION["Code_agents"]=="1 AS"){
                         </tr>';
                 }
                 else{
-                    ///////////-----recuperation des données des etudiants----///////////
+                    ///////////-----recuperation des données des agents----///////////
                     $codemysql = "SELECT * FROM agents"; //le code mysql
                     $agents=recuperation($connexion,$codemysql);
-                    ///////////-----Fin recuperation des données des etudiants----///////
+                    ///////////-----Fin recuperation des données des agents----///////
 
                     for($i=0;$i<count($agents);$i++) {
                         $ligne = $agents[$i]["Code_agents"]." ".$agents[$i]["Login"]." ".$agents[$i]["Nom"]." ".$agents[$i]["Telephone"]." ".$agents[$i]["statut"];
@@ -271,7 +340,9 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     }
                     echo'<div class="bas"></div>';
             }
-
+            if($admin==false){
+                echo'<div class="bas"></div>';
+            }
         }
         catch (PDOException $e) {
             echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
