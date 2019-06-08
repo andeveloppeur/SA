@@ -130,7 +130,7 @@ elseif (isset($_POST["ref"])) {
             /////////////////////////////////////////------Debut Affichage-----///////////////////////// 
             $actualisation=false;
             $nbr=0;
-
+            
             ///////////-----recuperation des données des etudiants----///////////
             $codemysql = "SELECT * FROM etudiants"; //le code mysql
             $etudiants=recuperation($connexion,$codemysql);

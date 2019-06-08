@@ -3,10 +3,27 @@ require('../fpdf.php');
 try {
     $tout="";
     include("../../pages/connexionBDD.php");
-    ///////////-----recuperation des données des etudiants----///////////
+    
+    ///////////-----recuperation de tous les etudiants----///////////
     $codemysql = "SELECT * FROM etudiants ORDER BY id_referentiels"; //le code mysql
+    ///////////-----Fin recuperation de tous les etudiants----///////
+    
+    if($_POST["ref_ap"]!="tous" ){
+        $nom_ref=$_POST["ref_ap"];
+        ///////////-----recuperation id ref----///////////
+        $codemysql = "SELECT referentiels.id_referentiels FROM referentiels WHERE Nom='$nom_ref'"; //le code mysql
+        $id_des_ref=recuperation($connexion,$codemysql);
+        ///////////-----Fin recuperation id ref----///////
+
+        $id_ref=$id_des_ref[0]["id_referentiels"];
+        ///////////-----recuperation des données des etudiants----///////////
+        $codemysql = "SELECT * FROM etudiants WHERE id_referentiels='$id_ref'"; //le code mysql
+        ///////////-----Fin recuperation des données des etudiants----///////
+        $validation=true;
+    }
     $etudiants=recuperation($connexion,$codemysql);
-    ///////////-----Fin recuperation des données des etudiants----///////
+
+   
     for($i=0;$i<count($etudiants);$i++) {
         $id_ref=$etudiants[$i]["id_referentiels"];
         ///////////-----recuperation des données des etudiants----///////////
@@ -18,6 +35,7 @@ try {
         fwrite($monfichier,trim($tout));
         fclose($monfichier);
     }
+
 }
 catch (PDOException $e) {
     echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql

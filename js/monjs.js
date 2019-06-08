@@ -166,3 +166,98 @@ if (nom_page.includes("parametres.php")) {
 
 }
 /////////////////////////////----Fin pour la page paramettre ----//////
+
+/////////////////////////////----Fin pour exporter fichier ----////////////
+var nom_page = window.location.pathname;
+if (nom_page.includes("exportation.php")) {
+    ////////////////////---Emargement---//////////////////
+    var lab_dd_em = document.getElementById("lab_dd_em");
+    var lab_df_em = document.getElementById("lab_df_em");
+    var dd_em = document.getElementById("dd_em");
+    var df_em = document.getElementById("df_em");
+    var pdf_em = document.getElementById("pdf_em");
+
+    pdf_em.addEventListener("click", verif_date_em);
+
+    function verif_date_em(e) {
+        lab_dd_em.textContent = "Date début";
+        lab_df_em.textContent = "Date fin";
+        lab_dd_em.style.color = lab_df_em.style.color = "black";
+        dd_em.style.backgroundColor = df_em.style.backgroundColor = "white";
+
+        if (df_em.value != "" && dd_em.value == "") {
+            lab_dd_em.textContent = "Remplir la date de début";
+            lab_dd_em.style.color = "rgba(255, 0, 0, 0.5)";
+            dd_em.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+        if (df_em.value != "" && dd_em.value != "" && df_em.value <= dd_em.value) {
+            lab_dd_em.textContent = "Revoir la dat";
+            lab_dd_em.style.color = "rgba(255, 0, 0, 0.5)";
+            dd_em.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+        var auj = new Date();
+        var date_dd_em = new Date(dd_em.value);
+        if (date_dd_em > auj) {
+            lab_dd_em.textContent = "Revoir la date";
+            lab_dd_em.style.color = "rgba(255, 0, 0, 0.5)";
+            dd_em.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+        var date_df_em = new Date(df_em.value);
+        if (date_df_em > auj) {
+            lab_df_em.textContent = "Revoir la date";
+            lab_df_em.style.color = "rgba(255, 0, 0, 0.5)";
+            df_em.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+    }
+    ////////////////////---Fin Emargement---//////////////////
+
+    ////////////////////---visiteur---//////////////////
+    var lab_dd_vi = document.getElementById("lab_dd_vi");
+    var lab_df_vi = document.getElementById("lab_df_vi");
+    var dd_vi = document.getElementById("dd_vi");
+    var df_vi = document.getElementById("df_vi");
+    var pdf_vi = document.getElementById("pdf_vi");
+
+    pdf_vi.addEventListener("click", verif_date_vi);
+
+    function verif_date_vi(e) {
+        lab_dd_vi.textContent = "Date début";
+        lab_df_vi.textContent = "Date fin";
+        lab_dd_vi.style.color = lab_df_vi.style.color = "black";
+        dd_vi.style.backgroundColor = df_vi.style.backgroundColor = "white";
+
+        if (df_vi.value != "" && dd_vi.value == "") {
+            lab_dd_vi.textContent = "Remplir la date de début";
+            lab_dd_vi.style.color = "rgba(255, 0, 0, 0.5)";
+            dd_vi.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+        if (df_vi.value != "" && dd_vi.value != "" && df_vi.value <= dd_vi.value) {
+            lab_dd_vi.textContent = "Revoir la dat";
+            lab_dd_vi.style.color = "rgba(255, 0, 0, 0.5)";
+            dd_vi.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+        var auj = new Date();
+        var date_dd_vi = new Date(dd_vi.value);
+        if (date_dd_vi > auj) {
+            lab_dd_vi.textContent = "Revoir la date";
+            lab_dd_vi.style.color = "rgba(255, 0, 0, 0.5)";
+            dd_vi.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+        var date_df_vi = new Date(df_vi.value);
+        if (date_df_vi > auj) {
+            lab_df_vi.textContent = "Revoir la date";
+            lab_df_vi.style.color = "rgba(255, 0, 0, 0.5)";
+            df_vi.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+            e.preventDefault();
+        }
+    }
+    ////////////////////---Fin visiteur---//////////////////
+}
+/////////////////////////////----Fin pour exporter fichier ----////////////
