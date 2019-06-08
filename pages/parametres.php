@@ -142,7 +142,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     <div class="row">
                         <div class="col-md-2"></div>
                         <input  type="text" id="nom_ag" name="nom" class="form-control col-md-8 espace" placeholder= "Nom de l'agent" <?php 
-                        if($login_existe==true || isset($_POST["modif_mdp"])){
+                        if($login_existe==true || isset($_POST["modif_mdp"])|| isset($_POST["valider_modif"]) && $bon_mdp==false){
                             echo ' value="'.$_POST["nom"].'"';
                         }
                         elseif(!isset($_POST["ajouter"]) ){
@@ -156,7 +156,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     <div class="row">
                         <div class="col-md-2"></div>
                         <input  type="number" id="tel_ag" name="tel" class="form-control col-md-8 espace" placeholder= "Téléphone" <?php 
-                        if($login_existe==true || isset($_POST["modif_mdp"])){echo ' value="'.$_POST["tel"].'"';}
+                        if($login_existe==true || isset($_POST["modif_mdp"])|| isset($_POST["valider_modif"]) && $bon_mdp==false){echo ' value="'.$_POST["tel"].'"';}
                         elseif(!isset($_POST["ajouter"]) ){echo ' value="'.$tel_agent_co.'"';}?>>
                     </div>
                     <!--################################-----Fin Telephone-------###################################-->
@@ -166,7 +166,8 @@ if($_SESSION["Code_agents"]=="1 AS"){
                         <div class="col-md-2"></div>
                         <?php if($login_existe==false){ ?>
                         <input  type="text" id="login_ag" name="login" class="form-control col-md-8 espace" placeholder= "Login" <?php 
-                        if(!isset($_POST["modif_mdp"]) && !isset($_POST["ajouter"])){echo ' value="'.$login_agent_co.'"';} elseif(isset($_POST["modif_mdp"])){echo ' value="'.$_POST["login"].'"';} ?>>
+                        if(isset($_POST["modif_mdp"])|| isset($_POST["valider_modif"]) && $bon_mdp==false){echo ' value="'.$_POST["login"].'"';} elseif(!isset($_POST["modif_mdp"]) && !isset($_POST["ajouter"])){echo ' value="'.$login_agent_co.'"';}  ?>>
+    
                         <?php } else { 
                         echo'<input type="text" id="login_ag" name="login" class="form-control col-md-8 espace rougMoins" placeholder="Login" value= "'.$_POST["login"].' existe déjà">';
                         }?>
@@ -235,7 +236,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
             </form>
         <?php } ?>
             <?php
-
+            
             ///////////////////////////////////------Debut Ajouter-----////////////////////////////////
             if (isset($_POST["valider_ajout"]) && $login_existe == false) {
                 ///////////-----recuperation des données des agents----///////////
@@ -289,6 +290,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                echo'<script>alert("Modification réussie");</script>';
             }
             ####################################------Fin Modification----#############################
+
             if($admin==true) {
                 ///////////////////////////////////------Debut Affichage-----////////////////////////
                 $nbr=0;
