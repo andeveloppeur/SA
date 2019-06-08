@@ -191,7 +191,7 @@ if (nom_page.includes("exportation.php")) {
             dd_em.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
             e.preventDefault();
         }
-        if (df_em.value != "" && dd_em.value != "" && df_em.value <= dd_em.value) {
+        if (df_em.value != "" && dd_em.value != "" && df_em.value < dd_em.value) {
             lab_dd_em.textContent = "Revoir la dat";
             lab_dd_em.style.color = "rgba(255, 0, 0, 0.5)";
             dd_em.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
@@ -236,7 +236,7 @@ if (nom_page.includes("exportation.php")) {
             dd_vi.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
             e.preventDefault();
         }
-        if (df_vi.value != "" && dd_vi.value != "" && df_vi.value <= dd_vi.value) {
+        if (df_vi.value != "" && dd_vi.value != "" && df_vi.value < dd_vi.value) {
             lab_dd_vi.textContent = "Revoir la dat";
             lab_dd_vi.style.color = "rgba(255, 0, 0, 0.5)";
             dd_vi.style.backgroundColor = "rgba(255, 0, 0, 0.5)";

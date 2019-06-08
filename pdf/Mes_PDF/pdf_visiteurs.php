@@ -2,15 +2,24 @@
 require('../fpdf.php');
 try {
     
-    if(isset($_GET["date_pdf"])) {
-        $datN=new DateTime($_GET["date_pdf"]);
-        $ladate = $datN->format('Y-m-d');
+    if(isset($_POST["pdf_visiteur"]) && $_POST["date_debu_visiteur"]!="") {
+        $datN=new DateTime($_POST["date_debu_visiteur"]);
+        $ladate_depart = $datN->format('Y-m-d');
     }
+    
+    if(isset($_POST["pdf_visiteur"]) && $_POST["date_fin_visiteur"]!="") {
+        $datN=new DateTime($_POST["date_fin_visiteur"]);
+        $ladate_fin = $datN->format('Y-m-d');
+    }
+
     $tout="";
     include("../../pages/connexionBDD.php");
     /////////-----recuperation des données des etudiants----///////////
-    if(isset($_GET["date_pdf"])) {
-        $codemysql = "SELECT * FROM visiteurs WHERE Date='$ladate'";
+    if(isset($_POST["pdf_visiteur"]) && $_POST["date_debu_visiteur"]!="" && $_POST["date_fin_visiteur"]=="") {
+        $codemysql = "SELECT * FROM visiteurs WHERE Date>='$ladate_depart' ORDER BY Date ASC";
+    }
+    elseif(isset($_POST["pdf_visiteur"]) && $_POST["date_debu_visiteur"]!="" && $_POST["date_fin_visiteur"]!="") {
+        $codemysql = "SELECT * FROM visiteurs WHERE Date>='$ladate_depart' AND Date<='$ladate_fin' ORDER BY Date ASC";
     }
     else{
         $codemysql = "SELECT * FROM visiteurs ORDER BY Date ASC";
@@ -18,7 +27,7 @@ try {
     $visiteurs=recuperation($connexion,$codemysql);
     ///////////-----Fin recuperation des données des etudiants----///////
     for($i=0;$i<count($visiteurs);$i++) {
-        $tout=$tout.$visiteurs[$i]["id_visiteurs"].";".$visiteurs[$i]["Nom"].";".$visiteurs[0]["Date"].";".$visiteurs[$i]["Telephone"].";".$visiteurs[$i]["Email"].";".$visiteurs[$i]["Code_agents"].";\n";
+        $tout=$tout.$visiteurs[$i]["id_visiteurs"].";".$visiteurs[$i]["Nom"].";".$visiteurs[$i]["Date"].";".$visiteurs[$i]["Telephone"].";".$visiteurs[$i]["Email"].";".$visiteurs[$i]["Code_agents"].";\n";
         $monfichier=fopen("../Mes_fichiers_texte/visiteurs.txt","w");
         fwrite($monfichier,trim($tout));
         fclose($monfichier);

@@ -135,8 +135,8 @@ $_SESSION["actif"] = "exportation";
                     <?php } ?>
                     <!--//////////////////////////----------Fin Si plusieurs portent le même nom----------////////////////////////-->
                 </form> 
-                <!-- <form method="POST" action="../pdf/Mes_PDF/pdf_visiteurs.php" target="_blank" class="espace"> -->
-                <form method="POST" action="" target="" class="espace">
+                <form method="POST" action="../pdf/Mes_PDF/pdf_visiteurs.php" target="_blank" class="espace">
+                <!-- <form method="POST" action="" target="" class="espace"> -->
                     <legend class="mesTitres">Visiteurs</legend>
                     <div class="row">
                         <label for="" class="col-md-2 l3p"  name="date_visiteur" id="lab_dd_vi">Date début</label>
