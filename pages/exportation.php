@@ -43,7 +43,18 @@ $_SESSION["actif"] = "exportation";
             margin-top: 5%;
         }
         .MonForm {
-            margin-top: 10%;
+            margin-top: 7%;
+        }
+        .bor{
+            background-color: #d0c9d6a1;
+            border: 2px solid #3e3f40b9;
+        }
+        .active>.nav-link{
+            background-color: #d0c9d675;
+            border-bottom: 4px solid #ce2e7469;
+        }
+        .navbar-expand-lg{
+            padding:0px 16px 0px 16px;
         }
     </style>
 </head>
@@ -58,10 +69,10 @@ $_SESSION["actif"] = "exportation";
         try {
             include("connexionBDD.php");
     ?> 
-        <form method="POST" action="" class="MonForm row insc">
+        <div class="MonForm row insc">
             <div class="col-md-1"></div>
             <div class="col-md-10 bor">
-                <fieldset class="">
+                <form method="POST" action="../pdf/Mes_PDF/pdf_etudiants.php" target="_blank" class="">
                     <legend class="mesTitres">Apprenants</legend>
                     <div class="row">
                         <label for="" class="col-md-2 l2p" >Référentiel</label>
@@ -72,8 +83,8 @@ $_SESSION["actif"] = "exportation";
                         <input type="text" class="form-control col-md-3  entrBouton" value="Tous les apprenants" placeholder="Nom de l'apprenant"  name="nom_ap">
                         <input type="submit" class="btn btn-outline-primary col-md-1  entrBouton" value="PDF" name="pdf_ap">
                     </div>
-                </fieldset>
-                <fieldset class="espace">
+                </form>
+                <form method="POST" action="../pdf/Mes_PDF/pdf_emargement.php" target="_blank" class="espace">
                     <legend class="mesTitres">Emargement</legend>
                      <div class="row">
                         <label for="" class="col-md-2 l2p" >Référentiel</label>
@@ -88,8 +99,8 @@ $_SESSION["actif"] = "exportation";
                         <input type="date" class="form-control col-md-2 entrBouton" value="" name="date_fin_em">
                         <input type="submit" class="btn btn-outline-primary col-md-1 entrBouton" value="PDF" name="pdf_em">
                     </div>
-                </fieldset> 
-                <fieldset class="espace">
+                </form> 
+                <form method="POST" action="../pdf/Mes_PDF/pdf_visiteurs.php" target="_blank" class="espace">
                     <legend class="mesTitres">Visiteurs</legend>
                     <div class="row">
                         <label for="" class="col-md-3 l2p" >Nom</label>
@@ -102,9 +113,9 @@ $_SESSION["actif"] = "exportation";
                         <input type="date" class="form-control col-md-2 entrBouton"  name="date_fin_visiteur">
                         <input type="submit" class="btn btn-outline-primary col-md-1 entrBouton" value="PDF" name="pdf_visiteur">
                     </div>
-                </fieldset> 
+                </form> 
             </div>
-        </form>
+        </div>
     <?php
             echo'<div class="bas"></div>';
         }

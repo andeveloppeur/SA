@@ -1,3 +1,3 @@
 <footer class="piedPage">
-    <p class="cpr">Copyright 2019 Sonatel Academy</p>
+    <p class="cpr">Copyright <?php echo date("Y"); ?> Sonatel Academy</p>
 </footer>
