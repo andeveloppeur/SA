@@ -1,7 +1,6 @@
 body {
     margin: 0px;
     background-image: url("../img/uu.jpg");
-    /* background-color: #d2c5c58a; */
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: 100%;
@@ -62,7 +61,7 @@ th {
     margin-top: 2%;
 }
 
-.espace {
+.espace2 {
     margin-top: 1%;
 }
 
