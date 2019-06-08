@@ -31,13 +31,18 @@ echo '<nav class="navbar navbar-expand-lg navbar-light row fixed-top" style="bac
         </li>';
       }
       elseif($_SESSION["actif"] =="presence" ||$_SESSION["actif"] =="stat"){
-        echo'<li class="nav-item ';if ($_SESSION["actif"] == "presence" || $_SESSION["actif"] == "accueil") {echo 'active';}echo '">
+        echo'<li class="nav-item ';if ($_SESSION["actif"] == "presence") {echo 'active';}echo '">
           <a class="nav-link" href="presence.php">Gestion des présences</a>
         </li>';
       }
       if($_SESSION["actif"] =="stat"){
         echo'<li class="nav-item ';if ($_SESSION["actif"] == "stat") {echo 'active';}echo '">
           <a class="nav-link" href="stat.php">Statistique</a>
+        </li>';
+      }
+      if($_SESSION["actif"] =="presence" ||$_SESSION["actif"] =="stat"){
+        echo'<li class="nav-item ';if ($_SESSION["actif"] == "exportation") {echo 'active';}echo '">
+          <a class="nav-link" href="exportation.php">Format PDF</a>
         </li>';
       }
       echo'<li class="nav-item">

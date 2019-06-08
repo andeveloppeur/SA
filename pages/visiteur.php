@@ -268,7 +268,7 @@ $_SESSION["actif"] = "visiteur";
                 ///////////-----Fin recuperation des données des etudiants----///////
                 if(isset($id_des_visiteurs[0]["id_visiteurs"])){
                     $id_visiteurs=$id_des_visiteurs[count($id_des_visiteurs)-1]["id_visiteurs"];//l'id du dernier visiteur
-                    $id_visiteurs=str_replace("SA-V- ","",$id_visiteurs);
+                    $id_visiteurs=str_replace(" V-SA","",$id_visiteurs);
                     $id_visiteurs=$id_visiteurs+1;
                     $id_visiteurs=$id_visiteurs." V-SA";
                 }
@@ -323,13 +323,12 @@ $_SESSION["actif"] = "visiteur";
         echo'<table class="col-12 table tabliste table-hover">
             <thead class="">
                 <tr class="row">
-                    <td class="col-md-1 text-center gras"></td>
                     <td class="col-md-2 text-center gras">Code</td>
                     <td class="col-md-2 text-center gras">Nom</td>
                     <td class="col-md-2 text-center gras">Date</td>
                     <td class="col-md-2 text-center gras">Téléphone</td>
                     <td class="col-md-2 text-center gras">Email</td>
-                    <td class="col-md-1 text-center gras"></td>
+                    <td class="col-md-2 text-center gras">Suppression</td>
                 </tr>
             </thead>
             <tbody id="developers">';
@@ -354,14 +353,12 @@ $_SESSION["actif"] = "visiteur";
                     }
                     echo
                                 '<tr class="row">
-                                    <td class="col-md-1 text-center"></td>
                                     <td class="col-md-2 text-center">' . $leCode. '</td>
                                     <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
                                     <td class="col-md-2 text-center">' . $date . '</td>
                                     <td class="col-md-2 text-center">' . $_POST["tel"] . '</td>
                                     <td class="col-md-2 text-center">' . $_POST["email"] . '</td>
-                                    <td class="col-md-1 text-center"></td>
-                                    
+                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $leCode. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td>
                                 </tr>';
             }
             else{
@@ -377,13 +374,12 @@ $_SESSION["actif"] = "visiteur";
                         $datev = $datN->format('d-m-Y');
                         echo
                             '<tr class="row">
-                                <td class="col-md-1 text-center"></td>
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["id_visiteurs"] . '</td>
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["Nom"]. '</td>
                                 <td class="col-md-2 text-center">' . $datev. '</td>
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["Telephone"] . '</td>
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["Email"] . '</td>
-                                <td class="col-md-1 text-center"></td>                            
+                                <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $visiteurs[$i]["id_visiteurs"] . '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td>                           
                             </tr>';
                             $nbr++;
                     }

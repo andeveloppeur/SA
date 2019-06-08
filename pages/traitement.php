@@ -69,7 +69,15 @@ try {
     }
     //////////////////////-------Fin Supprimer agent----////////////////
 
-    
+    //////////////////////-------Supprimer visiteur----////////////////
+    if(isset($_GET["code_visiteur_a_supp"])){
+        $sonId=$_GET["code_visiteur_a_supp"];
+        $codemysql = "DELETE FROM `visiteurs` WHERE id_visiteurs='$sonId' ";
+        $requete = $connexion->prepare($codemysql);
+        $requete->execute();
+        header('Location: visiteur.php');
+    }
+    //////////////////////-------Fin Supprimer visiteur----////////////////
 }
 catch (PDOException $e) {
     echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql

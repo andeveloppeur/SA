@@ -69,6 +69,9 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
     .navbar-expand-lg{
         padding:0px 16px 0px 16px;
     }
+    .entrBouton{
+        margin-right:0.2%;
+    }
     </style>
 </head>
 
@@ -218,8 +221,8 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             </div>
                             <div class="row">
                                 <div class="col-md-2"></div>
-                                <input type="submit" class="form-control col-md-4 espace" value="Oui" name="contEmarg">
-                                <a href="emargement.php" class="nonSoulign col-md-4 espace form-control text-center">Non</a>
+                                <input type="submit" class="form-control col-md-4 espace2 entrBouton" value="Oui" name="contEmarg">
+                                <a href="emargement.php" class="nonSoulign col-md-4 espace2 form-control text-center">Non</a>
                             </div>
                         </div>
                     </form>';
@@ -265,16 +268,14 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         $date_emar = securisation($_POST["auj"]);
                         $hArriv = securisation($_POST["arrivee"]);
                         $hDepart = securisation($_POST["depart"]);
-                        $nci_dep="";
-                        $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,Code_agents_arrivee,Code_agents_depart)
-                            VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:Code_agents_arrivee,:Code_agents_depart)"; //le code mysql
+                        $codemysql = "INSERT INTO `emargement` (NCI,Date_emargement,Arrivee,Depart,Code_agents_arrivee)
+                            VALUES(:NCI,:Date_emargement,:Arrivee,:Depart,:Code_agents_arrivee)"; //le code mysql
                         $requete = $connexion->prepare($codemysql); //Prépare la requête $codemysql à l'exécution
                         $requete->bindParam(":NCI", $code);
                         $requete->bindParam(":Date_emargement", $date_emar);
                         $requete->bindParam(":Arrivee", $hArriv);
                         $requete->bindParam(":Depart", $hDepart);
                         $requete->bindParam(":Code_agents_arrivee", $_SESSION["Code_agents"]);
-                        $requete->bindParam(":Code_agents_depart", $nci_dep);
                         $requete->execute(); //excecute la requete qui a été preparé
                     }
                     else{//donc il a emarger et on le modifie

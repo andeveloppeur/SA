@@ -158,7 +158,7 @@ elseif (isset($_POST["ref"])) {
                             <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"]. '</td>
                             <td class="col-md-2 text-center">' . $etudiants[$i]["Telephone"] . '</td>
                             <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
-                            <td class="col-md-1 text-center"><a href="emargement.php?code=' . $NCI_etudiant . '&ref=' . $ref .  '"   id="' . $NCI_etudiant . '" ><button class="btn btn-outline-primary" >Emarger</button></a></td>
+                            <td class="col-md-1 text-center"><a href="emargement.php?code=' . $NCI_etudiant . '&ref=' . $le_ref_etudiant[0]["Nom"] .  '"   id="' . $NCI_etudiant . '" ><button class="btn btn-outline-primary" >Emarger</button></a></td>
                         </tr>';
                         $nbr++;
                 }
