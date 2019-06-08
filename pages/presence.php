@@ -171,7 +171,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
             
             ///////////////////////////-------rechercher par jour---------------------//////////////////////
             //<table  id="dtBasicExample"  class="col-12 table table-hover tabliste table"   >
-                if($tableVide==false || isset($_POST["validerRechJour"])){   //donc la table n'est pas vide ou qu'on appuis sur le submit
+                if($tableVide==false || isset($_POST["validerRechJour"]) || $tableVide==true && isset($_POST["presence"]) && $_POST["presence"]=="absents" || $tableVide==true && isset($_GET["laDate"]) && $_GET["statut"]=="absents"){   //donc la table n'est pas vide ou qu'on appuis sur le submit
                 echo '
                     <table class="col-12 table tabliste table-hover">
                
@@ -245,18 +245,17 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                        
                         $absent=true;
                                    
-                        for($j=0;$j<count($emargement);$j++)  {
-                           
-                            if(!isset($_GET["laDate"]) && !isset($_POST["recherche"])){
-                                $date = $_POST["jourRech"];
-                            }
-                            elseif(isset($_GET["laDate"]) && !isset($_POST["recherche"])){
-                                $date = $_GET["laDate"];
-                            }
-                            elseif(isset($_POST["recherche"])){
-                                $date = $_SESSION["jourChercjer"];
-                            }
-                            
+                        if(!isset($_GET["laDate"]) && !isset($_POST["recherche"])){
+                            $date = $_POST["jourRech"];
+                        }
+                        elseif(isset($_GET["laDate"]) && !isset($_POST["recherche"])){
+                            $date = $_GET["laDate"];
+                        }
+                        elseif(isset($_POST["recherche"])){
+                            $date = $_SESSION["jourChercjer"];
+                        }
+
+                        for($j=0;$j<count($emargement);$j++)  {    
                             if($etudiants[$i]["NCI"]==$emargement[$j]["NCI"] && $emargement[$j]["Date_emargement"]==$date){
                                 $absent=false;
                             }
@@ -272,14 +271,14 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         if(isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) ||
                             !isset($_POST["recherche"]) && $absent==true && isset($_POST["Ref"]) && $_POST["Ref"]==$le_ref_etudiant[0]["Nom"] || 
                             !isset($_POST["recherche"]) && $absent==true && isset($_GET["Ref"]) && $_GET["Ref"]==$le_ref_etudiant[0]["Nom"]){
-                            $datN = new DateTime($date  );
-                            $date = $datN->format('d-m-Y');
+                            $datN = new DateTime($date);
+                            $date_abs = $datN->format('d-m-Y');
                             echo
                             '<tr class="row">
                                 <td class="col-md-2 text-center">' . $etudiants[$i]["NCI"]. '</td>
                                 <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
                                 <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"] . '</td>
-                                <td class="col-md-2 text-center">' . $date . '</td>
+                                <td class="col-md-2 text-center">' . $date_abs . '</td>
                                 <td class="col-md-2 text-center">--:--</td>
                                 <td class="col-md-1 text-center">--:--</td>
                                 <td class="col-md-1 text-center"><a class="nonSoulign" href="stat.php?code=' . $etudiants[$i]["NCI"]. '" ><button class="form-control" >Stat</button></a></td>

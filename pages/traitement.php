@@ -35,9 +35,39 @@ if (isset($_POST["submit"])) {
         $_SESSION["reussi"]=false;
         header('Location: ../index.php');
         $_SESSION["ancLogin"]=$login;
-        $_SESSION["ancMDP"]=$mDp;
-        
+        $_SESSION["ancMDP"]=$mDp;   
     }
-
 }
+
+
+try {
+    include("connexionBDD.php");
+    if(isset($_GET["code_agents"])){
+        $sonId=$_GET["code_agents"];
+        $tatut="";
+        if($_GET["statut"]=="Actif" && $sonId!=$_SESSION["Code_agents"]){
+            $tatut="Bloquer";
+        }
+        if($_GET["statut"]=="Bloquer"){
+            $tatut="Actif";
+        }
+        
+        $codemysql = "UPDATE `agents` SET statut='$tatut' WHERE Code_agents='$sonId' ";
+        $requete = $connexion->prepare($codemysql);
+        $requete->execute();
+        header('Location: parametres.php');
+    }
+    if(isset($_GET["code_agents_a_supp"]) && $_GET["code_agents_a_supp"]!=$_SESSION["Code_agents"]){
+        $sonId=$_GET["code_agents_a_supp"];
+        $codemysql = "DELETE FROM `agents` WHERE Code_agents='$sonId' ";
+        $requete = $connexion->prepare($codemysql);
+        $requete->execute();
+        header('Location: parametres.php');
+    }
+}
+catch (PDOException $e) {
+    echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql
+}
+    
+
 ?>

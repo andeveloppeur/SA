@@ -147,5 +147,22 @@ if (nom_page.includes("parametres.php")) {
 
     /////////////////////////////----Fin pour la page paramettre lors de la modification d un agent----//////
 
+
+    /////////////////////////////----modif admin ----//////
+    var modif_admin = document.getElementById("valider_modif_adm");
+    if (modif_admin) { modif_admin.addEventListener("click", verifmodif_admin); }
+
+    function verifmodif_admin(e) {
+        if (MDP.value != "") {
+            if (MDP.value != ConfMDP.value) {
+                ConfMDP.style.backgroundColor = "rgba(255, 0, 0, 0.5)"; //l equivalent de la classe rougMoins
+                ConfMDP.value = "";
+                ConfMDP.setAttribute("placeholder", "MOT DE PASSE DIFFERENT");
+                e.preventDefault();
+            }
+        }
+    }
+    /////////////////////////////----Fin modif admin----//////
+
 }
 /////////////////////////////----Fin pour la page paramettre ----//////
