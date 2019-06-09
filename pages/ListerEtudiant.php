@@ -135,6 +135,7 @@ elseif (isset($_POST["ref"])) {
             $codemysql = "SELECT * FROM etudiants"; //le code mysql
             $etudiants=recuperation($connexion,$codemysql);
             ///////////-----Fin recuperation des données des etudiants----///////
+            
             for($i=0;$i<count($etudiants);$i++) {
                 ///////////-----recuperation des données de la table ref----///////////
                 $NCI_etudiant=$etudiants[$i]["NCI"];

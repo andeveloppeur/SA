@@ -221,8 +221,8 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             </div>
                             <div class="row">
                                 <div class="col-md-2"></div>
-                                <input type="submit" class="form-control col-md-4 espace2 entrBouton" value="Oui" name="contEmarg">
-                                <a href="emargement.php" class="nonSoulign col-md-4 espace2 form-control text-center">Non</a>
+                                <input type="submit" class="form-control col-md-4 entrBouton" value="Oui" name="contEmarg">
+                                <a href="emargement.php" class="nonSoulign col-md-4 form-control text-center">Non</a>
                             </div>
                         </div>
                     </form>';

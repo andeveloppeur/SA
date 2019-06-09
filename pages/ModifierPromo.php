@@ -26,6 +26,9 @@ $_SESSION["actif"] = "ModifierPromo";
     .navbar-expand-lg{
         padding:0px 16px 0px 16px;
     }
+    .boutList{
+        width:60%;
+    }
 </style>
 <body>
     <?php
@@ -74,7 +77,7 @@ $_SESSION["actif"] = "ModifierPromo";
                     ///////////////////////////////////////-------Nom------////////////////////
                     echo '<div class="row">
                         <div class="col-md-2"></div>
-                        <input  type="text" id="nom" name="nom" ';
+                        <input  type="text" id="nom" name="nom" '; if(isset($_POST["premierValidation"])){echo' readonly="readonly"  ';}
                     if (isset($_POST["premierValidation"]) || isset($_POST["Ajouter"]) || $nepasModif == true) {
                         if (empty($_POST["nom"]) && !isset($_POST["Ajouter"]) || $nepasModif == true) {
                             echo ' class="form-control col-md-8 espace rougMoins" placeholder= "Entrez le nom de la promo à modifier !"';
@@ -90,6 +93,7 @@ $_SESSION["actif"] = "ModifierPromo";
                                 echo ' placeholder="Nom de la promo" class="form-control col-md-8 espace" ';
                             }
                         }
+
                     } 
                     elseif ($promoDejaAjouter == true) {
                         echo ' class="form-control col-md-8 espace rougMoins" placeholder= "Cette promo existe déja !"';
@@ -261,7 +265,7 @@ $_SESSION["actif"] = "ModifierPromo";
                     }
                 }
                 //////------Fin compter effectif---//////
-                    $ligne=$lesReferentiel[$a]["Nom"]." ".$lesReferentiel[$a]["Mois"]." ".$lesReferentiel[$a]["Annee"];
+                    $ligne=$lesReferentiel[$a]["Nom"]." ".$lesReferentiel[$a]["Mois"]." ".$lesReferentiel[$a]["Annee"]." ".$effectif;
                     ######-------fin compter effectif####
                     if ( $tableVide==false && !isset($_POST["recherche"]) || isset($_POST["recherche"]) &&  !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) || $tableVide==false && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
                         echo
@@ -271,7 +275,7 @@ $_SESSION["actif"] = "ModifierPromo";
                                 <td class="col-md-2 text-center">' . $lesReferentiel[$a]["Mois"]. '</td>
                                 <td class="col-md-2 text-center">' . $lesReferentiel[$a]["Annee"]. '</td>
                                 <td class="col-md-2 text-center"> ' . $effectif . '</td>
-                                <td class="col-md-2 text-center"><a href="ListerEtudiant.php?promo=' . $lesReferentiel[$a]["Nom"]  . ' "  id="' . $lesReferentiel[$a]["id_referentiels"] . '" ><button class="form-control">Liste</button></a></td>
+                                <td class="col-md-2 text-center"><a href="ListerEtudiant.php?ref=' . $lesReferentiel[$a]["Nom"]  . ' "  id="' . $lesReferentiel[$a]["id_referentiels"] . '" ><button class="btn btn-outline-primary boutList">Liste</button></a></td>
                             </tr>';
                     }
                 }
