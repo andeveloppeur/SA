@@ -101,7 +101,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     $mdp_agent_co=$donnes_agents[0]["MDP"];
                 
                     ////////////////////////------mofifier son mdp si non admin--------///////////////
-                    if($admin==false && isset($_POST["modif_mdp"]) && $mdp_agent_co == md5($_POST["ancien_mdp"]) || $admin==false && isset($_POST["valider_modif"]) && $mdp_agent_co == md5($_POST["ancien_mdp"]) ){
+                    if(isset($_POST["modif_mdp"]) && $mdp_agent_co == md5($_POST["ancien_mdp"]) || isset($_POST["valider_modif"]) && $mdp_agent_co == md5($_POST["ancien_mdp"]) ){
                         $bon_mdp=true;
                     }
                     ////////////////////////------fin mofifier son mdp si non admin--------//////////////////////////            
@@ -120,7 +120,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                 
         ?>
         
-        <?php  if($admin==true && !isset($_POST["ajouter"]) && !isset($_POST["modifier"]) && !isset($_POST["valider_modif"]) && !isset($_POST["valider_ajout"])|| $admin==true && isset($_POST["valider_modif"]) && $login_existe==false || isset($_POST["valider_ajout"]) && $login_existe==false ) {?>
+        <?php  if($admin==true && !isset($_POST["ajouter"]) && !isset($_POST["modifier"]) && !isset($_POST["valider_modif"]) && !isset($_POST["valider_ajout"]) && !isset($_POST["modif_mdp"]) || $admin==true && isset($_POST["valider_modif"]) && $login_existe==false || isset($_POST["valider_ajout"]) && $login_existe==false ) {?>
             <form method="POST" action="" class="MonForm row insc">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 bor">
@@ -132,9 +132,8 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     </div>
                 </div>
             </form>
-        <?php } ?>
-
-        <?php  if(isset($_POST["ajouter"]) || isset($_POST["modifier"]) || $admin==false || $admin==true && $login_existe==true) {?>
+        <?php } 
+        elseif(isset($_POST["ajouter"]) || isset($_POST["modifier"]) || $admin==false || $admin==true && $login_existe==true || isset($_POST["modif_mdp"]) && $login_existe == false) {?>
             <form method="POST" action="" class="MonForm row insc">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 bor">
@@ -175,7 +174,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     <!--################################------Fin Login-------###################################-->
 
                     <!--///////////////////////////////-------Ancien mot de passe------///////////////////////////////////-->
-                    <?php if($admin==false){?>
+                    <?php if($admin==false || $admin==true && isset($_POST["modifier"]) || $admin==true && isset($_POST["valider_modif"]) && $login_existe==true){?>
                         <div class="row">
                             <div class="col-md-2"></div>
                             <?php if(!isset($_POST["modif_mdp"]) && !isset($_POST["valider_modif"]) || isset($_POST["modif_mdp"]) && $bon_mdp==true|| isset($_POST["valider_modif"]) && $bon_mdp==true ){?>
@@ -191,7 +190,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     <!--##############################------Fin Ancien mot de passe-------###################################-->
 
                     <!--///////////////////////////////------changer Mot de passe et confirmation-------///////////////////////////////////-->
-                    <?php if($admin==false && isset($_POST["modif_mdp"]) && $bon_mdp==true || $admin==true){ ?>
+                    <?php if(isset($_POST["modif_mdp"]) && $bon_mdp==true || $admin==true && isset($_POST["ajouter"]) || $admin==true && isset($_POST["valider_ajout"]) && $login_existe==true){ ?>
                         
                         <!--///////////////////////////////------Nouveau mdp-------///////////////////////////////////-->
                         <div class="row">
@@ -223,7 +222,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                             ################################-----Fin Lors de l'ajout--------###################################-->
 
                             ///////////////////////////////-------Lors de la modification------///////////////////////////////////-->
-                            elseif(!isset($_POST["ajouter"]) && isset($_POST["modifier"])|| $admin==false|| $admin==true && $login_existe==true) { ?>
+                            elseif(!isset($_POST["ajouter"]) && isset($_POST["modifier"])|| $admin==false|| $admin==true && $login_existe==true || isset($_POST["modif_mdp"]) && $login_existe == false) { ?>
                                 <input type="submit"  class="form-control col-md-4 espace entrBouton" value="Modifier" name="valider_modif" 
                                 <?php if($admin==false) {?> id="valider_modif_ag" <?php } else { ?> id="valider_modif_adm"<?php }?>>
                             <?php } ?>

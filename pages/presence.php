@@ -70,6 +70,9 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
         .navbar-expand-lg{
             padding:0px 16px 0px 16px;
         }
+        .bstat{
+            width:100%;
+        }
     </style>
 </head>
 
@@ -227,7 +230,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                                 <td class="col-md-2 text-center">' . $date_emargement . '</td>
                                 <td class="col-md-2 text-center">' . $emargement[$i]["Arrivee"] . '</td>
                                 <td class="col-md-1 text-center">' . $emargement[$i]["Depart"] . '</td>
-                                <td class="col-md-1 text-center"><a class="nonSoulign" href="stat.php?code=' . $etudiants[0]["NCI"]  . '" ><button class="form-control" >Stat</button></a></td>
+                                <td class="col-md-1 text-center"><a class="nonSoulign" href="stat.php?code=' . $etudiants[0]["NCI"]  . '" ><button class="btn btn-outline-primary bstat" >Stat</button></a></td>
                             </tr>';
                             $nbr++;
                         }
@@ -281,7 +284,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                                 <td class="col-md-2 text-center">' . $date_abs . '</td>
                                 <td class="col-md-2 text-center">--:--</td>
                                 <td class="col-md-1 text-center">--:--</td>
-                                <td class="col-md-1 text-center"><a class="nonSoulign" href="stat.php?code=' . $etudiants[$i]["NCI"]. '" ><button class="form-control" >Stat</button></a></td>
+                                <td class="col-md-1 text-center"><a class="nonSoulign" href="stat.php?code=' . $etudiants[$i]["NCI"]. '" ><button class="btn btn-outline-primary bstat" >Stat</button></a></td>
                             </tr>';
                             $nbr++;
                         }

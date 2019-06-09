@@ -397,7 +397,7 @@ $_SESSION["actif"] = "ModifierEtudiant";
                 }   
                 $nbr=0;
                 ///////////-----recuperation des données des etudiants----///////////
-                $codemysql = "SELECT * FROM etudiants"; //le code mysql
+                $codemysql = "SELECT * FROM etudiants ORDER BY id_referentiels"; //le code mysql
                 $etudiants=recuperation($connexion,$codemysql);
                 ///////////-----Fin recuperation des données des etudiants----//////
                 if(isset($_POST["AjouterFin"]) && $valAjout == true || isset($_POST["valider"]) && $valAjout == true ){//si ajouter ou modifier n'afficher que la ligne
