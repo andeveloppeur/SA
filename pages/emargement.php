@@ -72,6 +72,15 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
         .entrBouton{
             margin-right:0.2%;
         }
+        .bvalsup{
+            width:100%;
+            background-color: red;
+            color:white;
+        }
+        .bsup{
+            width:100%;
+            padding-left:8%;
+        }
     </style>
 </head>
 
@@ -211,7 +220,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                     </form>';
                 }
                 ///////////////////////////-------Continuer emargement---------------------//////////////////////
-                elseif(!isset($_GET["ref"]) && isset($_POST["valider"])){
+                elseif(!isset($_GET["ref"]) && isset($_POST["valider"]) || !isset($_GET["ref"]) && isset($_POST["Annuller"])){
                         echo'<form method="POST" action="ListerEtudiant.php?ref='.$_POST["ref"].'" class="MonForm row insc">
                         <div class="col-md-3"></div>
                         <div class="col-md-6 bor">
@@ -328,7 +337,8 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         <td class="col-md-2 text-center gras">Date</td>
                         <td class="col-md-1 text-center gras">Arrivée</td>
                         <td class="col-md-1 text-center gras">Sortie</td>
-                        <td class="col-md-2 text-center gras">Modification</td>
+                        <td class="col-md-1 text-center gras">Modification</td>
+                        <td class="col-md-1 text-center gras">Suppression</td>
                     </tr>
                 </thead>
                 <tbody id="developers">';
@@ -364,14 +374,20 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             $nbr++;
                             echo
                                 '<tr class="row" id="ligne'.$nbr.'" name="'.$leNCI.'">
-                                    <td class="col-md-2 text-center" id="nci'.$nbr.'" name="'.$leNCI.'">' . $leNCI . '</td>
+                                    <td class="col-md-2 text-center">' . $leNCI . '</td>
                                     <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"]. '</td>
                                     <td class="col-md-2 text-center">' . $etudiants[0]["Nom"] . '</td>
                                     <td class="col-md-2 text-center">' . $date . '</td>
                                     <td class="col-md-1 text-center">' . $emargement[$i]["Arrivee"] . '</td>
                                     <td class="col-md-1 text-center">' . $emargement[$i]["Depart"] . '</td>
-                                    <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$leNCI.'&ref='.$le_ref_etudiant[0]["Nom"].'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
-                                </tr>';
+                                    <td class="col-md-1 text-center"><a href="emargement.php?aModifier='.$leNCI.'&ref='.$le_ref_etudiant[0]["Nom"].'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>';
+                                    if(isset($_GET["lg"]) && $_GET["lg"] ==$nbr){
+                                        echo'<td class="col-md-1 text-center"><a href="traitement.php?supp_em='. $leNCI.'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-danger bvalsup">Valider</button></a></td>';
+                                    }
+                                    else{
+                                        echo'<td class="col-md-1 text-center"><a href="emargement.php?lg='.$nbr.'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';
+                                    }
+                        echo'</tr>';
                                 
                         }
                     }
@@ -381,13 +397,14 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                     $date = $datN->format('d-m-Y');
                     echo
                         '<tr class="row" id="ligne1" name="'.$_POST["code"] .'">
-                            <td class="col-md-2 text-center" id="nci1">' . $_POST["code"] . '</td>
+                            <td class="col-md-2 text-center">' . $_POST["code"] . '</td>
                             <td class="col-md-2 text-center">' . $_POST["ref"] . '</td>
                             <td class="col-md-2 text-center">' . $_POST["nom"]  . '</td>
                             <td class="col-md-2 text-center">' . $date . '</td>
                             <td class="col-md-1 text-center">' . $_POST["arrivee"]  . '</td>
                             <td class="col-md-1 text-center">' . $_POST["depart"]  . '</td>
-                            <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&ref='.$_POST["ref"].'&&date='.$_POST["auj"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
+                            <td class="col-md-1 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&ref='.$_POST["ref"].'&&date='.$_POST["auj"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
+                            <td class="col-md-1 text-center"><a href="traitement.php?supp_em='. $_POST["code"] .'&&date='.$_POST["auj"].'"><button class="btn btn-outline-danger bsup" disabled>Supprimer</button></a></td>
                         </tr>';
                         $nbr++;
                 }

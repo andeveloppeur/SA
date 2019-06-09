@@ -78,6 +78,17 @@ try {
         header('Location: visiteur.php');
     }
     //////////////////////-------Fin Supprimer visiteur----////////////////
+
+    //////////////////////-------Fin Supprimer emargement----////////////////
+    if(isset($_GET["supp_em"])){
+        $sonId=$_GET["supp_em"];
+        $ladate=$_GET["date"];
+        $codemysql = "DELETE FROM `emargement` WHERE NCI='$sonId' AND Date_emargement='$ladate'";
+        $requete = $connexion->prepare($codemysql);
+        $requete->execute();
+        header('Location: emargement.php');
+    }
+    //////////////////////-------Fin Supprimer emargement----////////////////
 }
 catch (PDOException $e) {
     echo "ECHEC : " . $e->getMessage(); //en cas d erreur lors de la connexion à la base de données mysql

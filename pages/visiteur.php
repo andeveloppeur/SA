@@ -49,6 +49,13 @@ $_SESSION["actif"] = "visiteur";
         .navbar-expand-lg{
             padding:0px 16px 0px 16px;
         }
+        .bsup{
+            width:50%;
+        }
+         .bvalsup{
+            background-color: red;
+            color:white;
+        }
     </style>
 </head>
 
@@ -136,11 +143,11 @@ $_SESSION["actif"] = "visiteur";
                     <input  type="text" id="nom" name="nom" ';
                 if (isset($_POST["premierValidation"]) || isset($_POST["Ajouter"])) {
                     if (empty($_POST["nom"]) && !isset($_POST["Ajouter"])) {
-                        echo ' class="form-control col-md-8 espace rougMoins" placeholder= "Entrez le nom de l\'apprenant à modifier !"';
+                        echo ' class="form-control col-md-8 espace rougMoins" placeholder= "Entrez le nom du visiteur à modifier !"';
                     } 
                     else { //si on ajoute ou on modifie
                         if ($existeDeja == false && !isset($_POST["Ajouter"])) { //si on essaie de modifier une personne qui n'existe pas
-                            echo ' class="form-control col-md-8 espace rougMoins" placeholder= "' . $_POST["nom"] . ' ne fait pas partie des apprenants"';
+                            echo ' class="form-control col-md-8 espace rougMoins" placeholder= "' . $_POST["nom"] . ' n\'existe pas"';
                         } 
                         elseif ($existeDeja == true || isset($_POST["Ajouter"]) && !empty($_POST["nom"])) { //soit on veut modifier une personne qui existe soit on veut ajouter une personne dont on a écrit le nom
                             echo ' class="form-control col-md-8 espace" placeholder= "Nom et prénom" value="' . $_POST["nom"] . '"';
@@ -151,7 +158,7 @@ $_SESSION["actif"] = "visiteur";
                     }
                 } 
                 elseif (isset($_POST["AjouterFin"]) && empty($_POST["nom"]) || isset($_POST["valider"]) && empty($_POST["nom"])) { //si on enregistre alors que le nom est vide
-                    echo ' class="form-control col-md-8 espace rougMoins" placeholder= "Entrez le nom de l\'apprenant à ajouter !"';
+                    echo ' class="form-control col-md-8 espace rougMoins" placeholder= "Entrez le nom du visiteur !"';
                 } 
                 elseif (isset($_POST["AjouterFin"]) && $valAjout == false  || isset($_POST["valider"]) && $valAjout == false) { //si on enregistre alors que le nom n'etait pas vide on y remet sa valeur
                     echo ' class="form-control col-md-8 espace " placeholder= "Nom et prénom" value="' . $_POST["nom"] . '" ';
@@ -352,14 +359,15 @@ $_SESSION["actif"] = "visiteur";
                         $leCode=$id_visiteurs;
                     }
                     echo
-                                '<tr class="row">
-                                    <td class="col-md-2 text-center">' . $leCode. '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
-                                    <td class="col-md-2 text-center">' . $date . '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["tel"] . '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["email"] . '</td>
-                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $leCode. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td>
-                                </tr>';
+                    '<tr class="row">
+                        <td class="col-md-2 text-center">' . $leCode. '</td>
+                        <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
+                        <td class="col-md-2 text-center">' . $date . '</td>
+                        <td class="col-md-2 text-center">' . $_POST["tel"] . '</td>
+                        <td class="col-md-2 text-center">' . $_POST["email"] . '</td>';
+                        echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $leCode . '" ><button class="btn btn-outline-danger bsup ">Supprimer</button></a></td>';
+                        
+                    echo'</tr>';
             }
             else{
                 ///////////-----recuperation des données des etudiants----///////////
@@ -378,9 +386,15 @@ $_SESSION["actif"] = "visiteur";
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["Nom"]. '</td>
                                 <td class="col-md-2 text-center">' . $datev. '</td>
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["Telephone"] . '</td>
-                                <td class="col-md-2 text-center">' . $visiteurs[$i]["Email"] . '</td>
-                                <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $visiteurs[$i]["id_visiteurs"] . '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td>                           
-                            </tr>';
+                                <td class="col-md-2 text-center">' . $visiteurs[$i]["Email"] . '</td>';
+                                if(isset($_GET["lg"]) && $_GET["lg"] ==$i){
+                                    echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $visiteurs[$i]["id_visiteurs"] . '" ><button class="btn btn-outline-danger bsup bvalsup">Valider</button></a></td>';
+                                }
+                                else{
+                                    echo'<td class="col-md-2 text-center"><a href="visiteur.php?lg='.$i.'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';
+                                }
+                                                         
+                            echo'</tr>';
                             $nbr++;
                     }
                 }

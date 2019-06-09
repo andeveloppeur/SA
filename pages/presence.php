@@ -14,12 +14,12 @@ elseif (isset($_POST["Ref"])) {
     $Ref = $_POST["Ref"];
 }
 if(isset($_POST["validerRechJour"])){//pour barre de recherche
-    $_SESSION["jourChercjer"]=$_POST["jourRech"];
+    $_SESSION["jourChercher"]=$_POST["jourRech"];
     $_SESSION["ref"]=$_POST["Ref"];
     $_SESSION["presence"]=$_POST["presence"];
 }
 elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
-    // $_SESSION["jourChercjer"]=date("Y-m-d");
+    $_SESSION["jourChercher"]=date("Y-m-d");
     // $_SESSION["ref"]=$Ref;
     // $_SESSION["presence"]="";
 }
@@ -113,7 +113,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         elseif(isset($_GET["laDate"]) && !isset($_POST["recherche"])){
                             echo' value="'.$_GET["laDate"].'" ';
                         }
-                         elseif(isset($_POST["recherche"]) && isset($_SESSION["jourChercjer"])){echo' value="'.$_SESSION["jourChercjer"].'" ';} 
+                         elseif(isset($_POST["recherche"]) && isset($_SESSION["jourChercher"])){echo' value="'.$_SESSION["jourChercher"].'" ';} 
                             echo'>
                     </div>';
                     ///////////////////////////-------Ref---------------------//////////////////////
@@ -156,11 +156,11 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         <select class="form-control col-md-8 espace" name="presence" >
                             <option value="present" ';
                             if(isset($_POST["presence"]) && $_POST["presence"]=="present" && !isset($_GET["statut"]) && !isset($_POST["recherche"])|| 
-                            isset($_GET["statut"]) && $_GET["statut"]=="present" && !isset($_POST["recherche"])|| isset($_POST["recherche"])&& $_SESSION["presence"]=="present" && !isset($_POST["presence"])){echo' selected';}echo'>Présents</option>
+                            isset($_GET["statut"]) && $_GET["statut"]=="present" && !isset($_POST["recherche"])|| isset($_POST["recherche"])&& isset($_SESSION["presence"]) && $_SESSION["presence"]=="present" && !isset($_POST["presence"])){echo' selected';}echo'>Présents</option>
                             
                             <option value="absents" ';if(isset($_POST["presence"]) && $_POST["presence"]=="absents" && !isset($_GET["statut"]) && !isset($_POST["recherche"])|| 
                             isset($_GET["statut"]) && $_GET["statut"]=="absents" && !isset($_POST["recherche"]) || 
-                            isset($_POST["recherche"])&& $_SESSION["presence"]=="absents" && !isset($_POST["presence"])){echo' selected';}echo'>Absents</option>
+                            isset($_POST["recherche"])&& isset($_SESSION["presence"]) && $_SESSION["presence"]=="absents" && !isset($_POST["presence"])){echo' selected';}echo'>Absents</option>
                         </select>                   
                     </div>';
                     ///////////////////////////-------Fin Present/absent---------------------//////////////////////
@@ -213,7 +213,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         ///////////-----Fin recuperation des données des etudiants----///////////
                         $ligne=$etudiants[0]["NCI"]." ".$le_ref_emargement[0]["Nom"]." ".$etudiants[0]["Nom"]." ".$emargement[$i]["Date_emargement"]." ".$emargement[$i]["Arrivee"]." ".$emargement[$i]["Depart"] ;
                         
-                        if (isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && $_SESSION["jourChercjer"]==$emargement[$i]["Date_emargement"] && $_SESSION["ref"]==$le_ref_emargement[0]["Nom"] && $_SESSION["presence"]=="present"|| 
+                        if (isset($_POST["recherche"]) && !empty($_POST["aRechercher"]) && strstr(strtolower($ligne), strtolower($_POST["aRechercher"])) && isset($_SESSION["jourChercher"]) && $_SESSION["jourChercher"]==$emargement[$i]["Date_emargement"] &&  isset($_SESSION["ref"]) && $_SESSION["ref"]==$le_ref_emargement[0]["Nom"]  &&  isset($_SESSION["presence"]) && $_SESSION["presence"]=="present"|| 
                         isset($_POST["recherche"]) && empty($_POST["aRechercher"]) &&  !isset($_POST["validerRechJour"]) ||
                         !isset($_POST["recherche"]) && !isset($_POST["validerRechJour"]) && isset($date_emargement) && $date_emargement==date('Y-m-d') && !isset($_GET["Ref"])||
                         !isset($_POST["recherche"]) && isset($_POST["validerRechJour"]) && isset($date_emargement) && $date_emargement==$_POST["jourRech"] && $le_ref_emargement[0]["Nom"]==$_POST["Ref"] && $_POST["presence"]=="present" && !isset($_GET["Ref"]) ||
@@ -239,7 +239,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                 ///////////////////////////////////////////----Fin Present----//////////////////////////////////////////////
                             
                 ///////////////////////////////////////////----Absents----//////////////////////////////////////////////
-                if(isset($_POST["validerRechJour"]) && $_POST["presence"]=="absents" && !isset($_POST["recherche"]) || !isset($_POST["validerRechJour"]) && isset($_GET["statut"]) && $_GET["statut"]=="absents" && !isset($_POST["recherche"]) || isset($_POST["recherche"]) && $_SESSION["presence"]=="absents"){
+                if(isset($_POST["validerRechJour"]) && isset($_POST["presence"]) && $_POST["presence"]=="absents" && !isset($_POST["recherche"]) || !isset($_POST["validerRechJour"]) && isset($_GET["statut"]) && $_GET["statut"]=="absents" && !isset($_POST["recherche"]) || isset($_POST["recherche"]) && isset($_SESSION["presence"]) && $_SESSION["presence"]=="absents"){
                     ///////////-----recuperation des données des etudiants----///////////
                     $codemysql = "SELECT NCI,Nom FROM etudiants"; //le code mysql
                     $etudiants=recuperation($connexion,$codemysql);
@@ -255,7 +255,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             $date = $_GET["laDate"];
                         }
                         elseif(isset($_POST["recherche"])){
-                            $date = $_SESSION["jourChercjer"];
+                            $date = $_SESSION["jourChercher"];
                         }
 
                         for($j=0;$j<count($emargement);$j++)  {    
