@@ -43,7 +43,7 @@ $_SESSION["actif"] = "accueil";
     ?>
     <header></header>
     <section class="container-fluid">
-        <a href="presence.php" class="nonSoulign"><h1 class="textAccueil">Pourcentage d'étudiants présents/absents</h1></a>
+        <h1 class="textAccueil">Pourcentage d'étudiants présents/absents</h1>
         
         <?php
         ///////////////////////////-------rechercher par jour---------------------//////////////////////

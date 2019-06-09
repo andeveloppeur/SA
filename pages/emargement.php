@@ -33,45 +33,45 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
     <link rel="stylesheet" type="text/css" media="screen" href="../css/MonStyle.css">
     <title>Emargement</title>
     <style>
-    .nonSoulign {
-        text-decoration: none !important;
-    }
-    .nonSoulign:hover{
-        color:#495057;
-    }
-    .page_link,.prev_link,.next_link{
-        border:1px solid #007bffb9;
-        border-radius: 50px;
-        font-size:30px;
-        background-color: #d0c9d6;
-        padding:2px 10px 3px 10px;
-        text-decoration: none ;
-        color: #212529;
-    }
-    .pager{
-        justify-content: center;
-    }
-    .page_link:hover,.prev_link:hover,.next_link:hover{
-        text-decoration: none;
-        color: #212529;
-    }
-    .pager>.active>a{
-        border-radius: 50px;
-        background-color: #007bffb9;
-    }
-    .table {
-        margin-bottom: 2em;
-    }
-    .active>.nav-link{
-        background-color: #d0c9d675;
-        border-bottom: 4px solid #ce2e7469;
-    }
-    .navbar-expand-lg{
-        padding:0px 16px 0px 16px;
-    }
-    .entrBouton{
-        margin-right:0.2%;
-    }
+        .nonSoulign {
+            text-decoration: none !important;
+        }
+        .nonSoulign:hover{
+            color:#495057;
+        }
+        .page_link,.prev_link,.next_link{
+            border:1px solid #007bffb9;
+            border-radius: 50px;
+            font-size:30px;
+            background-color: #d0c9d6;
+            padding:2px 10px 3px 10px;
+            text-decoration: none ;
+            color: #212529;
+        }
+        .pager{
+            justify-content: center;
+        }
+        .page_link:hover,.prev_link:hover,.next_link:hover{
+            text-decoration: none;
+            color: #212529;
+        }
+        .pager>.active>a{
+            border-radius: 50px;
+            background-color: #007bffb9;
+        }
+        .table {
+            margin-bottom: 2em;
+        }
+        .active>.nav-link{
+            background-color: #d0c9d675;
+            border-bottom: 4px solid #ce2e7469;
+        }
+        .navbar-expand-lg{
+            padding:0px 16px 0px 16px;
+        }
+        .entrBouton{
+            margin-right:0.2%;
+        }
     </style>
 </head>
 
@@ -361,9 +361,10 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                         !isset($_POST["validerRechJour"]) && $tableVide==false && $le_ref_etudiant[0]["Nom"] == $ref && isset($_POST["recherche"]) && empty($_POST["aRechercher"])) {
                             $datN = new DateTime($emargement[$i]["Date_emargement"]);
                             $date = $datN->format('d-m-Y');
+                            $nbr++;
                             echo
-                                '<tr class="row">
-                                    <td class="col-md-2 text-center">' . $leNCI . '</td>
+                                '<tr class="row" id="ligne'.$nbr.'" name="'.$leNCI.'">
+                                    <td class="col-md-2 text-center" id="nci'.$nbr.'" name="'.$leNCI.'">' . $leNCI . '</td>
                                     <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"]. '</td>
                                     <td class="col-md-2 text-center">' . $etudiants[0]["Nom"] . '</td>
                                     <td class="col-md-2 text-center">' . $date . '</td>
@@ -371,7 +372,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                                     <td class="col-md-1 text-center">' . $emargement[$i]["Depart"] . '</td>
                                     <td class="col-md-2 text-center"><a href="emargement.php?aModifier='.$leNCI.'&ref='.$le_ref_etudiant[0]["Nom"].'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
                                 </tr>';
-                                $nbr++;
+                                
                         }
                     }
                 }
@@ -379,8 +380,8 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                     $datN = new DateTime($_POST["auj"]);
                     $date = $datN->format('d-m-Y');
                     echo
-                        '<tr class="row">
-                            <td class="col-md-2 text-center">' . $_POST["code"] . '</td>
+                        '<tr class="row" id="ligne1" name="'.$_POST["code"] .'">
+                            <td class="col-md-2 text-center" id="nci1">' . $_POST["code"] . '</td>
                             <td class="col-md-2 text-center">' . $_POST["ref"] . '</td>
                             <td class="col-md-2 text-center">' . $_POST["nom"]  . '</td>
                             <td class="col-md-2 text-center">' . $date . '</td>
@@ -392,6 +393,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                 }
                 ####################################------Fin Affichage-----#################################
             echo'</tbody>
+                    <div id="le_nombre" class="'.$nbr.'"></div>
                     </table>';
                     if($nbr>8){
                         echo'<div class="col-md-12 text-center">

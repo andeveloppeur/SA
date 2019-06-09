@@ -10,7 +10,7 @@ echo '<nav class="navbar navbar-expand-lg navbar-light row fixed-top" style="bac
       <li class="nav-item  ';if ($_SESSION["actif"] == "accueil") {echo 'active';}echo '">
         <a class="nav-link" href="accueil.php">Accueil<span class="sr-only">(current)</span></a>
       </li>';
-      if($_SESSION["actif"] !="presence" && $_SESSION["actif"] !="stat" && $_SESSION["actif"] !="exportation"){
+      if($_SESSION["actif"] !="presence" && $_SESSION["actif"] !="stat" && $_SESSION["actif"] !="exportation" && $_SESSION["actif"] !="parametres"){
         echo'<li class="nav-item ';if ($_SESSION["actif"] == "ModifierEtudiant") {echo 'active';}echo '">
           <a class="nav-link" href="ModifierEtudiant.php">Gestion des apprenants</a>
         </li>
@@ -30,7 +30,10 @@ echo '<nav class="navbar navbar-expand-lg navbar-light row fixed-top" style="bac
           <a class="nav-link" href="parametres.php">Paramètres</a>
         </li>';
       }
-      elseif($_SESSION["actif"] =="presence" ||$_SESSION["actif"] =="stat" ||$_SESSION["actif"] =="exportation"){
+      elseif($_SESSION["actif"] =="presence" ||$_SESSION["actif"] =="stat" ||$_SESSION["actif"] =="exportation" || $_SESSION["actif"] =="parametres"){
+        echo'<li class="nav-item ';if ($_SESSION["actif"] == "parametres") {echo 'active';}echo '">
+          <a class="nav-link" href="parametres.php">Paramètres</a>
+        </li>';
         echo'<li class="nav-item ';if ($_SESSION["actif"] == "presence") {echo 'active';}echo '">
           <a class="nav-link" href="presence.php">Gestion des présences</a>
         </li>';
@@ -40,7 +43,7 @@ echo '<nav class="navbar navbar-expand-lg navbar-light row fixed-top" style="bac
           <a class="nav-link" href="stat.php">Statistique</a>
         </li>';
       }
-      if($_SESSION["actif"] =="presence" ||$_SESSION["actif"] =="stat" ||$_SESSION["actif"] =="exportation"){
+      if($_SESSION["actif"] =="presence" ||$_SESSION["actif"] =="stat" ||$_SESSION["actif"] =="exportation" || $_SESSION["actif"] =="parametres"){
         echo'<li class="nav-item ';if ($_SESSION["actif"] == "exportation") {echo 'active';}echo '">
           <a class="nav-link" href="exportation.php">Format PDF</a>
         </li>';
