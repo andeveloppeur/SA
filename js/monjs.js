@@ -185,12 +185,7 @@ if (nom_page.includes("exportation.php")) {
         lab_dd_em.style.color = lab_df_em.style.color = "black";
         dd_em.style.backgroundColor = df_em.style.backgroundColor = "white";
 
-        if (df_em.value != "" && dd_em.value == "") {
-            lab_dd_em.textContent = "Remplir la date de début";
-            lab_dd_em.style.color = "rgba(255, 0, 0, 0.5)";
-            dd_em.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            e.preventDefault();
-        }
+
         if (df_em.value != "" && dd_em.value != "" && df_em.value < dd_em.value) {
             lab_dd_em.textContent = "Revoir la dat";
             lab_dd_em.style.color = "rgba(255, 0, 0, 0.5)";
@@ -230,12 +225,7 @@ if (nom_page.includes("exportation.php")) {
         lab_dd_vi.style.color = lab_df_vi.style.color = "black";
         dd_vi.style.backgroundColor = df_vi.style.backgroundColor = "white";
 
-        if (df_vi.value != "" && dd_vi.value == "") {
-            lab_dd_vi.textContent = "Remplir la date de début";
-            lab_dd_vi.style.color = "rgba(255, 0, 0, 0.5)";
-            dd_vi.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            e.preventDefault();
-        }
+
         if (df_vi.value != "" && dd_vi.value != "" && df_vi.value < dd_vi.value) {
             lab_dd_vi.textContent = "Revoir la dat";
             lab_dd_vi.style.color = "rgba(255, 0, 0, 0.5)";

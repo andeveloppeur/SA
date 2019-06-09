@@ -1,20 +1,72 @@
 <?php
 require('../fpdf.php');
 try {
-    
-    if(isset($_GET["date_pdf"])) {
-        $datN=new DateTime($_GET["date_pdf"]);
-        $ladate = $datN->format('Y-m-d');
-    }
     $tout="";
     include("../../pages/connexionBDD.php");
-    /////////-----recuperation des données des etudiants----///////////
-    if(isset($_GET["date_pdf"])) {
-        $codemysql = "SELECT * FROM emargement WHERE Date_emargement='$ladate'";
+
+    $ladate_depart=$_POST["date_debut_em"];
+    $ladate_fin=$_POST["date_fin_em"];
+    $nom_em=$_POST["nom_em"];
+    $ref_em=$_POST["ref_em"];
+    if($nom_em!=""){
+        ///////////-----recuperation des données des etudiants----///////////
+        $codemysql = "SELECT NCI FROM etudiants WHERE Nom='$nom_em'"; //le code mysql
+        $nci_etu=recuperation($connexion,$codemysql);
+        ///////////-----Fin recuperation des données des etudiants----///////
+        $nci=$nci_etu[0]["NCI"];
     }
-    elseif(isset($_GET["Nci_etudiant"])){
-        $nci_etudiants=$_GET["Nci_etudiant"];
-        $codemysql = "SELECT * FROM emargement WHERE NCI='$nci_etudiants'";
+    if($ref_em!="tous"){
+        ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
+        $codemysql = "SELECT id_referentiels FROM referentiels WHERE Nom='$ref_em'"; //le code mysql
+        $id_ref=recuperation($connexion,$codemysql);
+        ///////////-----Fin recuperation des referentiels des personnes qui ont emargés----///////////
+        $id_ref=$id_ref[0]["id_referentiels"];
+    }
+    /////////-----recuperation des données des etudiants----///////////
+    if(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin=="" && $nom_em=="" && $ref_em=="tous") {//1
+        $codemysql = "SELECT * FROM emargement WHERE Date_emargement>='$ladate_depart'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin!="" && $nom_em=="" && $ref_em=="tous"){//2
+        $codemysql = "SELECT * FROM emargement WHERE Date_emargement<='$ladate_fin'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin=="" && $nom_em!="" && $ref_em=="tous"){//3
+        $codemysql = "SELECT * FROM emargement WHERE NCI='$nci'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin=="" && $nom_em=="" && $ref_em!="tous"){//4
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI WHERE etudiants.id_referentiels='$id_ref'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin!="" && $nom_em=="" && $ref_em=="tous"){//12
+        $codemysql = "SELECT * FROM emargement WHERE Date_emargement>='$ladate_depart' AND Date_emargement<='$ladate_fin'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin=="" && $nom_em!="" && $ref_em=="tous"){//13
+        $codemysql = "SELECT * FROM emargement WHERE Date_emargement>='$ladate_depart' AND NCI='$nci'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin=="" && $nom_em=="" && $ref_em!="tous"){//14
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI WHERE emargement.Date_emargement>='$ladate_depart' AND etudiants.id_referentiels='$id_ref'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin!="" && $nom_em!="" && $ref_em=="tous"){//123
+        $codemysql = "SELECT * FROM emargement WHERE Date_emargement>='$ladate_depart' AND Date_emargement<='$ladate_fin' AND NCI='$nci'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin!="" && $nom_em=="" && $ref_em!="tous"){//124
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI WHERE emargement.Date_emargement>='$ladate_depart' AND Date_emargement<='$ladate_fin' AND etudiants.id_referentiels='$id_ref'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin!="" && $nom_em!="" && $ref_em!="tous"){//1234
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI  WHERE emargement.Date_emargement>='$ladate_depart' AND Date_emargement<='$ladate_fin' AND etudiants.id_referentiels='$id_ref'  AND etudiants.NCI='$nci'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin!="" && $nom_em!="" && $ref_em!="tous"){//234
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI  WHERE emargement.Date_emargement<='$ladate_fin' AND etudiants.id_referentiels='$id_ref'  AND etudiants.NCI='$nci'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart!="" && $ladate_fin=="" && $nom_em!="" && $ref_em!="tous"){//134
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI WHERE emargement.Date_emargement>='$ladate_depart' AND etudiants.id_referentiels='$id_ref' AND etudiants.NCI='$nci'";
+    }
+     elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin!="" && $nom_em=="" && $ref_em!="tous"){//24
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI WHERE emargement.Date_emargement<='$ladate_fin' AND etudiants.id_referentiels='$id_ref'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin!="" && $nom_em!="" && $ref_em=="tous"){//23
+        $codemysql = "SELECT * FROM emargement WHERE Date_emargement<='$ladate_fin' AND NCI='$nci'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin=="" && $nom_em!="" && $ref_em!="tous"){//34
+        $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI  WHERE etudiants.id_referentiels='$id_ref'  AND etudiants.NCI='$nci'";
     }
     else{
         $codemysql = "SELECT * FROM emargement ORDER BY Date_emargement ASC";

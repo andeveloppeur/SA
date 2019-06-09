@@ -1,16 +1,8 @@
 <?php
 require('../fpdf.php');
 try {
-    
-    if(isset($_POST["pdf_visiteur"]) && $_POST["date_debu_visiteur"]!="") {
-        $datN=new DateTime($_POST["date_debu_visiteur"]);
-        $ladate_depart = $datN->format('Y-m-d');
-    }
-    
-    if(isset($_POST["pdf_visiteur"]) && $_POST["date_fin_visiteur"]!="") {
-        $datN=new DateTime($_POST["date_fin_visiteur"]);
-        $ladate_fin = $datN->format('Y-m-d');
-    }
+    $ladate_depart=$_POST["date_debu_visiteur"];
+    $ladate_fin=$_POST["date_fin_visiteur"];
 
     $tout="";
     include("../../pages/connexionBDD.php");
@@ -20,6 +12,9 @@ try {
     }
     elseif(isset($_POST["pdf_visiteur"]) && $_POST["date_debu_visiteur"]!="" && $_POST["date_fin_visiteur"]!="") {
         $codemysql = "SELECT * FROM visiteurs WHERE Date>='$ladate_depart' AND Date<='$ladate_fin' ORDER BY Date ASC";
+    }
+    elseif(isset($_POST["pdf_visiteur"]) && $_POST["date_debu_visiteur"]=="" && $_POST["date_fin_visiteur"]!="") {
+        $codemysql = "SELECT * FROM visiteurs WHERE Date<='$ladate_fin' ORDER BY Date ASC";
     }
     else{
         $codemysql = "SELECT * FROM visiteurs ORDER BY Date ASC";

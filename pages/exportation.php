@@ -81,7 +81,6 @@ $_SESSION["actif"] = "exportation";
             <div class="col-md-1"></div>
             <div class="col-md-10 bor">
                 <form method="POST" action="../pdf/Mes_PDF/pdf_etudiants.php" target="_blank" class="">
-                <!-- <form method="POST" action="" target="" class=""> -->
                     <legend class="mesTitres">Apprenants</legend>
                     <div class="row">
                         <label for="" class="col-md-2 l2p" >Référentiel</label>
@@ -98,8 +97,8 @@ $_SESSION["actif"] = "exportation";
                         <input type="submit" class="btn btn-outline-primary col-md-1  entrBouton" value="PDF" name="pdf_ap" id="pdf_ap">
                      </div> 
                 </form>
-                <!-- <form method="POST" action="../pdf/Mes_PDF/pdf_emargement.php" target="_blank" class="espace"> -->
-                <form method="POST" action="" target="" class="espace">
+                <form method="POST" action="../pdf/Mes_PDF/pdf_emargement.php" target="_blank" class="espace">
+                <!-- <form method="POST" action="" target="" class="espace"> -->
                     <legend class="mesTitres">Emargement</legend>
                      <div class="row">
                         <label for="" class="col-md-2 l2p" >Référentiel</label>
@@ -109,6 +108,7 @@ $_SESSION["actif"] = "exportation";
                     </div>
                     <div class="row">
                         <select name="ref_em" class="form-control col-md-2  entrBouton" id="">
+                            <option value="tous">Tous les référentiels</option>
                             <?php
                             for($i=0;$i<count($referentiels);$i++){
                                 echo'<option value="'.$referentiels[$i]["Nom"].'">'.$referentiels[$i]["Nom"].'</option>';
@@ -136,7 +136,6 @@ $_SESSION["actif"] = "exportation";
                     <!--//////////////////////////----------Fin Si plusieurs portent le même nom----------////////////////////////-->
                 </form> 
                 <form method="POST" action="../pdf/Mes_PDF/pdf_visiteurs.php" target="_blank" class="espace">
-                <!-- <form method="POST" action="" target="" class="espace"> -->
                     <legend class="mesTitres">Visiteurs</legend>
                     <div class="row">
                         <label for="" class="col-md-2 l3p"  name="date_visiteur" id="lab_dd_vi">Date début</label>
