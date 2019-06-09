@@ -75,7 +75,9 @@ $_SESSION["actif"] = "exportation";
             $codemysql = "SELECT * FROM referentiels"; //le code mysql
             $referentiels=recuperation($connexion,$codemysql);
             ///////////-----Fin recuperation des referentiels----///////////
-            $_SESSION["nombre_em"]=0;
+            if(!isset($_SESSION["nombre_em"])){
+                $_SESSION["nombre_em"]=0;
+            }
     ?> 
         <div class="MonForm row insc">
             <div class="col-md-1"></div>
@@ -97,7 +99,7 @@ $_SESSION["actif"] = "exportation";
                         <input type="submit" class="btn btn-outline-primary col-md-1  entrBouton" value="PDF" name="pdf_ap" id="pdf_ap">
                      </div> 
                 </form>
-                <form method="POST" action="../pdf/Mes_PDF/pdf_emargement.php" target="_blank" class="espace">
+                <form method="POST" action="../pdf/Mes_PDF/pdf_emargement.php" <?php if(!isset($_GET["Noms"])){echo ' target="_blank" ';}?>class="espace">
                 <!-- <form method="POST" action="" target="" class="espace"> -->
                     <legend class="mesTitres">Emargement</legend>
                      <div class="row">
@@ -115,20 +117,32 @@ $_SESSION["actif"] = "exportation";
                             }
                             ?>
                         </select>
-                        <input type="text" class="form-control col-md-3 entrBouton" placeholder="Nom de l'apprenant"  name="nom_em">
+                        <input type="text" class="form-control col-md-3 entrBouton" placeholder="Nom de l'apprenant"  name="nom_em"
+                        <?php
+                        if(isset($_GET["Noms"])){
+                            echo ('value="'.$_GET["Noms"].'"');
+                        }
+                        ?>
+                        >
                         <input type="date" class="form-control col-md-2 entrBouton" value="" name="date_debut_em" id="dd_em">
                         <input type="date" class="form-control col-md-2 entrBouton" value="" name="date_fin_em" id="df_em">
                         <input type="submit" class="btn btn-outline-primary col-md-1 entrBouton" value="PDF" name="pdf_em" id="pdf_em">
                     </div>
                     <!--//////////////////////////----------Si plusieurs portent le même nom----------////////////////////////-->
-                    <?php if ($_SESSION["nombre_em"]>0) {?>
+                    <?php if ($_SESSION["nombre_em"]>1 && isset($_GET["Noms"])) {
+                    echo'<script>alert("Plusieurs personnes portent le nom '.$_GET["Noms"].', veuillez choisir son numéro de carte d\'identité.");</script>';?>
                     <div class="row lesCodes">
                         <div class="col-md-2  entrBouton"></div>
-                        <select name="code_em" class="form-control col-md-3  entrBouton" id="">
+                        <select name="nci_em" class="form-control col-md-3  entrBouton rougMoins" id="">
                             <?php
-                            // for($i=0;$i<count($referentiels);$i++){
-                            //     echo'<option value="'.$referentiels[$i]["Nom"].'">'.$referentiels[$i]["Nom"].'</option>';
-                            // }
+                            $nom_em=$_GET["Noms"];
+                            ///////////-----recuperation des données des etudiants----///////////
+                            $codemysql = "SELECT NCI FROM etudiants WHERE Nom='$nom_em'"; //le code mysql
+                            $nci_etu=recuperation($connexion,$codemysql);
+                            ///////////-----Fin recuperation des données des etudiants----///////
+                            for($i=0;$i<count($nci_etu);$i++){
+                                echo'<option value="'.$nci_etu[$i]["NCI"].'">'.$nci_etu[$i]["NCI"].'</option>';
+                            }
                             ?>
                         </select>
                     </div>
@@ -152,24 +166,7 @@ $_SESSION["actif"] = "exportation";
     <?php
             echo'<div class="bas"></div>';
     ?>
-    <script>
-        var pdf_ap = document.getElementById("pdf_ap");
-        var nom_ap = document.getElementById("nom_ap").value;
-        pdf_ap.addEventListener("click", verif_nom_ap);
-        function verif_nom_ap(e){
-            <?php
-                 ///////////-----recuperation des données des etudiants----/////////// var variableRecuperee = <?php echo json_encode($variableAPasser);
-                $codemysql = "SELECT * FROM etudiants"; //le code mysql
-                $etudiants=recuperation($connexion,$codemysql);
-                ///////////-----Fin recuperation des données des etudiants----///////
-                
-                for($i=0;$i<count($etudiants);$i++) {
-                    
-                }
-            ?>
-        }
-        var pdf_em = document.getElementById("pdf_em");
-    </script>
+    
     <?php
         }
         catch (PDOException $e) {

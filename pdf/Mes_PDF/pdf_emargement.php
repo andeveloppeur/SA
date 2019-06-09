@@ -1,7 +1,9 @@
 <?php
+session_start();
 require('../fpdf.php');
 try {
     $tout="";
+    $nbr=0;
     include("../../pages/connexionBDD.php");
 
     $ladate_depart=$_POST["date_debut_em"];
@@ -13,7 +15,23 @@ try {
         $codemysql = "SELECT NCI FROM etudiants WHERE Nom='$nom_em'"; //le code mysql
         $nci_etu=recuperation($connexion,$codemysql);
         ///////////-----Fin recuperation des données des etudiants----///////
-        $nci=$nci_etu[0]["NCI"];
+
+        for($i=0;$i<count($nci_etu);$i++){//connaist si plusieurs personnes n'ont pas le même nom
+            $lesnci=$nci_etu[$i]["NCI"];
+            $nbr++;
+        } 
+        if( $nbr>1 && !isset($_POST["nci_em"])){//s'il son plusieurs repartir et demander le NCI
+            $_SESSION["nombre_em"]=$nbr;
+            header('Location: ../../pages/exportation.php?Noms='.$nom_em.'');
+            exit();
+        }
+        unset($_SESSION["nombre_em"]);//detruire la variable session pour recacher les NCI sur notre page
+        if(!isset($_POST["nci_em"])){//car si il existe ca veut dire qu'ils sont plusieurs et qu'ont a choisi un NCI
+            $nci=$nci_etu[0]["NCI"];
+        }
+        else{
+            $nci=$_POST["nci_em"];
+        }
     }
     if($ref_em!="tous"){
         ///////////-----recuperation des referentiels des personnes qui ont emargés----///////////
@@ -31,6 +49,9 @@ try {
     }
     elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin=="" && $nom_em!="" && $ref_em=="tous"){//3
         $codemysql = "SELECT * FROM emargement WHERE NCI='$nci'";
+    }
+    elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin=="" && $nom_em=="" && $ref_em=="tous"){//4
+      $codemysql = "SELECT * FROM emargement";
     }
     elseif(isset($_POST["pdf_em"]) && $ladate_depart=="" && $ladate_fin=="" && $nom_em=="" && $ref_em!="tous"){//4
         $codemysql = "SELECT * FROM emargement INNER JOIN etudiants ON emargement.NCI=etudiants.NCI WHERE etudiants.id_referentiels='$id_ref'";
