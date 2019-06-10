@@ -62,7 +62,7 @@ if (!isset($_GET["code"])) {
         <?php
         $j=0;
             ///////////-----recuperation des données de la table emargement----///////////
-            $codemysql = "SELECT * FROM emargement"; //le code mysql
+            $codemysql = "SELECT * FROM emargement ORDER BY Date_emargement"; //le code mysql
             $emargement=recuperation($connexion,$codemysql);
             ///////////-----recuperation des données de la table emargement-----///////////
             for($i=0;$i<count($emargement);$i++) {

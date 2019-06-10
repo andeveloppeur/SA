@@ -364,10 +364,9 @@ $_SESSION["actif"] = "visiteur";
                         <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
                         <td class="col-md-2 text-center">' . $date . '</td>
                         <td class="col-md-2 text-center">' . $_POST["tel"] . '</td>
-                        <td class="col-md-2 text-center">' . $_POST["email"] . '</td>';
-                        echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $leCode . '" ><button class="btn btn-outline-danger bsup ">Supprimer</button></a></td>';
-                        
-                    echo'</tr>';
+                        <td class="col-md-2 text-center">' . $_POST["email"] . '</td>
+                        <td class="col-md-2 text-center"><a class="nonSoulign" href="visiteur.php?code_visiteur_a_supp=' . $leCode . '" ><button class="btn btn-outline-danger bsup ">Supprimer</button></a></td>
+                    </tr>';
             }
             else{
                 ///////////-----recuperation des données des etudiants----///////////
@@ -386,15 +385,9 @@ $_SESSION["actif"] = "visiteur";
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["Nom"]. '</td>
                                 <td class="col-md-2 text-center">' . $datev. '</td>
                                 <td class="col-md-2 text-center">' . $visiteurs[$i]["Telephone"] . '</td>
-                                <td class="col-md-2 text-center">' . $visiteurs[$i]["Email"] . '</td>';
-                                if(isset($_GET["lg"]) && $_GET["lg"] ==$i){
-                                    echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_visiteur_a_supp=' . $visiteurs[$i]["id_visiteurs"] . '" ><button class="btn btn-outline-danger bsup bvalsup">Valider</button></a></td>';
-                                }
-                                else{
-                                    echo'<td class="col-md-2 text-center"><a href="visiteur.php?lg='.$i.'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';
-                                }
-                                                         
-                            echo'</tr>';
+                                <td class="col-md-2 text-center">' . $visiteurs[$i]["Email"] . '</td>
+                                 <td class="col-md-2 text-center"><a class="nonSoulign" href="visiteur.php?code_visiteur_a_supp=' . $visiteurs[$i]["id_visiteurs"] . '" ><button class="btn btn-outline-danger bsup ">Supprimer</button></a></td>
+                            </tr>';
                             $nbr++;
                     }
                 }
@@ -418,6 +411,17 @@ $_SESSION["actif"] = "visiteur";
     </section>
     <?php
     include("piedDePage.php");
+    if(isset($_GET["code_visiteur_a_supp"])){
+        $sonId=$_GET["code_visiteur_a_supp"];
+        $sup='code_visiteur_a_supp='.$sonId
+        ?>
+        <script>
+            if(confirm("Confirmer la suppression ?")){
+                 document.location.href = "traitement.php?<?php echo "$sup"; ?>"
+            }
+        </script>
+        <?php
+    }
     ?>
     
     <script src="../js/jq.js"></script>

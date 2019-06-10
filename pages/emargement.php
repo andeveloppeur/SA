@@ -381,12 +381,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                                     <td class="col-md-1 text-center">' . $emargement[$i]["Arrivee"] . '</td>
                                     <td class="col-md-1 text-center">' . $emargement[$i]["Depart"] . '</td>
                                     <td class="col-md-1 text-center"><a href="emargement.php?aModifier='.$leNCI.'&ref='.$le_ref_etudiant[0]["Nom"].'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>';
-                                    if(isset($_GET["lg"]) && $_GET["lg"] ==$nbr){
-                                        echo'<td class="col-md-1 text-center"><a href="traitement.php?supp_em='. $leNCI.'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-danger bvalsup">Valider</button></a></td>';
-                                    }
-                                    else{
-                                        echo'<td class="col-md-1 text-center"><a href="emargement.php?lg='.$nbr.'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';
-                                    }
+                                    echo'<td class="col-md-1 text-center"><a href="emargement.php?supp_em='. $leNCI.'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';        
                         echo'</tr>';
                                 
                         }
@@ -404,7 +399,7 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             <td class="col-md-1 text-center">' . $_POST["arrivee"]  . '</td>
                             <td class="col-md-1 text-center">' . $_POST["depart"]  . '</td>
                             <td class="col-md-1 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&ref='.$_POST["ref"].'&&date='.$_POST["auj"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
-                            <td class="col-md-1 text-center"><a href="traitement.php?supp_em='. $_POST["code"] .'&&date='.$_POST["auj"].'"><button class="btn btn-outline-danger bsup" disabled>Supprimer</button></a></td>
+                            <td class="col-md-1 text-center"><a href="emargement.php?supp_em='. $_POST["code"] .'&&date='.$_POST["auj"].'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>
                         </tr>';
                         $nbr++;
                 }
@@ -427,6 +422,19 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
     </section>
     <?php
     include("piedDePage.php");
+    
+    if(isset($_GET["supp_em"])){
+        $sonId=$_GET["supp_em"];
+        $ladate=$_GET["date"];
+        $sup='supp_em='.$sonId.'&&date='.$ladate
+        ?>
+        <script>
+            if(confirm("Confirmer la suppression ?")){
+                 document.location.href = "traitement.php?<?php echo "$sup"; ?>"
+            }
+        </script>
+        <?php
+    }
     ?>
     <script src="../js/jq.js"></script>
     <script src="../js/bootstrap-table-pagination.js"></script>

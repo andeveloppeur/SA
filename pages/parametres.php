@@ -292,6 +292,9 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     $requete->execute();
                 }
                echo'<script>alert("Modification réussie");</script>';
+               if($admin == false){
+                   echo'<script>document.location.href="parametres.php";</script>';
+               }
             }
             ####################################------Fin Modification----#############################
 
@@ -326,10 +329,9 @@ if($_SESSION["Code_agents"]=="1 AS"){
                             <td class="col-md-2 text-center">' . $_POST["login"] . '</td>
                             <td class="col-md-2 text-center">' . $_POST["nom"]. '</td>
                             <td class="col-md-2 text-center">' . $_POST["tel"]. '</td>
-                            <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $inf_agents[0]["Code_agents"] . '&statut='.$inf_agents[0]["statut"].'" ><button class="btn '; if($inf_agents[0]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$inf_agents[0]["statut"].'</button></a></td>';
-                            echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents_a_supp=' . $inf_agents[0]["Code_agents"]. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td> ';
-                            
-                        echo'</tr>';
+                            <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $inf_agents[0]["Code_agents"] . '&statut='.$inf_agents[0]["statut"].'" ><button class="btn '; if($inf_agents[0]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$inf_agents[0]["statut"].'</button></a></td>
+                            <td class="col-md-2 text-center"><a class="nonSoulign" href="parametres.php?code_agents_a_supp=' . $inf_agents[0]["Code_agents"]. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td> 
+                            </tr>';
                 }
                 else{
                     ///////////-----recuperation des données des agents----///////////
@@ -348,15 +350,9 @@ if($_SESSION["Code_agents"]=="1 AS"){
                                     <td class="col-md-2 text-center">' . $agents[$i]["Login"] . '</td>
                                     <td class="col-md-2 text-center">' . $agents[$i]["Nom"]. '</td>
                                     <td class="col-md-2 text-center">' . $agents[$i]["Telephone"] . '</td>
-                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $agents[$i]["Code_agents"]. '&statut='.$agents[$i]["statut"].'" ><button class="btn '; if($agents[$i]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$agents[$i]["statut"] .'</button></a></td>';
-                                                        
-                                    if(isset($_GET["lg"]) && $_GET["lg"] ==$i){
-                                        echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents_a_supp=' . $agents[$i]["Code_agents"]. '" ><button class="btn btn-outline-danger bvalsup">Valider</button></a></td>'; 
-                                    }
-                                    else{
-                                        echo'<td class="col-md-2 text-center"><a href="parametres.php?lg='.$i.'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';
-                                    }
-                                echo'</tr>';
+                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $agents[$i]["Code_agents"]. '&statut='.$agents[$i]["statut"].'" ><button class="btn '; if($agents[$i]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$agents[$i]["statut"] .'</button></a></td>
+                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="parametres.php?code_agents_a_supp=' . $agents[$i]["Code_agents"]. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td> 
+                                </tr>';
                                 $nbr++;
                         }
                     }
@@ -384,6 +380,17 @@ if($_SESSION["Code_agents"]=="1 AS"){
     </section>
     <?php
     include("piedDePage.php");
+    if(isset($_GET["code_agents_a_supp"]) && $_GET["code_agents_a_supp"]!=$_SESSION["Code_agents"]){
+        $sonId=$_GET["code_agents_a_supp"];
+        $sup='code_agents_a_supp='.$sonId
+        ?>
+        <script>
+            if(confirm("Confirmer la suppression ?")){
+                 document.location.href = "traitement.php?<?php echo "$sup"; ?>"
+            }
+        </script>
+        <?php
+    }
     ?>
     
     <script src="../js/jq.js"></script>
