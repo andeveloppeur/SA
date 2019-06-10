@@ -57,7 +57,12 @@ if($_SESSION["Code_agents"]=="1 AS"){
             margin-left:0.2%;
         }
         .coulBout{
-                width:50%;
+            width:50%;
+        }
+        .bvalsup{
+            background-color: red;
+            color:white;
+            width:50%;
         }
     </style>
 </head>
@@ -120,7 +125,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                 
         ?>
         
-        <?php  if($admin==true && !isset($_POST["ajouter"]) && !isset($_POST["modifier"]) && !isset($_POST["valider_modif"]) && !isset($_POST["valider_ajout"]) && !isset($_POST["modif_mdp"]) || $admin==true && isset($_POST["valider_modif"]) && $login_existe==false || isset($_POST["valider_ajout"]) && $login_existe==false ) {?>
+        <?php  if($admin==true && !isset($_POST["ajouter"]) && !isset($_POST["modifier"]) && !isset($_POST["valider_modif"]) && !isset($_POST["valider_ajout"]) && !isset($_POST["modif_mdp"]) || $admin==true && isset($_POST["valider_modif"]) && $login_existe==false && $bon_mdp==true || isset($_POST["valider_ajout"]) && $login_existe==false ) {?>
             <form method="POST" action="" class="MonForm row insc">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 bor">
@@ -133,7 +138,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                 </div>
             </form>
         <?php } 
-        elseif(isset($_POST["ajouter"]) || isset($_POST["modifier"]) || $admin==false || $admin==true && $login_existe==true || isset($_POST["modif_mdp"]) && $login_existe == false) {?>
+        elseif(isset($_POST["ajouter"]) || isset($_POST["modifier"]) || $admin==false || $admin==true && $login_existe==true || isset($_POST["valider_modif"]) && $admin==true && $bon_mdp==false || isset($_POST["modif_mdp"]) && $login_existe == false) {?>
             <form method="POST" action="" class="MonForm row insc">
                 <div class="col-md-3"></div>
                 <div class="col-md-6 bor">
@@ -174,7 +179,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     <!--################################------Fin Login-------###################################-->
 
                     <!--///////////////////////////////-------Ancien mot de passe------///////////////////////////////////-->
-                    <?php if($admin==false || $admin==true && isset($_POST["modifier"]) || $admin==true && isset($_POST["valider_modif"]) && $login_existe==true){?>
+                    <?php if($admin==false || $admin==true && isset($_POST["modifier"]) || $admin==true && isset($_POST["valider_modif"]) && $login_existe==true || $admin==true && isset($_POST["valider_modif"]) && $bon_mdp==false || isset($_POST["modif_mdp"]) && $bon_mdp==false || isset($_POST["modif_mdp"]) && $bon_mdp==true){?>
                         <div class="row">
                             <div class="col-md-2"></div>
                             <?php if(!isset($_POST["modif_mdp"]) && !isset($_POST["valider_modif"]) || isset($_POST["modif_mdp"]) && $bon_mdp==true|| isset($_POST["valider_modif"]) && $bon_mdp==true ){?>
@@ -222,7 +227,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
                             ################################-----Fin Lors de l'ajout--------###################################-->
 
                             ///////////////////////////////-------Lors de la modification------///////////////////////////////////-->
-                            elseif(!isset($_POST["ajouter"]) && isset($_POST["modifier"])|| $admin==false|| $admin==true && $login_existe==true || isset($_POST["modif_mdp"]) && $login_existe == false) { ?>
+                            elseif(!isset($_POST["ajouter"]) && isset($_POST["modifier"])|| $admin==false|| $admin==true && $login_existe==true || isset($_POST["modif_mdp"]) && $login_existe == false || isset($_POST["valider_modif"]) && $bon_mdp==false) { ?>
                                 <input type="submit"  class="form-control col-md-4 espace entrBouton" value="Modifier" name="valider_modif" 
                                 <?php if($admin==false) {?> id="valider_modif_ag" <?php } else { ?> id="valider_modif_adm"<?php }?>>
                             <?php } ?>
@@ -270,7 +275,7 @@ if($_SESSION["Code_agents"]=="1 AS"){
             ####################################------Fin Ajouter-----#################################
 
             // ///////////////////////////////////------Debut Modification-----///////////////////////////
-            if (isset($_POST["valider_modif"])  && $admin == false && $login_existe==false && $bon_mdp==true ||isset($_POST["valider_modif"])  && $admin == true && $login_existe==false) {
+            if (isset($_POST["valider_modif"])  && $admin == false && $login_existe==false && $bon_mdp==true ||isset($_POST["valider_modif"])  && $admin == true && $login_existe==false && $bon_mdp==true) {
                 $sonId=$_SESSION["Code_agents"];
                 $nom = securisation($_POST["nom"]);
                 $tel = securisation($_POST["tel"]);
@@ -321,10 +326,10 @@ if($_SESSION["Code_agents"]=="1 AS"){
                             <td class="col-md-2 text-center">' . $_POST["login"] . '</td>
                             <td class="col-md-2 text-center">' . $_POST["nom"]. '</td>
                             <td class="col-md-2 text-center">' . $_POST["tel"]. '</td>
-                            <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $inf_agents[0]["Code_agents"] . '&statut='.$inf_agents[0]["statut"].'" ><button class="btn '; if($inf_agents[0]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$inf_agents[0]["statut"].'</button></a></td>
-                            <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents_a_supp=' . $inf_agents[0]["Code_agents"]. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td> 
+                            <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $inf_agents[0]["Code_agents"] . '&statut='.$inf_agents[0]["statut"].'" ><button class="btn '; if($inf_agents[0]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$inf_agents[0]["statut"].'</button></a></td>';
+                            echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents_a_supp=' . $inf_agents[0]["Code_agents"]. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td> ';
                             
-                        </tr>';
+                        echo'</tr>';
                 }
                 else{
                     ///////////-----recuperation des données des agents----///////////
@@ -343,9 +348,15 @@ if($_SESSION["Code_agents"]=="1 AS"){
                                     <td class="col-md-2 text-center">' . $agents[$i]["Login"] . '</td>
                                     <td class="col-md-2 text-center">' . $agents[$i]["Nom"]. '</td>
                                     <td class="col-md-2 text-center">' . $agents[$i]["Telephone"] . '</td>
-                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $agents[$i]["Code_agents"]. '&statut='.$agents[$i]["statut"].'" ><button class="btn '; if($agents[$i]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$agents[$i]["statut"] .'</button></a></td>
-                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents_a_supp=' . $agents[$i]["Code_agents"]. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td>                           
-                                </tr>';
+                                    <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $agents[$i]["Code_agents"]. '&statut='.$agents[$i]["statut"].'" ><button class="btn '; if($agents[$i]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$agents[$i]["statut"] .'</button></a></td>';
+                                                        
+                                    if(isset($_GET["lg"]) && $_GET["lg"] ==$i){
+                                        echo'<td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents_a_supp=' . $agents[$i]["Code_agents"]. '" ><button class="btn btn-outline-danger bvalsup">Valider</button></a></td>'; 
+                                    }
+                                    else{
+                                        echo'<td class="col-md-2 text-center"><a href="parametres.php?lg='.$i.'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';
+                                    }
+                                echo'</tr>';
                                 $nbr++;
                         }
                     }

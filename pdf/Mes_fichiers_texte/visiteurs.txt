@@ -1,2 +1,2 @@
-1 V-SA;Abdoulaye Ndoye;2019-06-08;771050106;layendoyesn@gmail.com;1 AS;
-2 V-SA;Ibou Ndaw;2019-06-08;777521436;ibou@gmail.com;1 AS;
+2 V-SA;Ibou Ndaw;2019-06-06;77;layendoyesn@gmail.com;0 AS;
+1 V-SA;Abdoulaye Ndoye;2019-06-09;1;layendoyesn@gmail.com;0 AS;
