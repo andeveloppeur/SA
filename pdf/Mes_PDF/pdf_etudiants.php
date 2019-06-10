@@ -1,6 +1,10 @@
 <?php
 require('../fpdf.php');
 try {
+    $tout=" ;"." ;"." ;"." ;"." ;"." ;"." ;"." ;";
+    $monfichier=fopen("../Mes_fichiers_texte/etudiants.txt","w");
+    fwrite($monfichier,trim($tout));
+    fclose($monfichier);
     $tout="";
     include("../../pages/connexionBDD.php");
     

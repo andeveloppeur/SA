@@ -113,19 +113,20 @@ $_SESSION["actif"] = "exportation";
                             <option value="tous">Tous les référentiels</option>
                             <?php
                             for($i=0;$i<count($referentiels);$i++){
-                                echo'<option value="'.$referentiels[$i]["Nom"].'">'.$referentiels[$i]["Nom"].'</option>';
+                                if(isset($_GET["ref_e"]) && $_GET["ref_e"]==$referentiels[$i]["Nom"]){
+                                    echo'<option value="'.$referentiels[$i]["Nom"].'" selected>'.$referentiels[$i]["Nom"].'</option>';
+                                }
+                                else{
+                                    echo'<option value="'.$referentiels[$i]["Nom"].'">'.$referentiels[$i]["Nom"].'</option>';
+                                }
+                                
                             }
                             ?>
                         </select>
                         <input type="text" class="form-control col-md-3 entrBouton" placeholder="Nom de l'apprenant"  name="nom_em"
-                        <?php
-                        if(isset($_GET["Noms"])){
-                            echo ('value="'.$_GET["Noms"].'"');
-                        }
-                        ?>
-                        >
-                        <input type="date" class="form-control col-md-2 entrBouton" value="" name="date_debut_em" id="dd_em">
-                        <input type="date" class="form-control col-md-2 entrBouton" value="" name="date_fin_em" id="df_em">
+                        <?php if(isset($_GET["Noms"])){echo 'value="'.$_GET["Noms"].'"' ;} ?>>
+                        <input type="date" class="form-control col-md-2 entrBouton" name="date_debut_em" id="dd_em" <?php if(isset($_GET["date_deb"])){echo ' value="'.$_GET["date_deb"].'"' ;} ?>>
+                        <input type="date" class="form-control col-md-2 entrBouton" name="date_fin_em" id="df_em" <?php if(isset($_GET["date_fin"])){echo ' value="'.$_GET["date_fin"].'"' ;} ?>>
                         <input type="submit" class="btn btn-outline-primary col-md-1 entrBouton" value="PDF" name="pdf_em" id="pdf_em">
                     </div>
                     <!--//////////////////////////----------Si plusieurs portent le même nom----------////////////////////////-->

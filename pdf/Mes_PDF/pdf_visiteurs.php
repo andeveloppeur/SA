@@ -1,6 +1,10 @@
 <?php
 require('../fpdf.php');
 try {
+    $tout=" ;"." ;"." ;"." ;"." ;"." ;"." ;"." ;";
+    $monfichier=fopen("../Mes_fichiers_texte/visiteurs.txt","w");
+    fwrite($monfichier,trim($tout));
+    fclose($monfichier);
     $ladate_depart=$_POST["date_debu_visiteur"];
     $ladate_fin=$_POST["date_fin_visiteur"];
 
