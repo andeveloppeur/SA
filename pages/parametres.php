@@ -59,10 +59,9 @@ if($_SESSION["Code_agents"]=="1 AS"){
         .coulBout{
             width:50%;
         }
-        .bvalsup{
-            background-color: red;
-            color:white;
-            width:50%;
+        .lesliens, .lesliens:hover{
+            text-decoration: none ;
+            color: #212529;
         }
     </style>
 </head>
