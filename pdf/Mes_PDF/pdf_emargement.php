@@ -16,11 +16,29 @@ try {
     $nom_em=$_POST["nom_em"];
     $ref_em=$_POST["ref_em"];
     if($nom_em!=""){
-        ///////////-----recuperation des données des etudiants----///////////
-        $codemysql = "SELECT NCI FROM etudiants WHERE Nom='$nom_em'"; //le code mysql
-        $nci_etu=recuperation($connexion,$codemysql);
-        ///////////-----Fin recuperation des données des etudiants----///////
+        if($ref_em!="tous"){
+            ///////////-----recuperation des données des etudiants----///////////
+            // // $codemysql = "SELECT etudiants.NCI FROM etudiants INNER JOIN referentiels ON etudiants.id_referentiels=referentiels.id_referentiels WHERE etudiants.Nom='$nom_em' AND referentiels.Nom='.$ref_em.'"; //le code mysql
+            // $nci_etu=recuperation($connexion,$codemysql);
+            ///////////-----Fin recuperation des données des etudiants----///////
 
+            // ///////////-----recuperation des données des etudiants----///////////
+            $codemysql = "SELECT id_referentiels FROM referentiels WHERE Nom='$ref_em'"; //le code mysql
+            $id_r=recuperation($connexion,$codemysql);
+            // ///////////-----Fin recuperation des données des etudiants----///////
+
+            // $id_r=$id_r[0]["id_referentiels"];
+            ///////////-----recuperation des données des etudiants----///////////
+            $codemysql = "SELECT NCI FROM etudiants WHERE Nom='$nom_em' AND id_referentiels='.$id_r.'"; //le code mysql
+            // $nci_etu=recuperation($connexion,$codemysql);
+            // ///////////-----Fin recuperation des données des etudiants----///////
+        }
+        else{
+            ///////////-----recuperation des données des etudiants----///////////
+            $codemysql = "SELECT NCI FROM etudiants WHERE Nom='$nom_em'"; //le code mysql
+            $nci_etu=recuperation($connexion,$codemysql);
+            ///////////-----Fin recuperation des données des etudiants----///////
+        }
         for($i=0;$i<count($nci_etu);$i++){//connaist si plusieurs personnes n'ont pas le même nom
             $lesnci=$nci_etu[$i]["NCI"];
             $nbr++;
