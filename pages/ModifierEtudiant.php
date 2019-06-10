@@ -51,6 +51,11 @@ $_SESSION["actif"] = "ModifierEtudiant";
         .navbar-expand-lg{
             padding:0px 16px 0px 16px;
         }
+        .lesliens, .lesliens:hover{
+            text-decoration: none ;
+            color: #212529;
+        }
+
     </style>
 </head>
 
@@ -411,12 +416,12 @@ $_SESSION["actif"] = "ModifierEtudiant";
                     }
                     echo
                                 '<tr class="row">
-                                    <td class="col-md-2 text-center">' .$leCode. '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["ref"]. '</td>
-                                    <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
-                                    <td class="col-md-2 text-center">' . $date . '</td>
-                                    <td class="col-md-1 text-center">' . $_POST["tel"] . '</td>
-                                    <td class="col-md-3 text-center">' . $_POST["email"] . '</td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leCode .'" >' .$leCode. '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leCode .'" >' . $_POST["ref"]. '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leCode .'" >' . $_POST["nom"] . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leCode .'" >' . $date . '</a></td>
+                                    <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $leCode .'" >' . $_POST["tel"] . '</a></td>
+                                    <td class="col-md-3 text-center"><a class="lesliens" href="stat.php?code=' . $leCode .'" >' . $_POST["email"] . '</a></td>
                                     
                                 </tr>';
                 }
@@ -434,12 +439,12 @@ $_SESSION["actif"] = "ModifierEtudiant";
                             $date = $datN->format('d-m-Y');
                             echo
                                 '<tr class="row">
-                                    <td class="col-md-2 text-center">' . $NCI_etudiant . '</td>
-                                    <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
-                                    <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"] . '</td>
-                                    <td class="col-md-2 text-center">' . $date . '</td>
-                                    <td class="col-md-1 text-center">' . $etudiants[$i]["Telephone"] . '</td>
-                                    <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $NCI_etudiant . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $le_ref_etudiant[0]["Nom"] . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $etudiants[$i]["Nom"] . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $date . '</a></td>
+                                    <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $etudiants[$i]["Telephone"] . '</a></td>
+                                    <td class="col-md-3 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $etudiants[$i]["Email"] . '</a></td>
                                     
                                 </tr>';
                                 $nbr++;

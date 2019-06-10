@@ -57,8 +57,9 @@ elseif (isset($_POST["ref"])) {
         .navbar-expand-lg{
             padding:0px 16px 0px 16px;
         }
-        .bst{
-            width:100%;
+        .lesliens, .lesliens:hover{
+            text-decoration: none ;
+            color: #212529;
         }
     </style>
 </head>
@@ -120,9 +121,8 @@ elseif (isset($_POST["ref"])) {
             echo '<table class="col-12 table tabliste table-hover">
             <thead class="">
                 <tr class="row">
-                    <td class="col-md-1 text-center gras">Stats</td>
                     <td class="col-md-2 text-center gras">N° CI</td>
-                    <td class="col-md-1 text-center gras">Référentiel</td>
+                    <td class="col-md-2 text-center gras">Référentiel</td>
                     <td class="col-md-2 text-center gras">Nom</td>
                     <td class="col-md-2 text-center gras">Téléphone</td>
                     <td class="col-md-3 text-center gras">Email</td>
@@ -158,12 +158,11 @@ elseif (isset($_POST["ref"])) {
                     
                     echo
                         '<tr class="row">
-                            <td class="col-md-1 text-center"><a href="stat.php?code=' . $NCI_etudiant .'" ><button class="btn btn-outline-primary bst" >stat</button></a></td>
-                            <td class="col-md-2 text-center">' . $NCI_etudiant . '</td>
-                            <td class="col-md-1 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
-                            <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"]. '</td>
-                            <td class="col-md-2 text-center">' . $etudiants[$i]["Telephone"] . '</td>
-                            <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $NCI_etudiant . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $le_ref_etudiant[0]["Nom"] . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $etudiants[$i]["Nom"]. '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $etudiants[$i]["Telephone"] . '</a></td>
+                            <td class="col-md-3 text-center"><a class="lesliens" href="stat.php?code=' . $NCI_etudiant .'" >' . $etudiants[$i]["Email"] . '</a></td>
                             <td class="col-md-1 text-center"><a href="emargement.php?code=' . $NCI_etudiant . '&ref=' . $le_ref_etudiant[0]["Nom"] .  '"   id="' . $NCI_etudiant . '" ><button class="btn btn-outline-primary" >Emarger</button></a></td>
                         </tr>';
                         $nbr++;

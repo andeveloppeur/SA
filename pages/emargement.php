@@ -72,14 +72,13 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
         .entrBouton{
             margin-right:0.2%;
         }
-        .bvalsup{
-            width:100%;
-            background-color: red;
-            color:white;
-        }
         .bsup{
             width:100%;
             padding-left:8%;
+        }
+        .lesliens, .lesliens:hover{
+            text-decoration: none ;
+            color: #212529;
         }
     </style>
 </head>
@@ -373,13 +372,13 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                             $date = $datN->format('d-m-Y');
                             $nbr++;
                             echo
-                                '<tr class="row" id="ligne'.$nbr.'" name="'.$leNCI.'">
-                                    <td class="col-md-2 text-center">' . $leNCI . '</td>
-                                    <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"]. '</td>
-                                    <td class="col-md-2 text-center">' . $etudiants[0]["Nom"] . '</td>
-                                    <td class="col-md-2 text-center">' . $date . '</td>
-                                    <td class="col-md-1 text-center">' . $emargement[$i]["Arrivee"] . '</td>
-                                    <td class="col-md-1 text-center">' . $emargement[$i]["Depart"] . '</td>
+                                '<tr class="row">
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leNCI  .'" >' . $leNCI . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leNCI  .'" >' . $le_ref_etudiant[0]["Nom"]. '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leNCI  .'" >' . $etudiants[0]["Nom"] . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $leNCI  .'" >' . $date . '</a></td>
+                                    <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $leNCI  .'" >' . $emargement[$i]["Arrivee"] . '</a></td>
+                                    <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $leNCI  .'" >' . $emargement[$i]["Depart"] . '</a></td>
                                     <td class="col-md-1 text-center"><a href="emargement.php?aModifier='.$leNCI.'&ref='.$le_ref_etudiant[0]["Nom"].'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>';
                                     echo'<td class="col-md-1 text-center"><a href="emargement.php?supp_em='. $leNCI.'&&date='.$emargement[$i]["Date_emargement"].'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>';        
                         echo'</tr>';
@@ -391,13 +390,13 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                     $datN = new DateTime($_POST["auj"]);
                     $date = $datN->format('d-m-Y');
                     echo
-                        '<tr class="row" id="ligne1" name="'.$_POST["code"] .'">
-                            <td class="col-md-2 text-center">' . $_POST["code"] . '</td>
-                            <td class="col-md-2 text-center">' . $_POST["ref"] . '</td>
-                            <td class="col-md-2 text-center">' . $_POST["nom"]  . '</td>
-                            <td class="col-md-2 text-center">' . $date . '</td>
-                            <td class="col-md-1 text-center">' . $_POST["arrivee"]  . '</td>
-                            <td class="col-md-1 text-center">' . $_POST["depart"]  . '</td>
+                        '<tr class="row">
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["code"] . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["ref"] . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["nom"]  . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $date . '</a></td>
+                            <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["arrivee"]  . '</a></td>
+                            <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["depart"]  . '</a></td>
                             <td class="col-md-1 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&ref='.$_POST["ref"].'&&date='.$_POST["auj"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
                             <td class="col-md-1 text-center"><a href="emargement.php?supp_em='. $_POST["code"] .'&&date='.$_POST["auj"].'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>
                         </tr>';

@@ -251,25 +251,3 @@ if (nom_page.includes("exportation.php")) {
     ////////////////////---Fin visiteur---//////////////////
 }
 /////////////////////////////----Fin pour exporter fichier ----////////////
-
-/////////////////////////////----Emargement ----////////////
-// var nom_page = window.location.pathname;
-// if (nom_page.includes("emargement.php")) {
-//     var le_nombre = document.getElementById("le_nombre");
-//     var nmbr = le_nombre.getAttribute("class");
-//     for (var i = 1; i <= nmbr; i++) {
-//         var ligne = document.getElementById("ligne" + i);
-//         ligne.addEventListener("click", stat);
-
-//     }
-
-//     function stat() {
-//         var code = ligne.getAttribute("name");
-//         document.location.href = "stat.php?code=" + code;
-//     }
-// }
-/////////////////////////////----Fin Emargement ----////////////
-
-/////////////////////////////----Confirmer sup emargement ----////////////
-
-/////////////////////////////----Fin Confirmer sup emargement ----////////////
