@@ -324,14 +324,13 @@ if($_SESSION["Code_agents"]=="1 AS"){
                     ///////////-----Fin recuperation des données des agents----///////
                     echo
                         '<tr class="row">
-                            
-                            <td class="col-md-2 text-center">' . $inf_agents[0]["Code_agents"] . '</td>
-                            <td class="col-md-2 text-center">' . $_POST["login"] . '</td>
-                            <td class="col-md-2 text-center">' . $_POST["nom"]. '</td>
-                            <td class="col-md-2 text-center">' . $_POST["tel"]. '</td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="parametres.php">' . $inf_agents[0]["Code_agents"] . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="parametres.php" >' . $_POST["login"] . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="parametres.php" >' . $_POST["nom"]. '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="parametres.php" >' . $_POST["tel"]. '</a></td>
                             <td class="col-md-2 text-center"><a class="nonSoulign" href="traitement.php?code_agents=' . $inf_agents[0]["Code_agents"] . '&statut='.$inf_agents[0]["statut"].'" ><button class="btn '; if($inf_agents[0]["statut"]=="Actif"){echo'btn-outline-primary';} else{echo'btn-outline-danger';} echo' coulBout">'.$inf_agents[0]["statut"].'</button></a></td>
                             <td class="col-md-2 text-center"><a class="nonSoulign" href="parametres.php?code_agents_a_supp=' . $inf_agents[0]["Code_agents"]. '" ><button class="btn btn-outline-danger ">Supprimer</button></a></td> 
-                            </tr>';
+                        </tr>';
                 }
                 else{
                     ///////////-----recuperation des données des agents----///////////
@@ -345,7 +344,6 @@ if($_SESSION["Code_agents"]=="1 AS"){
                         //si la table n'est pas vide et que on ne recherche rien                          //si on recherche une chose non vide et que cela face partie de la ligne                                 //si on appuis sur le bouton rechercher alors qu'on n'a rien ecrit afficher tous les éléments                                      
                             echo
                                 '<tr class="row">
-
                                     <td class="col-md-2 text-center">' . $agents[$i]["Code_agents"] . '</td>
                                     <td class="col-md-2 text-center">' . $agents[$i]["Login"] . '</td>
                                     <td class="col-md-2 text-center">' . $agents[$i]["Nom"]. '</td>

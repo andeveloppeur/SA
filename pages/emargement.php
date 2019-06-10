@@ -391,12 +391,12 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
                     $date = $datN->format('d-m-Y');
                     echo
                         '<tr class="row">
-                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["code"] . '</a></td>
-                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["ref"] . '</a></td>
-                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["nom"]  . '</a></td>
-                            <td class="col-md-2 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $date . '</a></td>
-                            <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["arrivee"]  . '</a></td>
-                            <td class="col-md-1 text-center"><a class="lesliens" href="stat.php?code=' . $_POST["code"] .'" >' . $_POST["depart"]  . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="emargement.php" >' . $_POST["code"] . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="emargement.php" >' . $_POST["ref"] . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="emargement.php" >' . $_POST["nom"]  . '</a></td>
+                            <td class="col-md-2 text-center"><a class="lesliens" href="emargement.php" >' . $date . '</a></td>
+                            <td class="col-md-1 text-center"><a class="lesliens" href="emargement.php" >' . $_POST["arrivee"]  . '</a></td>
+                            <td class="col-md-1 text-center"><a class="lesliens" href="emargement.php" >' . $_POST["depart"]  . '</a></td>
                             <td class="col-md-1 text-center"><a href="emargement.php?aModifier='.$_POST["code"] .'&ref='.$_POST["ref"].'&&date='.$_POST["auj"].'"><button class="btn btn-outline-primary" >Modifier</button></a></td>
                             <td class="col-md-1 text-center"><a href="emargement.php?supp_em='. $_POST["code"] .'&&date='.$_POST["auj"].'"><button class="btn btn-outline-danger bsup">Supprimer</button></a></td>
                         </tr>';

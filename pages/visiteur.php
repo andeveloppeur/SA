@@ -52,9 +52,9 @@ $_SESSION["actif"] = "visiteur";
         .bsup{
             width:50%;
         }
-         .bvalsup{
-            background-color: red;
-            color:white;
+        .lesliens, .lesliens:hover{
+            text-decoration: none ;
+            color: #212529;
         }
     </style>
 </head>
@@ -360,11 +360,11 @@ $_SESSION["actif"] = "visiteur";
                     }
                     echo
                     '<tr class="row">
-                        <td class="col-md-2 text-center">' . $leCode. '</td>
-                        <td class="col-md-2 text-center">' . $_POST["nom"] . '</td>
-                        <td class="col-md-2 text-center">' . $date . '</td>
-                        <td class="col-md-2 text-center">' . $_POST["tel"] . '</td>
-                        <td class="col-md-2 text-center">' . $_POST["email"] . '</td>
+                        <td class="col-md-2 text-center"><a class="lesliens" href="visiteur.php" >' . $leCode. '</a></td>
+                        <td class="col-md-2 text-center"><a class="lesliens" href="visiteur.php" >' . $_POST["nom"] . '</a></td>
+                        <td class="col-md-2 text-center"><a class="lesliens" href="visiteur.php" >' . $date . '</a></td>
+                        <td class="col-md-2 text-center"><a class="lesliens" href="visiteur.php" >' . $_POST["tel"] . '</a></td>
+                        <td class="col-md-2 text-center"><a class="lesliens" href="visiteur.php" >' . $_POST["email"] . '</a></td>
                         <td class="col-md-2 text-center"><a class="nonSoulign" href="visiteur.php?code_visiteur_a_supp=' . $leCode . '" ><button class="btn btn-outline-danger bsup ">Supprimer</button></a></td>
                     </tr>';
             }
