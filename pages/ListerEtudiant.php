@@ -57,6 +57,9 @@ elseif (isset($_POST["ref"])) {
         .navbar-expand-lg{
             padding:0px 16px 0px 16px;
         }
+        .bst{
+            width:100%;
+        }
     </style>
 </head>
 
@@ -117,8 +120,9 @@ elseif (isset($_POST["ref"])) {
             echo '<table class="col-12 table tabliste table-hover">
             <thead class="">
                 <tr class="row">
+                    <td class="col-md-1 text-center gras">Stats</td>
                     <td class="col-md-2 text-center gras">N° CI</td>
-                    <td class="col-md-2 text-center gras">Référentiel</td>
+                    <td class="col-md-1 text-center gras">Référentiel</td>
                     <td class="col-md-2 text-center gras">Nom</td>
                     <td class="col-md-2 text-center gras">Téléphone</td>
                     <td class="col-md-3 text-center gras">Email</td>
@@ -154,8 +158,9 @@ elseif (isset($_POST["ref"])) {
                     
                     echo
                         '<tr class="row">
+                            <td class="col-md-1 text-center"><a href="stat.php?code=' . $NCI_etudiant .'" ><button class="btn btn-outline-primary bst" >stat</button></a></td>
                             <td class="col-md-2 text-center">' . $NCI_etudiant . '</td>
-                            <td class="col-md-2 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
+                            <td class="col-md-1 text-center">' . $le_ref_etudiant[0]["Nom"] . '</td>
                             <td class="col-md-2 text-center">' . $etudiants[$i]["Nom"]. '</td>
                             <td class="col-md-2 text-center">' . $etudiants[$i]["Telephone"] . '</td>
                             <td class="col-md-3 text-center">' . $etudiants[$i]["Email"] . '</td>
