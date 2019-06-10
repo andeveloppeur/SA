@@ -22,15 +22,15 @@ try {
             // $nci_etu=recuperation($connexion,$codemysql);
             ///////////-----Fin recuperation des données des etudiants----///////
 
-            // ///////////-----recuperation des données des etudiants----///////////
+            // ///////////-----recuperation ref etudiants----///////////
             $codemysql = "SELECT id_referentiels FROM referentiels WHERE Nom='$ref_em'"; //le code mysql
             $id_r=recuperation($connexion,$codemysql);
-            // ///////////-----Fin recuperation des données des etudiants----///////
+            // ///////////-----Fin recuperation ref etudiants----///////
 
-            // $id_r=$id_r[0]["id_referentiels"];
+            $id_r=$id_r[0]["id_referentiels"];
             ///////////-----recuperation des données des etudiants----///////////
             $codemysql = "SELECT NCI FROM etudiants WHERE Nom='$nom_em' AND id_referentiels='.$id_r.'"; //le code mysql
-            // $nci_etu=recuperation($connexion,$codemysql);
+            $nci_etu=recuperation($connexion,$codemysql);
             // ///////////-----Fin recuperation des données des etudiants----///////
         }
         else{
@@ -50,7 +50,10 @@ try {
         }
         unset($_SESSION["nombre_em"]);//detruire la variable session pour recacher les NCI sur notre page
         if(!isset($_POST["nci_em"])){//car si il existe ca veut dire qu'ils sont plusieurs et qu'ont a choisi un NCI
-            $nci=$nci_etu[0]["NCI"];
+            if(isset($nci_etu[0]["NCI"])) 
+                $nci=$nci_etu[0]["NCI"];
+            else 
+                $nci="";//il n'existe pas
         }
         else{
             $nci=$_POST["nci_em"];
