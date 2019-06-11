@@ -84,7 +84,7 @@ elseif (isset($_POST["ref"])) {
                 ///////////-----Fin recuperation des données de la table ref----///////////
                 echo '<div class="row">
                         <div class="col-md-2"></div>
-                        <select class="form-control col-md-8 espace" name="ref" >';
+                        <select class="form-control col-md-8 espace" name="ref">';
                 if(!isset($_POST["recherche"]) && !isset($_POST["aRechercher"])||isset($_POST["recherche"]) && empty($_POST["aRechercher"])|| isset($_POST["finRecherche"])){
                     for($i=0;$i<count($lesReferentiel);$i++) {
                         if ($ref == $lesReferentiel[$i]["Nom"]) {

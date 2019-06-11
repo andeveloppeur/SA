@@ -416,12 +416,12 @@ $_SESSION["actif"] = "ModifierEtudiant";
                     }
                     echo
                                 '<tr class="row">
-                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' .$leCode. '</a></td>
-                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . $_POST["ref"]. '</a></td>
-                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . $_POST["nom"] . '</a></td>
-                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . $date . '</a></td>
-                                    <td class="col-md-1 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . $_POST["tel"] . '</a></td>
-                                    <td class="col-md-3 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . $_POST["email"] . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' .securisation($leCode). '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . securisation($_POST["ref"]). '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . securisation($_POST["nom"]) . '</a></td>
+                                    <td class="col-md-2 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . securisation($date) . '</a></td>
+                                    <td class="col-md-1 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . strip_tags($_POST["tel"]) . '</a></td>
+                                    <td class="col-md-3 text-center"><a class="lesliens" href="ModifierEtudiant.php" >' . securisation($_POST["email"]) . '</a></td>
                                     
                                 </tr>';
                 }
