@@ -429,7 +429,10 @@ elseif(!isset($_POST["validerRechJour"]) && !isset($_POST["recherche"])){
         ?>
         <script>
             if(confirm("Confirmer la suppression ?")){
-                 document.location.href = "traitement.php?<?php echo "$sup"; ?>"
+                document.location.href = "traitement.php?<?php echo "$sup"; ?>"
+            }
+            else{
+                document.location.href = "emargement.php";
             }
         </script>
         <?php

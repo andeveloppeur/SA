@@ -176,6 +176,12 @@ $_SESSION["actif"] = "exportation";
     </section>
     <?php
     include("piedDePage.php");
+    if(isset($_GET["fichier_vide"])){
+        echo'<script>
+        alert("Désoler, aucune donnée disponible !"); 
+        window.close();
+        </script>';
+    }
     ?>
     
     <script src="../js/jq.js"></script>

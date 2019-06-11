@@ -1,7 +1,7 @@
 <?php
 require('../fpdf.php');
 try {
-    $tout=" ;"." ;"." ;"." ;"." ;"." ;"." ;"." ;";
+    $tout="";
     $monfichier=fopen("../Mes_fichiers_texte/etudiants.txt","w");
     fwrite($monfichier,trim($tout));
     fclose($monfichier);
@@ -38,6 +38,9 @@ try {
         $monfichier=fopen("../Mes_fichiers_texte/etudiants.txt","w");
         fwrite($monfichier,trim($tout));
         fclose($monfichier);
+    }
+    if($tout==""){
+         header('Location: ../../pages/exportation.php?fichier_vide=true');
     }
 
 }

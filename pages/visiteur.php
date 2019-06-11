@@ -419,6 +419,9 @@ $_SESSION["actif"] = "visiteur";
             if(confirm("Confirmer la suppression ?")){
                  document.location.href = "traitement.php?<?php echo "$sup"; ?>"
             }
+            else{
+                document.location.href = "visiteur.php"
+            }
         </script>
         <?php
     }

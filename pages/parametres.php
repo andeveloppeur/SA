@@ -385,6 +385,9 @@ if($_SESSION["Code_agents"]=="1 AS"){
             if(confirm("Confirmer la suppression ?")){
                  document.location.href = "traitement.php?<?php echo "$sup"; ?>"
             }
+            else{
+                document.location.href = "parametres.php";
+            }
         </script>
         <?php
     }
